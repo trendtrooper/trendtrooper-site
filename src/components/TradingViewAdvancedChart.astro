@@ -1,0 +1,118 @@
+---
+const {
+  symbol = "TSX:FTS",
+  interval = "5",
+  theme = "dark",
+  height = 720,
+  autosize = false,
+  hide_side_toolbar = false,
+} = Astro.props;
+
+const containerId = `tv_${Math.random().toString(36).slice(2)}`;
+---
+
+<div
+  id={containerId}
+  style={`width:100%; ${autosize ? "height:100%;" : `height:${height}px;`}`}
+/>
+
+<script
+  is:inline
+  data-container-id={JSON.stringify(containerId)}
+  data-symbol={JSON.stringify(symbol)}
+  data-interval={JSON.stringify(interval)}
+  data-theme={JSON.stringify(theme)}
+  data-height={JSON.stringify(height)}
+  data-autosize={JSON.stringify(autosize)}
+  data-hide-side-toolbar={JSON.stringify(hide_side_toolbar)}
+>
+  (function () {
+    const TV_SRC = "https://s3.tradingview.com/tv.js";
+    const ds = document.currentScript.dataset;
+
+    const containerId = JSON.parse(ds.containerId);
+    const initialSymbol = JSON.parse(ds.symbol);
+    const interval = JSON.parse(ds.interval);
+    const theme = JSON.parse(ds.theme);
+    const height = JSON.parse(ds.height);
+    const autosize = JSON.parse(ds.autosize);
+    const hideSideToolbar = JSON.parse(ds.hideSideToolbar);
+
+    function loadTvJs() {
+      return new Promise((resolve, reject) => {
+        if (window.TradingView && window.TradingView.widget) return resolve();
+
+        if (window.__TT_TV_LOADING__) {
+          window.__TT_TV_LOADING__.then(resolve).catch(reject);
+          return;
+        }
+
+        window.__TT_TV_LOADING__ = new Promise((res, rej) => {
+          document
+            .querySelectorAll(`script[src^="${TV_SRC}"]`)
+            .forEach((s) => s.remove());
+
+          const s = document.createElement("script");
+          s.src = TV_SRC + "?v=" + Date.now(); // Safari cache bust
+          s.async = true;
+          s.onload = () => res();
+          s.onerror = () => rej(new Error("tv.js failed to load"));
+          document.head.appendChild(s);
+        });
+
+        window.__TT_TV_LOADING__.then(resolve).catch(reject);
+      });
+    }
+
+    async function render(symbol) {
+      await loadTvJs();
+
+      const el = document.getElementById(containerId);
+      if (!el) return;
+
+      el.innerHTML = "";
+
+      if (!window.TradingView || !window.TradingView.widget) return;
+
+      new window.TradingView.widget({
+        container_id: containerId,
+        symbol,
+        interval,
+        timezone: "America/New_York",
+        theme,
+        style: "1",
+        locale: "en",
+        toolbar_bg: "#0b0f19",
+        enable_publishing: false,
+        allow_symbol_change: true,
+        hide_side_toolbar: hideSideToolbar,
+        withdateranges: true,
+        details: true,
+        hotlist: true,
+        calendar: true,
+        autosize,
+        height: autosize ? undefined : height,
+      });
+    }
+
+    // Initial render
+    render(initialSymbol).catch((err) => {
+      console.error("[TrendTrooper] TradingView failed:", err);
+      const el = document.getElementById(containerId);
+      if (el) {
+        el.innerHTML =
+          '<div style="padding:14px;border:1px solid #1d2747;border-radius:12px;background:#0b0f19;color:#e9eefc;">' +
+          "TradingView failed to load. Try Chrome/Firefox or disable strict blockers." +
+          "</div>";
+      }
+    });
+
+    // Listen for symbol changes
+    window.addEventListener("tt:setSymbol", (e) => {
+      const next = e?.detail?.symbol;
+      if (typeof next === "string" && next.trim()) {
+        render(next.trim().toUpperCase()).catch(console.error);
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,88 @@
+---
+import TradingViewAdvancedChart from "../components/TradingViewAdvancedChart.astro";
+
+const symbolParam = Astro.url.searchParams.get("symbol");
+const initialSymbol = (symbolParam && symbolParam.trim())
+  ? symbolParam.trim().toUpperCase()
+  : "TSX:FTS";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TrendTrooper — Chart</title>
+  </head>
+
+  <body style="margin:0; background:#060913; color:#e9eefc; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;">
+    <div style="max-width:1200px; margin:0 auto; padding:16px;">
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px;">
+        <h1 style="margin:0; font-size:18px;">Chart</h1>
+
+        <div style="display:flex; gap:8px; align-items:center; flex:1; min-width:280px;">
+          <input
+            id="symbolInput"
+            value={initialSymbol}
+            placeholder="e.g. TSX:FTS, TSXV:NFG, NYSE:SPY"
+            style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; outline:none;"
+          />
+          <button
+            id="goBtn"
+            style="padding:10px 14px; border-radius:10px; border:1px solid #1d2747; background:#111a33; color:#e9eefc; cursor:pointer;"
+          >
+            Go
+          </button>
+        </div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="qp" data-sym="TSX:FTS" style="padding:8px 10px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; cursor:pointer;">FTS</button>
+          <button class="qp" data-sym="TSX:CNQ" style="padding:8px 10px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; cursor:pointer;">CNQ</button>
+          <button class="qp" data-sym="TSX:HIVE" style="padding:8px 10px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; cursor:pointer;">HIVE</button>
+          <button class="qp" data-sym="TSXV:NFG" style="padding:8px 10px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; cursor:pointer;">NFG</button>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <TradingViewAdvancedChart symbol={initialSymbol} interval="5" theme="dark" height={760} />
+
+      <p style="opacity:.7; margin-top:10px; font-size:12px;">
+        Shareable link example:
+        <code style="background:#0b0f19; padding:2px 6px; border-radius:6px;">/chart?symbol=TSX%3AFTS</code>
+      </p>
+    </div>
+
+    <script is:inline>
+      (function () {
+        const input = document.getElementById("symbolInput");
+        const btn = document.getElementById("goBtn");
+        const qpButtons = document.querySelectorAll(".qp");
+
+        function normalizeSymbol(s) {
+          return (s || "").trim().toUpperCase();
+        }
+
+        function setSymbol(sym) {
+          const symbol = normalizeSymbol(sym);
+          if (!symbol) return;
+
+          input.value = symbol;
+
+          window.dispatchEvent(new CustomEvent("tt:setSymbol", { detail: { symbol } }));
+
+          const url = new URL(window.location.href);
+          url.searchParams.set("symbol", symbol);
+          window.history.replaceState({}, "", url.toString());
+        }
+
+        btn.addEventListener("click", () => setSymbol(input.value));
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") setSymbol(input.value);
+        });
+
+        qpButtons.forEach((b) => {
+          b.addEventListener("click", () => setSymbol(b.getAttribute("data-sym")));
+        });
+      })();
+    </script>
+  </body>
+</html>
