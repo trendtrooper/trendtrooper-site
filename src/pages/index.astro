@@ -1,405 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TrendTrooper Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrendTrooper Dashboard</title>
 
-  <script src="https://s3.tradingview.com/tv.js"></script>
+<style>
+* { box-sizing: border-box; }
 
-  <style>
-    * { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #070b10;
+  color: #e5e7eb;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+}
 
-    body {
-      margin: 0;
-      background: #070b10;
-      color: #e5e7eb;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    }
+/* NAV */
+header {
+  height: 70px;
+  background: #0b1118;
+  border-bottom: 1px solid #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+}
 
-    header {
-      height: 72px;
-      background: linear-gradient(90deg, #0b1118, #111827);
-      border-bottom: 1px solid #1f2937;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 800;
-      font-size: 22px;
-    }
+nav a {
+  color: #9ca3af;
+  margin-left: 20px;
+  text-decoration: none;
+}
 
-    .logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #00ff88, #00a3ff);
-      color: #020617;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-    }
+nav a:hover { color: #00ff88; }
 
-    nav a {
-      color: #9ca3af;
-      text-decoration: none;
-      margin-left: 20px;
-      font-weight: 600;
-    }
+/* LAYOUT */
+.dashboard {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  padding: 20px;
+}
 
-    nav a:hover { color: #00ff88; }
+.card {
+  background: #0b1118;
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  padding: 15px;
+}
 
-    .hero {
-      padding: 28px;
-      display: grid;
-      grid-template-columns: 1.4fr 0.6fr;
-      gap: 20px;
-    }
+h2 { margin-top: 0; }
 
-    .hero-card {
-      background: radial-gradient(circle at top left, #122033, #0b1118 55%);
-      border: 1px solid #1f2937;
-      border-radius: 22px;
-      padding: 26px;
-      box-shadow: 0 18px 60px rgba(0,0,0,0.35);
-    }
+/* CHART */
+.chart-tools {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
 
-    .label {
-      color: #00ff88;
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
+input {
+  background: #070b10;
+  border: 1px solid #1f2937;
+  color: #fff;
+  padding: 8px;
+  border-radius: 6px;
+}
 
-    h1 {
-      font-size: 42px;
-      margin: 12px 0;
-      line-height: 1.05;
-    }
+button {
+  background: #111827;
+  border: 1px solid #1f2937;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-    .sub {
-      color: #9ca3af;
-      font-size: 16px;
-      max-width: 720px;
-    }
+button:hover {
+  background: #00ff88;
+  color: #000;
+}
 
-    .actions {
-      margin-top: 22px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+/* SIDEBAR */
+.side {
+  display: grid;
+  gap: 20px;
+}
 
-    .btn {
-      border: 1px solid #263241;
-      background: #111827;
-      color: #e5e7eb;
-      padding: 11px 16px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 800;
-      cursor: pointer;
-    }
+.green { color: #00ff88; }
+.red { color: #ff4d4d; }
+.yellow { color: #facc15; }
 
-    .btn.primary {
-      background: linear-gradient(135deg, #00ff88, #00a3ff);
-      color: #020617;
-      border: none;
-    }
+.feed {
+  font-family: monospace;
+  color: #9ca3af;
+  font-size: 13px;
+}
 
-    .dashboard {
-      padding: 0 28px 28px;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-    }
-
-    .card {
-      background: #0b1118;
-      border: 1px solid #1f2937;
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.25);
-    }
-
-    .card h2 {
-      margin: 0 0 14px;
-      font-size: 18px;
-    }
-
-    .chart-tools {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    input {
-      background: #070b10;
-      border: 1px solid #263241;
-      color: #fff;
-      padding: 11px;
-      border-radius: 12px;
-      min-width: 220px;
-      font-weight: 700;
-    }
-
-    button {
-      background: #111827;
-      border: 1px solid #263241;
-      color: #e5e7eb;
-      padding: 10px 13px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 800;
-    }
-
-    button:hover {
-      background: #00ff88;
-      color: #020617;
-    }
-
-    #tv_chart {
-      height: 560px;
-      width: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #05070a;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .stat {
-      background: #070b10;
-      border: 1px solid #1f2937;
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .stat span {
-      display: block;
-      color: #9ca3af;
-      font-size: 12px;
-      text-transform: uppercase;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .stat strong { font-size: 20px; }
-
-    .green { color: #00ff88; }
-    .red { color: #ff4d4d; }
-    .yellow { color: #facc15; }
-
-    .side {
-      display: grid;
-      gap: 20px;
-    }
-
-    .watch button {
-      width: 100%;
-      text-align: left;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .feed {
-      font-family: monospace;
-      color: #9ca3af;
-      line-height: 1.8;
-      font-size: 14px;
-    }
-
-    .signal {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #1f2937;
-      font-weight: 800;
-    }
-
-    footer {
-      padding: 24px 28px;
-      color: #6b7280;
-      border-top: 1px solid #1f2937;
-    }
-
-    @media (max-width: 900px) {
-      .hero,
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-
-      h1 { font-size: 32px; }
-    }
-  </style>
+.signal {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #1f2937;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="brand">
-    <div class="logo">TT</div>
-    TrendTrooper
-  </div>
-
+  <div class="logo">TrendTrooper</div>
   <nav>
-    <a href="/">Home</a>
-    <a href="/chart">Full Chart</a>
+    <a href="https://www.trendtrooper.com/">Home</a>
+    <a href="https://www.trendtrooper.com/chart">Full Chart</a>
     <a href="https://bot.trendtrooper.com/">Bot Status</a>
   </nav>
 </header>
 
-<section class="hero">
-  <div class="hero-card">
-    <div class="label">Live Command Center</div>
-    <h1>Elite Trading Dashboard</h1>
-    <p class="sub">
-      Live chart, watchlist, bot status, signal board, strategy rules, and quick access to your trading tools.
-    </p>
-
-    <div class="actions">
-      <a class="btn primary" href="/chart">Open Full Chart</a>
-      <a class="btn" href="https://bot.trendtrooper.com/">Check Bot</a>
-      <a class="btn" href="https://www.tradingview.com/chart/ny1aIlyu/">TradingView Layout</a>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>System Status</h2>
-    <div class="grid-2">
-      <div class="stat">
-        <span>Bot</span>
-        <strong class="green">Online</strong>
-      </div>
-      <div class="stat">
-        <span>Mode</span>
-        <strong>Paper</strong>
-      </div>
-      <div class="stat">
-        <span>Symbol</span>
-        <strong id="activeSymbol">FTS</strong>
-      </div>
-      <div class="stat">
-        <span>Timeframe</span>
-        <strong>5 Min</strong>
-      </div>
-    </div>
-  </div>
-</section>
-
 <main class="dashboard">
 
+<!-- LEFT SIDE -->
+<section class="card">
+  <h2>Live TradingView Chart</h2>
+
+  <div class="chart-tools">
+    <input id="symbolInput" value="NYSE:FTS">
+    <button onclick="loadChart()">Load</button>
+    <button onclick="setSymbol('NYSE:FTS')">FTS</button>
+    <button onclick="setSymbol('AMEX:SPY')">SPY</button>
+    <button onclick="setSymbol('NASDAQ:QQQ')">QQQ</button>
+    <button onclick="setSymbol('NASDAQ:AAPL')">AAPL</button>
+    <button onclick="setSymbol('NASDAQ:TSLA')">TSLA</button>
+  </div>
+
+  <div id="tv_chart" style="height:550px;width:100%;border-radius:10px;overflow:hidden;"></div>
+</section>
+
+<!-- RIGHT SIDE -->
+<aside class="side">
+
   <section class="card">
-    <h2>Live TradingView Chart</h2>
-
-    <div class="chart-tools">
-      <input id="symbolInput" type="text" value="NYSE:FTS" />
-      <button onclick="loadChart()">Load</button>
-      <button onclick="setSymbol('NYSE:FTS')">FTS</button>
-      <button onclick="setSymbol('AMEX:SPY')">SPY</button>
-      <button onclick="setSymbol('NASDAQ:QQQ')">QQQ</button>
-      <button onclick="setSymbol('NASDAQ:AAPL')">AAPL</button>
-      <button onclick="setSymbol('NASDAQ:TSLA')">TSLA</button>
-    </div>
-
-    <div id="tv_chart"></div>
+    <h2>System Status</h2>
+    <div>Bot: <span class="green">Online</span></div>
+    <div>Mode: Paper</div>
+    <div>Symbol: <span id="activeSymbol">FTS</span></div>
+    <div>Timeframe: 5m</div>
   </section>
 
-  <aside class="side">
+  <section class="card">
+    <h2>Signal Board</h2>
+    <div class="signal">LONG FILTER <span class="green">READY</span></div>
+    <div class="signal">PULLBACK <span class="yellow">SCANNING</span></div>
+    <div class="signal">RISK <span class="green">CONTROLLED</span></div>
+    <div class="signal">CHASE <span class="red">BLOCKED</span></div>
+  </section>
 
-    <section class="card watch">
-      <h2>Watchlist</h2>
-      <button onclick="setSymbol('NYSE:FTS')">FTS <span>Primary</span></button>
-      <button onclick="setSymbol('AMEX:SPY')">SPY <span>Market</span></button>
-      <button onclick="setSymbol('NASDAQ:QQQ')">QQQ <span>Tech</span></button>
-      <button onclick="setSymbol('NASDAQ:AAPL')">AAPL <span>Watch</span></button>
-      <button onclick="setSymbol('NASDAQ:TSLA')">TSLA <span>Volatile</span></button>
-    </section>
+  <section class="card">
+    <h2>Watchlist</h2>
+    <button onclick="setSymbol('NYSE:FTS')">FTS</button>
+    <button onclick="setSymbol('AMEX:SPY')">SPY</button>
+    <button onclick="setSymbol('NASDAQ:QQQ')">QQQ</button>
+    <button onclick="setSymbol('NASDAQ:AAPL')">AAPL</button>
+    <button onclick="setSymbol('NASDAQ:TSLA')">TSLA</button>
+  </section>
 
-    <section class="card">
-      <h2>Signal Board</h2>
-      <div class="signal">LONG FILTER <span class="green">READY</span></div>
-      <div class="signal">PULLBACK <span class="yellow">SCANNING</span></div>
-      <div class="signal">RISK <span class="green">CONTROLLED</span></div>
-      <div class="signal">CHASE <span class="red">BLOCKED</span></div>
-    </section>
+  <section class="card">
+    <h2>Bot Feed</h2>
+    <div class="feed">
+      &gt; webhook armed<br>
+      &gt; bot online<br>
+      &gt; waiting for alerts<br>
+      &gt; paper mode active
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Strategy Rules</h2>
-      <div class="feed">
-        ✓ Longs above 200 MA<br>
-        ✓ Shorts below 200 MA<br>
-        ✓ Wait for clean pullback<br>
-        ✓ No chase entries<br>
-        ✓ Paper mode until confirmed
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Bot Feed</h2>
-      <div class="feed">
-        &gt; webhook armed<br>
-        &gt; bot domain online<br>
-        &gt; waiting for TradingView alert<br>
-        &gt; paper mode active
-      </div>
-    </section>
-
-  </aside>
+</aside>
 
 </main>
 
-<footer>
-  TrendTrooper Command Center · Homepage Dashboard
-</footer>
-
 <script>
-let tvWidget = null;
-
 function shortSymbol(symbol) {
-  if (!symbol) return "FTS";
   return symbol.includes(":") ? symbol.split(":")[1] : symbol;
 }
 
 function loadChart() {
-  const input = document.getElementById("symbolInput").value.trim();
-  const symbol = input !== "" ? input : "NYSE:FTS";
+  const symbol = document.getElementById("symbolInput").value || "NYSE:FTS";
 
   document.getElementById("activeSymbol").textContent = shortSymbol(symbol);
-  document.getElementById("tv_chart").innerHTML = "";
 
-  tvWidget = new TradingView.widget({
-    autosize: true,
-    symbol: symbol,
-    interval: "5",
-    timezone: "America/New_York",
-    theme: "dark",
-    style: "1",
-    locale: "en",
-    toolbar_bg: "#0b1118",
-    enable_publishing: false,
-    hide_top_toolbar: false,
-    hide_legend: false,
-    save_image: false,
-    container_id: "tv_chart"
-  });
+  document.getElementById("tv_chart").innerHTML = `
+    <iframe
+      src="https://s.tradingview.com/widgetembed/?symbol=${encodeURIComponent(symbol)}&interval=5&theme=dark&style=1&timezone=America%2FNew_York"
+      style="width:100%;height:100%;border:none;">
+    </iframe>
+  `;
 }
 
 function setSymbol(symbol) {
@@ -407,7 +206,7 @@ function setSymbol(symbol) {
   loadChart();
 }
 
-window.addEventListener("DOMContentLoaded", loadChart);
+window.onload = loadChart;
 </script>
 
 </body>
