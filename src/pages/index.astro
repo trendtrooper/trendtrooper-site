@@ -19,8 +19,9 @@
         </div>
 
         <div class="navlinks">
+          <a href="/">Home</a>
           <a href="/chart">Chart</a>
-          <a href="https://bot.trendtrooper.com">Bot</a>
+          <a href="https://bot.trendtrooper.com">Bot Status</a>
         </div>
       </nav>
 
@@ -35,7 +36,7 @@
 
           <p>
             TrendTrooper connects TradingView alerts, automated webhook execution,
-            chart analysis, and bot monitoring into one clean control center.
+            chart analysis, and bot monitoring into one clean trading command center.
           </p>
 
           <div class="actions">
@@ -73,9 +74,9 @@
           </div>
 
           <div class="bot-log">
-            <p>> webhook armed</p>
-            <p>> TradingView connected</p>
-            <p>> waiting for clean signal...</p>
+            <p>&gt; webhook armed</p>
+            <p>&gt; TradingView connected</p>
+            <p>&gt; waiting for clean signal...</p>
           </div>
         </div>
       </section>
@@ -84,7 +85,9 @@
 </html>
 
 <style>
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
   body {
     margin: 0;
@@ -148,6 +151,7 @@
   .navlinks {
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
   }
 
   a {
@@ -188,7 +192,7 @@
   }
 
   h1 {
-    font-size: clamp(56px, 7vw, 104px);
+    font-size: clamp(52px, 7vw, 104px);
     line-height: .88;
     letter-spacing: -5px;
     margin: 0;
@@ -271,8 +275,13 @@
     background: #ff5f57;
   }
 
-  .terminal-top span:nth-child(2) { background: #ffbd2e; }
-  .terminal-top span:nth-child(3) { background: #28c840; }
+  .terminal-top span:nth-child(2) {
+    background: #ffbd2e;
+  }
+
+  .terminal-top span:nth-child(3) {
+    background: #28c840;
+  }
 
   .terminal-top p {
     margin: 0 0 0 12px;
@@ -284,6 +293,7 @@
     display: flex;
     justify-content: space-between;
     align-items: start;
+    gap: 14px;
   }
 
   small {
@@ -303,6 +313,7 @@
     padding: 10px 13px;
     border-radius: 999px;
     font-size: 12px;
+    white-space: nowrap;
   }
 
   .signal {
@@ -313,9 +324,20 @@
     letter-spacing: .5px;
   }
 
-  .buy { background: rgba(57,217,138,.12); color: #39d98a; }
-  .wait { background: rgba(47,124,255,.12); color: #5aa7ff; }
-  .risk { background: rgba(255,190,60,.12); color: #ffca63; }
+  .buy {
+    background: rgba(57,217,138,.12);
+    color: #39d98a;
+  }
+
+  .wait {
+    background: rgba(47,124,255,.12);
+    color: #5aa7ff;
+  }
+
+  .risk {
+    background: rgba(255,190,60,.12);
+    color: #ffca63;
+  }
 
   .mini-chart {
     height: 150px;
@@ -354,17 +376,41 @@
   }
 
   @media (max-width: 900px) {
+    main {
+      padding: 20px;
+    }
+
+    nav {
+      align-items: flex-start;
+      gap: 18px;
+      flex-direction: column;
+    }
+
     .hero {
       grid-template-columns: 1fr;
-      margin-top: 70px;
+      margin-top: 64px;
+      gap: 36px;
     }
 
     h1 {
+      font-size: clamp(44px, 13vw, 64px);
       letter-spacing: -3px;
+    }
+
+    .left p {
+      font-size: 18px;
     }
 
     .stats {
       grid-template-columns: 1fr;
+    }
+
+    h2 {
+      font-size: 52px;
+    }
+
+    .terminal {
+      padding: 20px;
     }
   }
 </style>
