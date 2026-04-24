@@ -1,4 +1,4 @@
----
+ ---
 ---
 
 <html lang="en">
@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <title>TrendTrooper</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://s3.tradingview.com/tv.js"></script>
   </head>
 
   <body>
@@ -23,9 +24,7 @@
         <div class="panel intro">
           <p class="tag">LIVE DASHBOARD</p>
           <h1>Command Center</h1>
-          <p>
-            FTS chart, live price, strategy status, bot feed, watchlist, and trading notes.
-          </p>
+          <p>Live chart, live price, strategy status, bot feed, watchlist, and trading notes.</p>
 
           <div class="actions">
             <a class="primary" href="/chart">Open Full Chart</a>
@@ -36,7 +35,7 @@
         <div class="panel price">
           <div class="panel-title">Live FTS Price</div>
           <iframe
-            src="https://s.tradingview.com/embed-widget/symbol-info/?locale=en#%7B%22symbol%22%3A%22NYSE%3AFTS%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%7D"
+            src="https://s.tradingview.com/embed-widget/symbol-info/?locale=en#%7B%22symbol%22%3A%22NYSE%3AFTS%22%2C%22colorTheme%22%3A%22light%22%2C%22isTransparent%22%3Atrue%7D"
             width="100%"
             height="150"
             frameborder="0"
@@ -48,7 +47,7 @@
           <div class="panel-title">System Status</div>
           <div class="row"><span>Bot</span><b class="green">Online</b></div>
           <div class="row"><span>Mode</span><b>Paper</b></div>
-          <div class="row"><span>Symbol</span><b>FTS</b></div>
+          <div class="row"><span>Symbol</span><b id="activeSymbol">FTS</b></div>
           <div class="row"><span>Timeframe</span><b>5 min</b></div>
         </div>
       </section>
@@ -56,11 +55,11 @@
       <section class="main-grid">
         <div class="panel side">
           <div class="panel-title">Watchlist</div>
-          <div class="row"><span>FTS</span><b>Primary</b></div>
-          <div class="row"><span>SPY</span><b>Market</b></div>
-          <div class="row"><span>QQQ</span><b>Tech</b></div>
-          <div class="row"><span>AAPL</span><b>Watch</b></div>
-          <div class="row"><span>TSLA</span><b>Volatile</b></div>
+          <button class="watch-btn" onclick="loadChart('NYSE:FTS', 'FTS')">FTS <b>Primary</b></button>
+          <button class="watch-btn" onclick="loadChart('AMEX:SPY', 'SPY')">SPY <b>Market</b></button>
+          <button class="watch-btn" onclick="loadChart('NASDAQ:QQQ', 'QQQ')">QQQ <b>Tech</b></button>
+          <button class="watch-btn" onclick="loadChart('NASDAQ:AAPL', 'AAPL')">AAPL <b>Watch</b></button>
+          <button class="watch-btn" onclick="loadChart('NASDAQ:TSLA', 'TSLA')">TSLA <b>Volatile</b></button>
 
           <div class="panel-title mt">Strategy Rules</div>
           <div class="note">Longs above 200 MA</div>
@@ -70,15 +69,16 @@
         </div>
 
         <div class="panel chart">
-          <div class="panel-title">Live TradingView Chart</div>
-          <iframe
-            src="https://www.tradingview.com/widgetembed/?symbol=NYSE%3AFTS&interval=5&theme=dark&style=1&timezone=America%2FSt_Johns&hide_top_toolbar=false&hide_side_toolbar=false&withdateranges=true"
-            width="100%"
-            height="560"
-            frameborder="0"
-            allowtransparency="true"
-            scrolling="no">
-          </iframe>
+          <div class="chart-head">
+            <div class="panel-title">Live TradingView Chart</div>
+
+            <form class="search-box" onsubmit="searchTicker(event)">
+              <input id="tickerInput" type="text" placeholder="Search ticker: FTS, SPY, AAPL..." />
+              <button type="submit">Load</button>
+            </form>
+          </div>
+
+          <div id="tv_chart"></div>
         </div>
 
         <div class="panel side">
@@ -101,6 +101,46 @@
         </div>
       </section>
     </main>
+
+    <script>
+      function loadChart(symbol, label) {
+        document.getElementById("tv_chart").innerHTML = "";
+        document.getElementById("activeSymbol").innerText = label || symbol;
+
+        new TradingView.widget({
+          autosize: true,
+          symbol: symbol,
+          interval: "5",
+          timezone: "America/St_Johns",
+          theme: "light",
+          style: "1",
+          locale: "en",
+          toolbar_bg: "#f1f3f6",
+          enable_publishing: false,
+          hide_top_toolbar: false,
+          hide_side_toolbar: false,
+          withdateranges: true,
+          save_image: false,
+          container_id: "tv_chart"
+        });
+      }
+
+      function searchTicker(event) {
+        event.preventDefault();
+
+        let ticker = document.getElementById("tickerInput").value.trim().toUpperCase();
+
+        if (!ticker) return;
+
+        if (!ticker.includes(":")) {
+          ticker = "NYSE:" + ticker;
+        }
+
+        loadChart(ticker, ticker.replace("NYSE:", "").replace("NASDAQ:", "").replace("AMEX:", ""));
+      }
+
+      loadChart("NYSE:FTS", "FTS");
+    </script>
   </body>
 </html>
 
@@ -112,8 +152,8 @@
   body {
     margin: 0;
     font-family: Inter, Arial, sans-serif;
-    background: #050814;
-    color: #dbe6ff;
+    background: #eef2f7;
+    color: #0f172a;
     font-size: 14px;
   }
 
@@ -121,9 +161,9 @@
     min-height: 100vh;
     padding: 14px;
     background:
-      radial-gradient(circle at 10% 8%, rgba(47,124,255,.14), transparent 26%),
+      radial-gradient(circle at 10% 8%, rgba(47,124,255,.10), transparent 26%),
       radial-gradient(circle at 92% 12%, rgba(57,217,138,.10), transparent 28%),
-      #050814;
+      #eef2f7;
   }
 
   nav {
@@ -160,7 +200,7 @@
   }
 
   a {
-    color: white;
+    color: #0f172a;
     text-decoration: none;
   }
 
@@ -169,8 +209,8 @@
   .block-link {
     padding: 8px 11px;
     border-radius: 9px;
-    background: rgba(255,255,255,.055);
-    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.85);
+    border: 1px solid rgba(15,23,42,.10);
     font-weight: 700;
     font-size: 12px;
   }
@@ -193,17 +233,17 @@
   }
 
   .panel {
-    background: rgba(255,255,255,.045);
-    border: 1px solid rgba(255,255,255,.09);
+    background: rgba(255,255,255,.88);
+    border: 1px solid rgba(15,23,42,.10);
     border-radius: 14px;
     padding: 12px;
-    box-shadow: 0 16px 50px rgba(0,0,0,.24);
+    box-shadow: 0 16px 50px rgba(15,23,42,.10);
     overflow: hidden;
   }
 
   .panel-title {
     font-size: 11px;
-    color: #8292b4;
+    color: #64748b;
     font-weight: 900;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -213,7 +253,7 @@
   .tag {
     margin: 0 0 7px;
     font-size: 11px;
-    color: #39d98a;
+    color: #059669;
     font-weight: 900;
     letter-spacing: 1.4px;
   }
@@ -228,7 +268,7 @@
   .intro p {
     margin: 0 0 12px;
     max-width: 620px;
-    color: #9cafcf;
+    color: #475569;
     line-height: 1.35;
   }
 
@@ -240,6 +280,7 @@
 
   .primary {
     background: linear-gradient(135deg, #2f7cff, #0057ff) !important;
+    color: white !important;
   }
 
   .row {
@@ -247,11 +288,11 @@
     justify-content: space-between;
     gap: 12px;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,.06);
+    border-bottom: 1px solid rgba(15,23,42,.08);
   }
 
   .row span {
-    color: #8998b8;
+    color: #64748b;
   }
 
   .row b {
@@ -259,14 +300,66 @@
   }
 
   .green {
-    color: #39d98a;
+    color: #059669;
   }
 
-  .chart iframe {
+  .chart-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .search-box {
+    display: flex;
+    gap: 8px;
+  }
+
+  .search-box input {
+    width: 260px;
+    padding: 9px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(15,23,42,.16);
+    background: white;
+    color: #0f172a;
+    font-weight: 700;
+  }
+
+  .search-box button,
+  .watch-btn {
+    cursor: pointer;
+    border: 1px solid rgba(15,23,42,.12);
+    background: white;
+    color: #0f172a;
+    border-radius: 9px;
+    font-weight: 800;
+  }
+
+  .search-box button {
+    padding: 9px 13px;
+  }
+
+  .watch-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 9px;
+    margin-bottom: 7px;
+  }
+
+  .watch-btn:hover,
+  .search-box button:hover {
+    background: #e0ecff;
+  }
+
+  #tv_chart {
     width: 100%;
     height: 560px;
     border-radius: 10px;
-    background: #07101f;
+    background: white;
+    overflow: hidden;
   }
 
   .price iframe {
@@ -285,9 +378,9 @@
     padding: 8px;
     margin-bottom: 7px;
     border-radius: 8px;
-    color: #b9c7e6;
-    background: rgba(0,0,0,.22);
-    border: 1px solid rgba(255,255,255,.06);
+    color: #334155;
+    background: rgba(15,23,42,.04);
+    border: 1px solid rgba(15,23,42,.07);
   }
 
   .signal {
@@ -299,28 +392,28 @@
   }
 
   .green-bg {
-    color: #39d98a;
-    background: rgba(57,217,138,.11);
+    color: #047857;
+    background: rgba(57,217,138,.15);
   }
 
   .blue-bg {
-    color: #5aa7ff;
+    color: #2563eb;
     background: rgba(47,124,255,.12);
   }
 
   .yellow-bg {
-    color: #ffca63;
-    background: rgba(255,190,60,.12);
+    color: #a16207;
+    background: rgba(255,190,60,.18);
   }
 
   .red-bg {
-    color: #ff7777;
-    background: rgba(255,80,80,.12);
+    color: #dc2626;
+    background: rgba(255,80,80,.13);
   }
 
   .log {
     font-family: monospace;
-    color: #9fe7bd;
+    color: #047857;
     font-size: 11px;
     padding: 5px 0;
   }
@@ -336,7 +429,7 @@
       grid-template-columns: 1fr;
     }
 
-    .chart iframe {
+    #tv_chart {
       height: 500px;
     }
   }
@@ -356,7 +449,15 @@
       font-size: 24px;
     }
 
-    .chart iframe {
+    .search-box {
+      width: 100%;
+    }
+
+    .search-box input {
+      width: 100%;
+    }
+
+    #tv_chart {
       height: 430px;
     }
   }
