@@ -3,40 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TrendTrooper Dashboard</title>
+<title>TrendTrooper Command Center</title>
 
 <style>
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: #070b10;
+  background:
+    radial-gradient(circle at top left, rgba(0,255,136,.12), transparent 32%),
+    radial-gradient(circle at top right, rgba(56,189,248,.10), transparent 30%),
+    #060a0f;
   color: #e5e7eb;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 header {
-  height: 72px;
-  background: #111827;
+  height: 76px;
+  background: rgba(15, 23, 42, .9);
   border-bottom: 1px solid #1f2937;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 28px;
+  padding: 0 32px;
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-weight: 800;
-  font-size: 22px;
+  gap: 14px;
+  font-size: 24px;
+  font-weight: 900;
 }
 
 .logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
   background: linear-gradient(135deg, #00ff88, #38bdf8);
   color: #020617;
   display: flex;
@@ -47,26 +54,101 @@ header {
 
 nav a {
   color: #9ca3af;
-  margin-left: 24px;
+  margin-left: 26px;
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 nav a:hover { color: #00ff88; }
 
-main {
-  padding: 28px;
+.hero {
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1.45fr .55fr;
+  gap: 24px;
+}
+
+.hero-card,
+.card {
+  background: rgba(11,17,24,.92);
+  border: 1px solid #223044;
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.38);
+}
+
+.hero-card {
+  padding: 32px;
+  background:
+    linear-gradient(135deg, rgba(0,255,136,.12), rgba(56,189,248,.08)),
+    rgba(11,17,24,.94);
+}
+
+.label {
+  color: #00ff88;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+h1 {
+  font-size: 46px;
+  line-height: 1.04;
+  margin: 14px 0;
+}
+
+.sub {
+  color: #a3aab8;
+  font-size: 17px;
+  max-width: 720px;
+}
+
+.actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn,
+button {
+  background: #111827;
+  border: 1px solid #263241;
+  color: #e5e7eb;
+  padding: 11px 15px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #00ff88, #38bdf8);
+  color: #020617;
+  border: none;
+}
+
+button:hover,
+.btn:hover {
+  background: #00ff88;
+  color: #020617;
+}
+
+.dashboard {
+  padding: 0 32px 32px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
 }
 
 .card {
-  background: #0b1118;
-  border: 1px solid #1f2937;
-  border-radius: 20px;
-  padding: 18px;
-  margin-bottom: 28px;
+  padding: 20px;
 }
 
-h2 { margin-top: 0; }
+.card h2 {
+  margin: 0 0 16px;
+  font-size: 21px;
+}
 
 .status-grid {
   display: grid;
@@ -77,24 +159,26 @@ h2 { margin-top: 0; }
 .stat {
   background: #05070a;
   border: 1px solid #1f2937;
-  border-radius: 14px;
-  padding: 14px;
+  border-radius: 18px;
+  padding: 16px;
 }
 
 .stat span {
   display: block;
   color: #9ca3af;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
   margin-bottom: 6px;
 }
 
 .stat strong {
-  font-size: 22px;
+  font-size: 23px;
 }
 
 .green { color: #00ff88; }
+.red { color: #ff4d4d; }
+.yellow { color: #facc15; }
 
 .chart-tools {
   display: flex;
@@ -107,35 +191,62 @@ input {
   background: #05070a;
   border: 1px solid #263241;
   color: #fff;
-  padding: 11px 14px;
-  border-radius: 12px;
-  min-width: 220px;
-  font-weight: 800;
-}
-
-button {
-  background: #111827;
-  border: 1px solid #263241;
-  color: #e5e7eb;
-  padding: 10px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 800;
-}
-
-button:hover {
-  background: #00ff88;
-  color: #020617;
+  padding: 12px 14px;
+  border-radius: 14px;
+  min-width: 230px;
+  font-weight: 900;
 }
 
 #tv_chart {
-  height: 560px;
+  height: 570px;
   width: 100%;
-  border-radius: 14px;
+  border-radius: 18px;
   overflow: hidden;
   background: #05070a;
+  border: 1px solid #1f2937;
 }
 
+.side {
+  display: grid;
+  gap: 24px;
+}
+
+.signal {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #1f2937;
+  font-weight: 900;
+}
+
+.feed {
+  font-family: monospace;
+  color: #a3aab8;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.watch button {
+  width: 100%;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+footer {
+  padding: 24px 32px;
+  color: #6b7280;
+  border-top: 1px solid #1f2937;
+}
+
+@media (max-width: 950px) {
+  .hero,
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  h1 { font-size: 34px; }
+}
 </style>
 </head>
 
@@ -154,40 +265,39 @@ button:hover {
   </nav>
 </header>
 
-<main>
+<section class="hero">
+  <div class="hero-card">
+    <div class="label">Live Command Center</div>
+    <h1>Elite Trading Dashboard</h1>
+    <p class="sub">
+      Live chart control, watchlist switching, bot status, signal board, and strategy rules in one clean trading command center.
+    </p>
 
-<section class="card">
-  <h2>System Status</h2>
-
-  <div class="status-grid">
-    <div class="stat">
-      <span>Bot</span>
-      <strong class="green">Online</strong>
-    </div>
-
-    <div class="stat">
-      <span>Mode</span>
-      <strong>Paper</strong>
-    </div>
-
-    <div class="stat">
-      <span>Symbol</span>
-      <strong id="activeSymbol">FTS</strong>
-    </div>
-
-    <div class="stat">
-      <span>Timeframe</span>
-      <strong>5 Min</strong>
+    <div class="actions">
+      <a class="btn primary" href="https://www.trendtrooper.com/chart">Open Full Chart</a>
+      <a class="btn" href="https://bot.trendtrooper.com/">Check Bot</a>
+      <a class="btn" href="https://www.tradingview.com/chart/ny1aIlyu/">TradingView Layout</a>
     </div>
   </div>
+
+  <section class="card">
+    <h2>System Status</h2>
+    <div class="status-grid">
+      <div class="stat"><span>Bot</span><strong class="green">Online</strong></div>
+      <div class="stat"><span>Mode</span><strong>Paper</strong></div>
+      <div class="stat"><span>Symbol</span><strong id="activeSymbol">FTS</strong></div>
+      <div class="stat"><span>Timeframe</span><strong>5 Min</strong></div>
+    </div>
+  </section>
 </section>
+
+<main class="dashboard">
 
 <section class="card">
   <h2>Live TradingView Chart</h2>
 
   <div class="chart-tools">
     <input id="symbolInput" type="text" value="NYSE:FTS">
-
     <button type="button" onclick="loadChart()">Load</button>
     <button type="button" onclick="setSymbol('NYSE:FTS')">FTS</button>
     <button type="button" onclick="setSymbol('AMEX:SPY')">SPY</button>
@@ -199,7 +309,42 @@ button:hover {
   <div id="tv_chart"></div>
 </section>
 
+<aside class="side">
+
+<section class="card watch">
+  <h2>Watchlist</h2>
+  <button type="button" onclick="setSymbol('NYSE:FTS')">FTS <span>Primary</span></button>
+  <button type="button" onclick="setSymbol('AMEX:SPY')">SPY <span>Market</span></button>
+  <button type="button" onclick="setSymbol('NASDAQ:QQQ')">QQQ <span>Tech</span></button>
+  <button type="button" onclick="setSymbol('NASDAQ:AAPL')">AAPL <span>Watch</span></button>
+  <button type="button" onclick="setSymbol('NASDAQ:TSLA')">TSLA <span>Volatile</span></button>
+</section>
+
+<section class="card">
+  <h2>Signal Board</h2>
+  <div class="signal">LONG FILTER <span class="green">READY</span></div>
+  <div class="signal">PULLBACK <span class="yellow">SCANNING</span></div>
+  <div class="signal">RISK <span class="green">CONTROLLED</span></div>
+  <div class="signal">CHASE <span class="red">BLOCKED</span></div>
+</section>
+
+<section class="card">
+  <h2>Bot Feed</h2>
+  <div class="feed">
+    &gt; webhook armed<br>
+    &gt; bot online<br>
+    &gt; waiting for TradingView alerts<br>
+    &gt; paper mode active
+  </div>
+</section>
+
+</aside>
+
 </main>
+
+<footer>
+  TrendTrooper Command Center · Professional Homepage Dashboard
+</footer>
 
 <script>
 function normalizeSymbol(input) {
@@ -257,4 +402,5 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 </body>
+</html>
 </html>
