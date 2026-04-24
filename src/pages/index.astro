@@ -10,75 +10,68 @@
 
   <body>
     <main>
-      <div class="grid-bg"></div>
-
       <nav>
-        <div class="brand">
-          <span class="mark">TT</span>
-          <span>TrendTrooper</span>
-        </div>
-
-        <div class="navlinks">
+        <div class="brand"><span>TT</span> TrendTrooper</div>
+        <div class="links">
           <a href="/">Home</a>
-          <a href="/chart">Chart</a>
+          <a href="/chart">Full Chart</a>
           <a href="https://bot.trendtrooper.com">Bot Status</a>
         </div>
       </nav>
 
-      <section class="hero">
+      <section class="dashboard">
         <div class="left">
-          <div class="badge">LIVE TRADING COMMAND CENTER</div>
-
-          <h1>
-            Trade the pullback.<br />
-            Execute with precision.
-          </h1>
-
-          <p>
-            TrendTrooper connects TradingView alerts, automated webhook execution,
-            chart analysis, and bot monitoring into one clean trading command center.
+          <p class="tag">LIVE TRADING DASHBOARD</p>
+          <h1>TrendTrooper Command Center</h1>
+          <p class="sub">
+            Live FTS chart, TradingView alerts, webhook bot status, and trading tools in one clean dashboard.
           </p>
 
           <div class="actions">
-            <a class="primary" href="/chart">Launch Trading Chart</a>
-            <a class="ghost" href="https://bot.trendtrooper.com">Check Bot Status</a>
+            <a class="primary" href="/chart">Open Full Chart</a>
+            <a class="secondary" href="https://bot.trendtrooper.com">Check Bot</a>
           </div>
 
-          <div class="stats">
-            <div><b>5m</b><span>Primary setup</span></div>
-            <div><b>FTS</b><span>Active symbol</span></div>
-            <div><b>Paper</b><span>Execution mode</span></div>
+          <div class="cards">
+            <div><small>Symbol</small><b>FTS / NYSE</b></div>
+            <div><small>Timeframe</small><b>5 min</b></div>
+            <div><small>Mode</small><b>Paper</b></div>
+            <div><small>Status</small><b class="green">Online</b></div>
           </div>
         </div>
 
-        <div class="terminal">
-          <div class="terminal-top">
-            <span></span><span></span><span></span>
-            <p>trendtrooper_bot</p>
+        <div class="right">
+          <div class="panel price-panel">
+            <div class="panel-title">Live FTS Price</div>
+            <iframe
+              src="https://s.tradingview.com/embed-widget/symbol-info/?locale=en#%7B%22symbol%22%3A%22NYSE%3AFTS%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22180%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%7D"
+              width="100%"
+              height="180"
+              frameborder="0"
+              scrolling="no">
+            </iframe>
           </div>
 
-          <div class="price-row">
-            <div>
-              <small>FTS / NYSE</small>
-              <h2>$55.36</h2>
-            </div>
-            <strong class="online">BOT ONLINE</strong>
-          </div>
-
-          <div class="signal buy">LONG FILTER: READY</div>
-          <div class="signal wait">PULLBACK: SCANNING</div>
-          <div class="signal risk">RISK MODE: CONTROLLED</div>
-
-          <div class="mini-chart">
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-          </div>
-
-          <div class="bot-log">
+          <div class="panel log-panel">
+            <div class="panel-title">Bot Feed</div>
             <p>&gt; webhook armed</p>
-            <p>&gt; TradingView connected</p>
-            <p>&gt; waiting for clean signal...</p>
+            <p>&gt; bot.trendtrooper.com online</p>
+            <p>&gt; waiting for TradingView alert...</p>
           </div>
         </div>
+      </section>
+
+      <section class="chart-panel">
+        <div class="panel-title">Live TradingView Chart</div>
+
+        <iframe
+          src="https://www.tradingview.com/widgetembed/?symbol=NYSE%3AFTS&interval=5&theme=dark&style=1&timezone=America%2FSt_Johns&hide_top_toolbar=false&hide_side_toolbar=false&withdateranges=true&studies=%5B%5D"
+          width="100%"
+          height="620"
+          frameborder="0"
+          allowtransparency="true"
+          scrolling="no">
+        </iframe>
       </section>
     </main>
   </body>
@@ -92,325 +85,239 @@
   body {
     margin: 0;
     font-family: Inter, Arial, sans-serif;
-    background: #030712;
+    background: #050814;
     color: white;
-    overflow-x: hidden;
   }
 
   main {
     min-height: 100vh;
-    position: relative;
-    padding: 28px;
+    padding: 22px;
     background:
-      radial-gradient(circle at 15% 20%, rgba(0,122,255,.35), transparent 28%),
-      radial-gradient(circle at 85% 15%, rgba(57,217,138,.25), transparent 25%),
-      radial-gradient(circle at 75% 85%, rgba(255,80,80,.18), transparent 24%),
-      linear-gradient(135deg, #020617, #070b18 55%, #020617);
-  }
-
-  .grid-bg {
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: radial-gradient(circle, black, transparent 75%);
-    pointer-events: none;
+      radial-gradient(circle at top left, rgba(47, 124, 255, 0.18), transparent 28%),
+      radial-gradient(circle at top right, rgba(57, 217, 138, 0.12), transparent 26%),
+      #050814;
   }
 
   nav {
-    position: relative;
-    z-index: 2;
-    max-width: 1240px;
-    margin: 0 auto;
+    max-width: 1320px;
+    margin: 0 auto 38px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
   .brand {
-    display: flex;
-    gap: 12px;
-    align-items: center;
+    font-size: 20px;
     font-weight: 900;
-    font-size: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  .mark {
+  .brand span {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #2f7cff, #39d98a);
-    color: #020617;
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
+    color: #06101f;
     display: grid;
     place-items: center;
-    font-weight: 1000;
   }
 
-  .navlinks {
+  .links {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
   a {
     color: white;
     text-decoration: none;
-    font-weight: 900;
+    font-weight: 800;
   }
 
-  .navlinks a {
-    border: 1px solid rgba(255,255,255,.14);
-    padding: 11px 18px;
-    border-radius: 999px;
+  .links a,
+  .actions a {
+    padding: 11px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.12);
     background: rgba(255,255,255,.05);
   }
 
-  .hero {
-    position: relative;
-    z-index: 2;
-    max-width: 1240px;
-    margin: 100px auto 0;
+  .dashboard {
+    max-width: 1320px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 1.05fr .95fr;
-    gap: 60px;
-    align-items: center;
+    gap: 22px;
+    align-items: stretch;
   }
 
-  .badge {
-    display: inline-block;
+  .left,
+  .panel,
+  .chart-panel {
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.11);
+    border-radius: 22px;
+    box-shadow: 0 18px 70px rgba(0,0,0,.32);
+  }
+
+  .left {
+    padding: 32px;
+  }
+
+  .tag {
+    margin: 0 0 12px;
     color: #39d98a;
-    background: rgba(57,217,138,.1);
-    border: 1px solid rgba(57,217,138,.25);
-    padding: 9px 14px;
-    border-radius: 999px;
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: 900;
     letter-spacing: 2px;
-    font-weight: 1000;
-    margin-bottom: 22px;
   }
 
   h1 {
-    font-size: clamp(52px, 7vw, 104px);
-    line-height: .88;
-    letter-spacing: -5px;
     margin: 0;
+    font-size: clamp(34px, 5vw, 62px);
+    line-height: 1;
+    letter-spacing: -2px;
   }
 
-  .left p {
-    color: #b9c4da;
-    font-size: 22px;
-    line-height: 1.55;
-    max-width: 680px;
-    margin: 28px 0 34px;
+  .sub {
+    max-width: 720px;
+    color: #b8c2d8;
+    font-size: 18px;
+    line-height: 1.45;
+    margin: 18px 0 24px;
   }
 
   .actions {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
-  }
-
-  .actions a {
-    padding: 16px 24px;
-    border-radius: 16px;
+    margin-bottom: 26px;
   }
 
   .primary {
-    background: linear-gradient(135deg, #2f7cff, #0057ff);
-    box-shadow: 0 18px 50px rgba(47,124,255,.42);
+    background: linear-gradient(135deg, #2f7cff, #0057ff) !important;
+    box-shadow: 0 12px 34px rgba(47,124,255,.28);
   }
 
-  .ghost {
+  .secondary {
     background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.14);
   }
 
-  .stats {
-    margin-top: 42px;
+  .cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    max-width: 620px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
   }
 
-  .stats div {
-    padding: 18px;
-    border-radius: 20px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.1);
-  }
-
-  .stats b {
-    display: block;
-    font-size: 28px;
-  }
-
-  .stats span {
-    color: #8996ad;
-    font-size: 13px;
-  }
-
-  .terminal {
-    border-radius: 30px;
-    padding: 26px;
-    background: rgba(3,7,18,.72);
-    border: 1px solid rgba(255,255,255,.14);
-    box-shadow: 0 40px 120px rgba(0,0,0,.55);
-    backdrop-filter: blur(18px);
-  }
-
-  .terminal-top {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 28px;
-  }
-
-  .terminal-top span {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #ff5f57;
-  }
-
-  .terminal-top span:nth-child(2) {
-    background: #ffbd2e;
-  }
-
-  .terminal-top span:nth-child(3) {
-    background: #28c840;
-  }
-
-  .terminal-top p {
-    margin: 0 0 0 12px;
-    color: #8c98ad;
-    font-size: 14px;
-  }
-
-  .price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    gap: 14px;
+  .cards div {
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(0,0,0,.26);
+    border: 1px solid rgba(255,255,255,.08);
   }
 
   small {
-    color: #8c98ad;
-    font-weight: 900;
+    display: block;
+    color: #8d99b0;
+    margin-bottom: 6px;
   }
 
-  h2 {
-    font-size: 72px;
-    letter-spacing: -4px;
-    margin: 8px 0 4px;
+  b {
+    font-size: 17px;
   }
 
-  .online {
-    color: #39d98a;
-    background: rgba(57,217,138,.12);
-    padding: 10px 13px;
-    border-radius: 999px;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-
-  .signal {
-    margin-top: 14px;
-    padding: 16px;
-    border-radius: 16px;
-    font-weight: 1000;
-    letter-spacing: .5px;
-  }
-
-  .buy {
-    background: rgba(57,217,138,.12);
+  .green {
     color: #39d98a;
   }
 
-  .wait {
-    background: rgba(47,124,255,.12);
-    color: #5aa7ff;
+  .right {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 22px;
   }
 
-  .risk {
-    background: rgba(255,190,60,.12);
-    color: #ffca63;
-  }
-
-  .mini-chart {
-    height: 150px;
-    display: flex;
-    align-items: end;
-    gap: 12px;
-    margin: 30px 0;
-  }
-
-  .mini-chart i {
-    flex: 1;
-    border-radius: 999px 999px 0 0;
-    background: linear-gradient(to top, #2f7cff, #39d98a);
-    box-shadow: 0 0 30px rgba(57,217,138,.35);
-  }
-
-  .mini-chart i:nth-child(1) { height: 42%; }
-  .mini-chart i:nth-child(2) { height: 58%; }
-  .mini-chart i:nth-child(3) { height: 36%; }
-  .mini-chart i:nth-child(4) { height: 72%; }
-  .mini-chart i:nth-child(5) { height: 64%; }
-  .mini-chart i:nth-child(6) { height: 88%; }
-  .mini-chart i:nth-child(7) { height: 76%; }
-
-  .bot-log {
-    background: rgba(0,0,0,.38);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 18px;
+  .panel {
     padding: 18px;
-    color: #9fe7bd;
+    overflow: hidden;
+  }
+
+  .panel-title {
+    font-size: 14px;
+    color: #9facbf;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .log-panel {
     font-family: monospace;
+    color: #9fe7bd;
+    font-size: 15px;
   }
 
-  .bot-log p {
-    margin: 8px 0;
+  .log-panel p {
+    margin: 10px 0;
   }
 
-  @media (max-width: 900px) {
+  .chart-panel {
+    max-width: 1320px;
+    margin: 22px auto 0;
+    padding: 18px;
+    overflow: hidden;
+  }
+
+  .chart-panel iframe {
+    border-radius: 16px;
+    background: #07101f;
+  }
+
+  @media (max-width: 950px) {
     main {
-      padding: 20px;
+      padding: 16px;
     }
 
     nav {
       align-items: flex-start;
-      gap: 18px;
       flex-direction: column;
+      gap: 14px;
+      margin-bottom: 22px;
     }
 
-    .hero {
+    .dashboard {
       grid-template-columns: 1fr;
-      margin-top: 64px;
-      gap: 36px;
     }
 
+    .left {
+      padding: 24px;
+    }
+
+    .cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chart-panel iframe {
+      height: 520px;
+    }
+  }
+
+  @media (max-width: 520px) {
     h1 {
-      font-size: clamp(44px, 13vw, 64px);
-      letter-spacing: -3px;
+      font-size: 36px;
     }
 
-    .left p {
-      font-size: 18px;
+    .sub {
+      font-size: 16px;
     }
 
-    .stats {
+    .cards {
       grid-template-columns: 1fr;
     }
 
-    h2 {
-      font-size: 52px;
-    }
-
-    .terminal {
-      padding: 20px;
+    .chart-panel iframe {
+      height: 460px;
     }
   }
 </style>
