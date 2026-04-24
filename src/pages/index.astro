@@ -19,224 +19,345 @@
         </div>
       </nav>
 
-      <section class="dashboard">
-        <div class="left">
-          <p class="tag">LIVE TRADING DASHBOARD</p>
-          <h1>TrendTrooper Command Center</h1>
-          <p class="sub">
-            Live FTS chart, TradingView alerts, webhook bot status, and trading tools in one clean dashboard.
+      <section class="top-grid">
+        <div class="panel intro">
+          <p class="tag">LIVE DASHBOARD</p>
+          <h1>Command Center</h1>
+          <p>
+            FTS chart, live price, strategy status, bot feed, watchlist, and trading notes.
           </p>
 
           <div class="actions">
             <a class="primary" href="/chart">Open Full Chart</a>
-            <a class="secondary" href="https://bot.trendtrooper.com">Check Bot</a>
-          </div>
-
-          <div class="cards">
-            <div><small>Symbol</small><b>FTS / NYSE</b></div>
-            <div><small>Timeframe</small><b>5 min</b></div>
-            <div><small>Mode</small><b>Paper</b></div>
-            <div><small>Status</small><b class="green">Online</b></div>
+            <a href="https://bot.trendtrooper.com">Check Bot</a>
           </div>
         </div>
 
-        <div class="right">
-          <div class="panel price-panel">
-            <div class="panel-title">Live FTS Price</div>
-            <iframe
-              src="https://s.tradingview.com/embed-widget/symbol-info/?locale=en#%7B%22symbol%22%3A%22NYSE%3AFTS%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22180%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%7D"
-              width="100%"
-              height="180"
-              frameborder="0"
-              scrolling="no">
-            </iframe>
-          </div>
+        <div class="panel price">
+          <div class="panel-title">Live FTS Price</div>
+          <iframe
+            src="https://s.tradingview.com/embed-widget/symbol-info/?locale=en#%7B%22symbol%22%3A%22NYSE%3AFTS%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%7D"
+            width="100%"
+            height="150"
+            frameborder="0"
+            scrolling="no">
+          </iframe>
+        </div>
 
-          <div class="panel log-panel">
-            <div class="panel-title">Bot Feed</div>
-            <p>&gt; webhook armed</p>
-            <p>&gt; bot.trendtrooper.com online</p>
-            <p>&gt; waiting for TradingView alert...</p>
-          </div>
+        <div class="panel status">
+          <div class="panel-title">System Status</div>
+          <div class="row"><span>Bot</span><b class="green">Online</b></div>
+          <div class="row"><span>Mode</span><b>Paper</b></div>
+          <div class="row"><span>Symbol</span><b>FTS</b></div>
+          <div class="row"><span>Timeframe</span><b>5 min</b></div>
         </div>
       </section>
 
-      <section class="chart-panel">
-        <div class="panel-title">Live TradingView Chart</div>
+      <section class="main-grid">
+        <div class="panel side">
+          <div class="panel-title">Watchlist</div>
+          <div class="row"><span>FTS</span><b>Primary</b></div>
+          <div class="row"><span>SPY</span><b>Market</b></div>
+          <div class="row"><span>QQQ</span><b>Tech</b></div>
+          <div class="row"><span>AAPL</span><b>Watch</b></div>
+          <div class="row"><span>TSLA</span><b>Volatile</b></div>
 
-        <iframe
-          src="https://www.tradingview.com/widgetembed/?symbol=NYSE%3AFTS&interval=5&theme=dark&style=1&timezone=America%2FSt_Johns&hide_top_toolbar=false&hide_side_toolbar=false&withdateranges=true&studies=%5B%5D"
-          width="100%"
-          height="620"
-          frameborder="0"
-          allowtransparency="true"
-          scrolling="no">
-        </iframe>
+          <div class="panel-title mt">Strategy Rules</div>
+          <div class="note">Longs above 200 MA</div>
+          <div class="note">Shorts below 200 MA</div>
+          <div class="note">Wait for clean pullback</div>
+          <div class="note">No chase entries</div>
+        </div>
+
+        <div class="panel chart">
+          <div class="panel-title">Live TradingView Chart</div>
+          <iframe
+            src="https://www.tradingview.com/widgetembed/?symbol=NYSE%3AFTS&interval=5&theme=dark&style=1&timezone=America%2FSt_Johns&hide_top_toolbar=false&hide_side_toolbar=false&withdateranges=true"
+            width="100%"
+            height="560"
+            frameborder="0"
+            allowtransparency="true"
+            scrolling="no">
+          </iframe>
+        </div>
+
+        <div class="panel side">
+          <div class="panel-title">Signal Board</div>
+          <div class="signal green-bg">LONG FILTER: READY</div>
+          <div class="signal blue-bg">PULLBACK: SCANNING</div>
+          <div class="signal yellow-bg">RISK: CONTROLLED</div>
+          <div class="signal red-bg">CHASE: BLOCKED</div>
+
+          <div class="panel-title mt">Bot Feed</div>
+          <div class="log">&gt; webhook armed</div>
+          <div class="log">&gt; bot domain online</div>
+          <div class="log">&gt; waiting for TradingView alert</div>
+          <div class="log">&gt; paper mode active</div>
+
+          <div class="panel-title mt">Quick Links</div>
+          <a class="block-link" href="/chart">Open chart page</a>
+          <a class="block-link" href="https://bot.trendtrooper.com">Bot status</a>
+          <a class="block-link" href="https://www.tradingview.com/chart/ny1aIlyu/">TradingView layout</a>
+        </div>
       </section>
     </main>
   </body>
 </html>
 
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: Inter, Arial, sans-serif;
-  background: #030712;
-  color: #d6e1ff;
-  font-size: 14px;
-}
-
-main {
-  min-height: 100vh;
-  padding: 14px;
-  background:
-    radial-gradient(circle at 10% 10%, rgba(47,124,255,.15), transparent 30%),
-    radial-gradient(circle at 90% 20%, rgba(57,217,138,.1), transparent 30%),
-    #030712;
-}
-
-/* NAV */
-nav {
-  max-width: 1400px;
-  margin: 0 auto 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand {
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.links {
-  display: flex;
-  gap: 8px;
-}
-
-.links a {
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.1);
-}
-
-/* GRID */
-.dashboard {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 260px 1fr 300px;
-  gap: 12px;
-}
-
-/* LEFT PANEL */
-.left {
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px;
-  padding: 14px;
-}
-
-.left h1 {
-  font-size: 16px;
-  margin: 0 0 10px;
-}
-
-.left p {
-  font-size: 12px;
-  color: #8fa3c8;
-}
-
-/* STATUS CARDS */
-.cards {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.cards div {
-  padding: 10px;
-  border-radius: 8px;
-  background: rgba(0,0,0,.3);
-}
-
-.cards small {
-  font-size: 10px;
-  color: #6f7c99;
-}
-
-.cards b {
-  font-size: 13px;
-}
-
-/* CENTER CHART */
-.chart-panel {
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px;
-  padding: 10px;
-}
-
-.chart-panel iframe {
-  width: 100%;
-  height: 520px;
-  border-radius: 10px;
-}
-
-/* RIGHT PANEL */
-.right {
-  display: grid;
-  gap: 10px;
-}
-
-.panel {
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px;
-  padding: 10px;
-}
-
-.panel-title {
-  font-size: 11px;
-  color: #7f8fb3;
-  margin-bottom: 6px;
-}
-
-/* BOT LOG */
-.log-panel {
-  font-family: monospace;
-  font-size: 11px;
-  color: #9fe7bd;
-}
-
-/* PRICE PANEL */
-.price-panel iframe {
-  height: 120px;
-}
-
-/* EXTRA PANELS */
-.watchlist, .signals {
-  font-size: 12px;
-}
-
-.watchlist div,
-.signals div {
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255,255,255,.05);
-}
-
-/* MOBILE */
-@media (max-width: 900px) {
-  .dashboard {
-    grid-template-columns: 1fr;
+  * {
+    box-sizing: border-box;
   }
 
-  .chart-panel iframe {
-    height: 420px;
+  body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: #050814;
+    color: #dbe6ff;
+    font-size: 14px;
   }
-}
-</style></style>
+
+  main {
+    min-height: 100vh;
+    padding: 14px;
+    background:
+      radial-gradient(circle at 10% 8%, rgba(47,124,255,.14), transparent 26%),
+      radial-gradient(circle at 92% 12%, rgba(57,217,138,.10), transparent 28%),
+      #050814;
+  }
+
+  nav {
+    max-width: 1440px;
+    margin: 0 auto 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .brand {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .brand span {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #2f7cff, #39d98a);
+    color: #07111f;
+    font-weight: 900;
+  }
+
+  .links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .links a,
+  .actions a,
+  .block-link {
+    padding: 8px 11px;
+    border-radius: 9px;
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.10);
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .top-grid,
+  .main-grid {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    gap: 12px;
+  }
+
+  .top-grid {
+    grid-template-columns: 1.2fr 1fr .8fr;
+    margin-bottom: 12px;
+  }
+
+  .main-grid {
+    grid-template-columns: 260px 1fr 300px;
+  }
+
+  .panel {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 16px 50px rgba(0,0,0,.24);
+    overflow: hidden;
+  }
+
+  .panel-title {
+    font-size: 11px;
+    color: #8292b4;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .tag {
+    margin: 0 0 7px;
+    font-size: 11px;
+    color: #39d98a;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .intro p {
+    margin: 0 0 12px;
+    max-width: 620px;
+    color: #9cafcf;
+    line-height: 1.35;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .primary {
+    background: linear-gradient(135deg, #2f7cff, #0057ff) !important;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+
+  .row span {
+    color: #8998b8;
+  }
+
+  .row b {
+    font-size: 13px;
+  }
+
+  .green {
+    color: #39d98a;
+  }
+
+  .chart iframe {
+    width: 100%;
+    height: 560px;
+    border-radius: 10px;
+    background: #07101f;
+  }
+
+  .price iframe {
+    height: 150px;
+  }
+
+  .side {
+    font-size: 12px;
+  }
+
+  .mt {
+    margin-top: 18px;
+  }
+
+  .note {
+    padding: 8px;
+    margin-bottom: 7px;
+    border-radius: 8px;
+    color: #b9c7e6;
+    background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,255,255,.06);
+  }
+
+  .signal {
+    padding: 9px;
+    border-radius: 9px;
+    margin-bottom: 8px;
+    font-weight: 800;
+    font-size: 12px;
+  }
+
+  .green-bg {
+    color: #39d98a;
+    background: rgba(57,217,138,.11);
+  }
+
+  .blue-bg {
+    color: #5aa7ff;
+    background: rgba(47,124,255,.12);
+  }
+
+  .yellow-bg {
+    color: #ffca63;
+    background: rgba(255,190,60,.12);
+  }
+
+  .red-bg {
+    color: #ff7777;
+    background: rgba(255,80,80,.12);
+  }
+
+  .log {
+    font-family: monospace;
+    color: #9fe7bd;
+    font-size: 11px;
+    padding: 5px 0;
+  }
+
+  .block-link {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 1050px) {
+    .top-grid,
+    .main-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .chart iframe {
+      height: 500px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    main {
+      padding: 10px;
+    }
+
+    nav {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    .chart iframe {
+      height: 430px;
+    }
+  }
+</style>
