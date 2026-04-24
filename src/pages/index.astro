@@ -9,12 +9,207 @@
   </head>
 
   <body>
-    <main>
-      <h1>TrendTrooper</h1>
-      <p>Trading charts and automated bot tools.</p>
+    <main class="page">
+      <nav>
+        <div class="logo">TrendTrooper</div>
+        <a href="/chart">Launch Chart</a>
+      </nav>
 
-      <a href="/chart">Open Chart</a><br><br>
-      <a href="https://bot.trendtrooper.com">Bot Status</a>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Trading command center</p>
+          <h1>Clean charts. Faster alerts. Smarter trade execution.</h1>
+          <p class="sub">
+            TrendTrooper connects your TradingView strategy, chart workspace, and bot tools
+            into one simple trading dashboard.
+          </p>
+
+          <div class="buttons">
+            <a class="primary" href="/chart">Open Trading Chart</a>
+            <a class="secondary" href="https://bot.trendtrooper.com">Check Bot Status</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span>FTS / NYSE</span>
+            <strong>Bot Online</strong>
+          </div>
+
+          <div class="price">$55.36</div>
+          <div class="down">−0.84% today</div>
+
+          <div class="grid">
+            <div><span>Signal</span><b>Pullback</b></div>
+            <div><span>Timeframe</span><b>5 min</b></div>
+            <div><span>Mode</span><b>Paper</b></div>
+            <div><span>Status</span><b>Armed</b></div>
+          </div>
+        </div>
+      </section>
     </main>
   </body>
 </html>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background:
+      radial-gradient(circle at top left, #173b73, transparent 35%),
+      linear-gradient(135deg, #05070d, #0b1020 60%, #05070d);
+    color: white;
+  }
+
+  .page {
+    min-height: 100vh;
+    padding: 28px;
+  }
+
+  nav {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  nav a, .buttons a {
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+  }
+
+  nav a {
+    border: 1px solid #2b3550;
+    padding: 10px 16px;
+    border-radius: 999px;
+  }
+
+  .hero {
+    max-width: 1180px;
+    margin: 110px auto 0;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  .eyebrow {
+    color: #5aa7ff;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  h1 {
+    font-size: clamp(48px, 6vw, 86px);
+    line-height: 0.92;
+    letter-spacing: -4px;
+    margin: 0;
+  }
+
+  .sub {
+    max-width: 650px;
+    color: #b8c1d6;
+    font-size: 21px;
+    line-height: 1.55;
+    margin: 26px 0 34px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .buttons a {
+    padding: 15px 22px;
+    border-radius: 14px;
+  }
+
+  .primary {
+    background: #2f7cff;
+    box-shadow: 0 12px 40px rgba(47,124,255,.35);
+  }
+
+  .secondary {
+    border: 1px solid #303b58;
+    background: rgba(255,255,255,.04);
+  }
+
+  .card {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 28px;
+    padding: 28px;
+    box-shadow: 0 30px 90px rgba(0,0,0,.35);
+    backdrop-filter: blur(16px);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    color: #aeb8cf;
+  }
+
+  .card-top strong {
+    color: #39d98a;
+  }
+
+  .price {
+    font-size: 64px;
+    font-weight: 900;
+    margin-top: 32px;
+    letter-spacing: -3px;
+  }
+
+  .down {
+    color: #ff6b6b;
+    font-weight: 800;
+    margin-bottom: 34px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .grid div {
+    background: rgba(0,0,0,.25);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px;
+    padding: 18px;
+  }
+
+  .grid span {
+    display: block;
+    color: #8f9bb3;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .grid b {
+    font-size: 18px;
+  }
+
+  @media (max-width: 850px) {
+    .hero {
+      grid-template-columns: 1fr;
+      margin-top: 70px;
+    }
+
+    h1 {
+      letter-spacing: -2px;
+    }
+  }
+</style>
