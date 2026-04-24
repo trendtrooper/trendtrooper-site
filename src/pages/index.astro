@@ -10,23 +10,19 @@
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at top left, rgba(0,255,136,.12), transparent 32%),
-    radial-gradient(circle at top right, rgba(56,189,248,.10), transparent 30%),
-    #060a0f;
+  background: #060a0f;
   color: #e5e7eb;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 header {
   height: 76px;
-  background: rgba(15, 23, 42, .9);
+  background: #111827;
   border-bottom: 1px solid #1f2937;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -61,26 +57,23 @@ nav a {
 
 nav a:hover { color: #00ff88; }
 
-.hero {
+.hero, .dashboard {
   padding: 32px;
   display: grid;
-  grid-template-columns: 1.45fr .55fr;
+  grid-template-columns: 2fr 1fr;
   gap: 24px;
 }
 
-.hero-card,
-.card {
-  background: rgba(11,17,24,.92);
+.card, .hero-card {
+  background: #0b1118;
   border: 1px solid #223044;
   border-radius: 24px;
+  padding: 22px;
   box-shadow: 0 24px 80px rgba(0,0,0,.38);
 }
 
 .hero-card {
-  padding: 32px;
-  background:
-    linear-gradient(135deg, rgba(0,255,136,.12), rgba(56,189,248,.08)),
-    rgba(11,17,24,.94);
+  background: linear-gradient(135deg, rgba(0,255,136,.12), rgba(56,189,248,.08)), #0b1118;
 }
 
 .label {
@@ -93,25 +86,12 @@ nav a:hover { color: #00ff88; }
 
 h1 {
   font-size: 46px;
-  line-height: 1.04;
   margin: 14px 0;
 }
 
-.sub {
-  color: #a3aab8;
-  font-size: 17px;
-  max-width: 720px;
-}
+.sub { color: #a3aab8; }
 
-.actions {
-  margin-top: 24px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.btn,
-button {
+.btn, button {
   background: #111827;
   border: 1px solid #263241;
   color: #e5e7eb;
@@ -128,26 +108,16 @@ button {
   border: none;
 }
 
-button:hover,
-.btn:hover {
+button:hover, .btn:hover {
   background: #00ff88;
   color: #020617;
 }
 
-.dashboard {
-  padding: 0 32px 32px;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 24px;
-}
-
-.card {
-  padding: 20px;
-}
-
-.card h2 {
-  margin: 0 0 16px;
-  font-size: 21px;
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
 }
 
 .status-grid {
@@ -172,13 +142,7 @@ button:hover,
   margin-bottom: 6px;
 }
 
-.stat strong {
-  font-size: 23px;
-}
-
-.green { color: #00ff88; }
-.red { color: #ff4d4d; }
-.yellow { color: #facc15; }
+.stat strong { font-size: 23px; }
 
 .chart-tools {
   display: flex;
@@ -211,6 +175,13 @@ input {
   gap: 24px;
 }
 
+.watch button {
+  width: 100%;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
 .signal {
   display: flex;
   justify-content: space-between;
@@ -223,15 +194,11 @@ input {
   font-family: monospace;
   color: #a3aab8;
   line-height: 1.8;
-  font-size: 14px;
 }
 
-.watch button {
-  width: 100%;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-}
+.green { color: #00ff88; }
+.red { color: #ff4d4d; }
+.yellow { color: #facc15; }
 
 footer {
   padding: 24px 32px;
@@ -240,11 +207,7 @@ footer {
 }
 
 @media (max-width: 950px) {
-  .hero,
-  .dashboard {
-    grid-template-columns: 1fr;
-  }
-
+  .hero, .dashboard { grid-template-columns: 1fr; }
   h1 { font-size: 34px; }
 }
 </style>
@@ -269,9 +232,7 @@ footer {
   <div class="hero-card">
     <div class="label">Live Command Center</div>
     <h1>Elite Trading Dashboard</h1>
-    <p class="sub">
-      Live chart control, watchlist switching, bot status, signal board, and strategy rules in one clean trading command center.
-    </p>
+    <p class="sub">Live chart control, watchlist switching, bot status, signal board, and strategy rules in one clean trading command center.</p>
 
     <div class="actions">
       <a class="btn primary" href="https://www.trendtrooper.com/chart">Open Full Chart</a>
@@ -296,15 +257,15 @@ footer {
 <section class="card">
   <h2>Live TradingView Chart</h2>
 
-  <div class="chart-tools">
-    <input id="symbolInput" type="text" value="NYSE:FTS">
-    <button type="button" onclick="loadChart()">Load</button>
-    <button type="button" onclick="setSymbol('NYSE:FTS')">FTS</button>
-    <button type="button" onclick="setSymbol('AMEX:SPY')">SPY</button>
-    <button type="button" onclick="setSymbol('NASDAQ:QQQ')">QQQ</button>
-    <button type="button" onclick="setSymbol('NASDAQ:AAPL')">AAPL</button>
-    <button type="button" onclick="setSymbol('NASDAQ:TSLA')">TSLA</button>
-  </div>
+  <form class="chart-tools" id="symbolForm">
+    <input id="symbolInput" name="symbolInput" type="text" value="NYSE:FTS" autocomplete="off">
+    <button type="submit">Load</button>
+    <button type="button" data-symbol="NYSE:FTS">FTS</button>
+    <button type="button" data-symbol="AMEX:SPY">SPY</button>
+    <button type="button" data-symbol="NASDAQ:QQQ">QQQ</button>
+    <button type="button" data-symbol="NASDAQ:AAPL">AAPL</button>
+    <button type="button" data-symbol="NASDAQ:TSLA">TSLA</button>
+  </form>
 
   <div id="tv_chart"></div>
 </section>
@@ -313,11 +274,11 @@ footer {
 
 <section class="card watch">
   <h2>Watchlist</h2>
-  <button type="button" onclick="setSymbol('NYSE:FTS')">FTS <span>Primary</span></button>
-  <button type="button" onclick="setSymbol('AMEX:SPY')">SPY <span>Market</span></button>
-  <button type="button" onclick="setSymbol('NASDAQ:QQQ')">QQQ <span>Tech</span></button>
-  <button type="button" onclick="setSymbol('NASDAQ:AAPL')">AAPL <span>Watch</span></button>
-  <button type="button" onclick="setSymbol('NASDAQ:TSLA')">TSLA <span>Volatile</span></button>
+  <button type="button" data-symbol="NYSE:FTS">FTS <span>Primary</span></button>
+  <button type="button" data-symbol="AMEX:SPY">SPY <span>Market</span></button>
+  <button type="button" data-symbol="NASDAQ:QQQ">QQQ <span>Tech</span></button>
+  <button type="button" data-symbol="NASDAQ:AAPL">AAPL <span>Watch</span></button>
+  <button type="button" data-symbol="NASDAQ:TSLA">TSLA <span>Volatile</span></button>
 </section>
 
 <section class="card">
@@ -348,7 +309,7 @@ footer {
 
 <script>
 function normalizeSymbol(input) {
-  let s = input.trim().toUpperCase();
+  let s = String(input || "").trim().toUpperCase();
 
   if (!s) return "NYSE:FTS";
   if (s.includes(":")) return s;
@@ -358,46 +319,65 @@ function normalizeSymbol(input) {
   if (s === "QQQ") return "NASDAQ:QQQ";
   if (s === "AAPL") return "NASDAQ:AAPL";
   if (s === "TSLA") return "NASDAQ:TSLA";
+  if (s === "NVDA") return "NASDAQ:NVDA";
+  if (s === "MSFT") return "NASDAQ:MSFT";
+  if (s === "META") return "NASDAQ:META";
+  if (s === "AMD") return "NASDAQ:AMD";
 
-  return "NASDAQ:" + s;
+  return "NYSE:" + s;
 }
 
 function shortSymbol(symbol) {
   return symbol.includes(":") ? symbol.split(":")[1] : symbol;
 }
 
-function loadChart() {
-  const raw = document.getElementById("symbolInput").value;
-  const symbol = normalizeSymbol(raw);
+function loadChart(symbolText) {
+  const input = document.getElementById("symbolInput");
+  const chart = document.getElementById("tv_chart");
+  const active = document.getElementById("activeSymbol");
 
-  document.getElementById("symbolInput").value = symbol;
-  document.getElementById("activeSymbol").textContent = shortSymbol(symbol);
+  const symbol = normalizeSymbol(symbolText || input.value);
 
-  document.getElementById("tv_chart").innerHTML = `
-    <iframe
-      src="https://s.tradingview.com/widgetembed/?symbol=${encodeURIComponent(symbol)}&interval=5&theme=dark&style=1&timezone=America%2FNew_York&symboledit=1&saveimage=0"
-      style="width:100%;height:100%;border:none;"
-      scrolling="no">
-    </iframe>
-  `;
-}
+  input.value = symbol;
+  active.textContent = shortSymbol(symbol);
 
-function setSymbol(symbol) {
-  document.getElementById("symbolInput").value = symbol;
-  loadChart();
+  chart.innerHTML = "";
+
+  const iframe = document.createElement("iframe");
+  iframe.src =
+    "https://s.tradingview.com/widgetembed/?" +
+    "symbol=" + encodeURIComponent(symbol) +
+    "&interval=5" +
+    "&theme=dark" +
+    "&style=1" +
+    "&timezone=America%2FNew_York" +
+    "&symboledit=1" +
+    "&saveimage=0" +
+    "&hidesidetoolbar=0";
+
+  iframe.style.width = "100%";
+  iframe.style.height = "100%";
+  iframe.style.border = "none";
+  iframe.setAttribute("scrolling", "no");
+
+  chart.appendChild(iframe);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const input = document.getElementById("symbolInput");
+  const form = document.getElementById("symbolForm");
 
-  loadChart();
-
-  input.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      loadChart();
-    }
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    loadChart();
   });
+
+  document.querySelectorAll("[data-symbol]").forEach(function(button) {
+    button.addEventListener("click", function() {
+      loadChart(button.getAttribute("data-symbol"));
+    });
+  });
+
+  loadChart("NYSE:FTS");
 });
 </script>
 
