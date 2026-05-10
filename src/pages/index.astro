@@ -753,51 +753,23 @@ footer {
   </div>
 
   <div class="hero-panel">
-    <div class="panel-title">Live Signal Board</div>
+    <div class="panel-title">Live Bot Status</div>
 
-    <div class="signal-row">
-      <div>
-        <div class="signal-name">Fortis Inc.</div>
-        <div class="signal-ticker">TSX:FTS · 5m</div>
-      </div>
-      <span class="badge badge-long">LONG</span>
+    <div class="status-grid" style="margin-bottom:16px;">
+      <div class="stat"><span>Bot</span><strong id="botStatus" style="color:var(--muted2)">—</strong></div>
+      <div class="stat"><span>IBKR</span><strong id="ibkrStatus" style="color:var(--muted2)">—</strong></div>
+      <div class="stat"><span>Mode</span><strong id="botMode" style="color:var(--muted2)">—</strong></div>
+      <div class="stat"><span>Positions</span><strong id="posCount" style="color:var(--muted2)">—</strong></div>
     </div>
 
-    <div class="signal-row">
-      <div>
-        <div class="signal-name">Canadian Natural</div>
-        <div class="signal-ticker">TSX:CNQ · 5m</div>
-      </div>
-      <span class="badge badge-wait">WAIT</span>
-    </div>
-
-    <div class="signal-row">
-      <div>
-        <div class="signal-name">S&P 500 ETF</div>
-        <div class="signal-ticker">AMEX:SPY · 5m</div>
-      </div>
-      <span class="badge badge-long">LONG</span>
-    </div>
-
-    <div class="signal-row">
-      <div>
-        <div class="signal-name">NVIDIA Corp.</div>
-        <div class="signal-ticker">NASDAQ:NVDA · 5m</div>
-      </div>
-      <span class="badge badge-wait">WAIT</span>
-    </div>
-
-    <div class="signal-row">
-      <div>
-        <div class="signal-name">Direxion SOXL</div>
-        <div class="signal-ticker">NASDAQ:SOXL · 5m</div>
-      </div>
-      <span class="badge badge-long">LONG</span>
+    <div class="panel-title" style="margin-top:4px;">Recent Signals</div>
+    <div id="signalBoard">
+      <div class="signal-row" style="color:var(--muted); font-size:13px; padding:16px 0;">Connecting to bot…</div>
     </div>
 
     <div class="panel-footer">
-      <span><span class="status-dot"></span>Bot online · Paper mode</span>
-      <span>Updated 5m ago</span>
+      <span><span class="status-dot" id="botDot" style="background:var(--muted)"></span><span id="botFooter">Connecting…</span></span>
+      <span id="lastUpdated">—</span>
     </div>
   </div>
 </div>
@@ -1112,7 +1084,82 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   loadChart("TSX:FTS");
+  fetchBotStatus();
+  setInterval(fetchBotStatus, 30000);
 });
+
+// ── Bot status ──
+const BOT_URL = "https://bot.trendtrooper.com/status";
+
+function timeAgo(iso) {
+  const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (diff < 60) return diff + "s ago";
+  if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+  return Math.floor(diff / 3600) + "h ago";
+}
+
+function fetchBotStatus() {
+  fetch(BOT_URL, { cache: "no-store" })
+    .then(r => r.json())
+    .then(d => updateBotUI(d))
+    .catch(() => updateBotUI(null));
+}
+
+function updateBotUI(d) {
+  const botStatus  = document.getElementById("botStatus");
+  const ibkrStatus = document.getElementById("ibkrStatus");
+  const botMode    = document.getElementById("botMode");
+  const posCount   = document.getElementById("posCount");
+  const signalBoard = document.getElementById("signalBoard");
+  const botFooter  = document.getElementById("botFooter");
+  const lastUpdated = document.getElementById("lastUpdated");
+  const botDot     = document.getElementById("botDot");
+
+  if (!d) {
+    if (botStatus)  { botStatus.textContent = "Offline"; botStatus.style.color = "var(--red)"; }
+    if (ibkrStatus) { ibkrStatus.textContent = "—"; ibkrStatus.style.color = "var(--muted)"; }
+    if (botMode)    { botMode.textContent = "—"; }
+    if (posCount)   { posCount.textContent = "—"; }
+    if (botFooter)  { botFooter.textContent = "Bot offline"; }
+    if (botDot)     { botDot.style.background = "var(--red)"; }
+    if (signalBoard) { signalBoard.innerHTML = '<div class="signal-row" style="color:var(--muted);font-size:13px;padding:16px 0;">Bot is offline</div>'; }
+    return;
+  }
+
+  if (botStatus)  { botStatus.textContent = "Online"; botStatus.style.color = "var(--green)"; }
+  if (botDot)     { botDot.style.background = "var(--green)"; }
+  if (ibkrStatus) {
+    ibkrStatus.textContent = d.ibkr_connected ? "Connected" : "Disconnected";
+    ibkrStatus.style.color = d.ibkr_connected ? "var(--green)" : "var(--yellow)";
+  }
+  if (botMode)  { botMode.textContent = d.mode || "—"; botMode.style.color = "var(--text)"; }
+  if (posCount) { posCount.textContent = (d.positions || []).length; posCount.style.color = "var(--text)"; }
+  if (botFooter) { botFooter.textContent = "Bot online · " + (d.mode || ""); }
+  if (lastUpdated && d.timestamp) { lastUpdated.textContent = timeAgo(d.timestamp); }
+
+  if (signalBoard) {
+    const sigs = d.last_signals || [];
+    if (!sigs.length) {
+      signalBoard.innerHTML = '<div class="signal-row" style="color:var(--muted);font-size:13px;padding:16px 0;">No signals yet</div>';
+      return;
+    }
+    signalBoard.innerHTML = [...sigs].reverse().map(s => {
+      const ticker  = s.ticker || s.symbol || "—";
+      const action  = (s.action || "").toUpperCase();
+      const price   = s.price ? " · $" + s.price : "";
+      const time    = s.time ? new Date(s.time).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}) : "";
+      const badgeClass = action === "BUY" ? "badge-long" : action === "SELL" ? "badge-short" : "badge-wait";
+      const label   = action === "BUY" ? "LONG" : action === "SELL" ? "EXIT" : action;
+      return `<div class="signal-row">
+        <div>
+          <div class="signal-name">${ticker}${price}</div>
+          <div class="signal-ticker">${time}</div>
+        </div>
+        <span class="badge ${badgeClass}">${label}</span>
+      </div>`;
+    }).join("");
+  }
+}
 </script>
 
 </body>
