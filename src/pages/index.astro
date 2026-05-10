@@ -3,384 +3,1117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TrendTrooper Command Center</title>
+<title>TrendTrooper — Algorithmic Trading Signals</title>
+<meta name="description" content="Professional algorithmic trading signals for Canadian and US markets. Real-time alerts, live charts, and automated strategy execution.">
 
 <style>
-* { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  margin: 0;
-  background: #060a0f;
-  color: #e5e7eb;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+:root {
+  --bg: #060a0f;
+  --bg2: #0b1118;
+  --bg3: #0f1923;
+  --border: #1a2535;
+  --border2: #223044;
+  --green: #00ff88;
+  --green-dim: rgba(0,255,136,.12);
+  --blue: #38bdf8;
+  --blue-dim: rgba(56,189,248,.08);
+  --red: #ff4d6d;
+  --yellow: #facc15;
+  --text: #e5e7eb;
+  --muted: #6b7280;
+  --muted2: #9ca3af;
 }
 
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── HEADER ── */
 header {
-  height: 76px;
-  background: #111827;
-  border-bottom: 1px solid #1f2937;
+  height: 72px;
+  background: rgba(6,10,15,.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 100;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 14px;
-  font-size: 24px;
-  font-weight: 900;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
 }
 
 .logo {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #00ff88, #38bdf8);
-  color: #020617;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
+  font-size: 15px;
+  color: #020617;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -.3px;
+}
+
+.brand-tag {
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: block;
+  line-height: 1;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 nav a {
-  color: #9ca3af;
-  margin-left: 26px;
+  color: var(--muted2);
+  padding: 7px 14px;
+  border-radius: 10px;
   text-decoration: none;
-  font-weight: 800;
+  font-weight: 600;
+  font-size: 14px;
+  transition: color .15s, background .15s;
 }
 
-nav a:hover { color: #00ff88; }
+nav a:hover { color: var(--text); background: var(--bg3); }
 
-.hero, .dashboard {
-  padding: 32px;
+.nav-cta {
+  background: linear-gradient(135deg, var(--green), var(--blue)) !important;
+  color: #020617 !important;
+  font-weight: 800 !important;
+  padding: 8px 18px !important;
+  border-radius: 10px;
+}
+
+.nav-cta:hover { opacity: .9; background: linear-gradient(135deg, var(--green), var(--blue)) !important; }
+
+/* ── HERO ── */
+.hero {
+  padding: 90px 32px 70px;
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr 420px;
+  gap: 60px;
+  align-items: center;
 }
 
-.card, .hero-card {
-  background: #0b1118;
-  border: 1px solid #223044;
-  border-radius: 24px;
-  padding: 22px;
-  box-shadow: 0 24px 80px rgba(0,0,0,.38);
-}
-
-.hero-card {
-  background: linear-gradient(135deg, rgba(0,255,136,.12), rgba(56,189,248,.08)), #0b1118;
-}
-
-.label {
-  color: #00ff88;
-  font-size: 13px;
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green-dim);
+  border: 1px solid rgba(0,255,136,.25);
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
-  font-weight: 900;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,136,.5); }
+  50% { opacity: .7; box-shadow: 0 0 0 6px rgba(0,255,136,0); }
 }
 
 h1 {
-  font-size: 46px;
-  margin: 14px 0;
-}
-
-.sub { color: #a3aab8; }
-
-.btn, button {
-  background: #111827;
-  border: 1px solid #263241;
-  color: #e5e7eb;
-  padding: 11px 15px;
-  border-radius: 14px;
-  cursor: pointer;
+  font-size: 58px;
   font-weight: 900;
-  text-decoration: none;
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  margin-bottom: 22px;
 }
 
-.btn.primary {
-  background: linear-gradient(135deg, #00ff88, #38bdf8);
-  color: #020617;
-  border: none;
+h1 .accent {
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-button:hover, .btn:hover {
-  background: #00ff88;
-  color: #020617;
+.hero-sub {
+  font-size: 18px;
+  color: var(--muted2);
+  max-width: 520px;
+  margin-bottom: 36px;
+  line-height: 1.7;
 }
 
-.actions {
+.hero-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 24px;
-  flex-wrap: wrap;
-}
-
-.status-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 14px;
-}
-
-.stat {
-  background: #05070a;
-  border: 1px solid #1f2937;
-  border-radius: 18px;
-  padding: 16px;
-}
-
-.stat span {
-  display: block;
-  color: #9ca3af;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.stat strong { font-size: 23px; }
-
-.chart-tools {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
   flex-wrap: wrap;
+  margin-bottom: 48px;
 }
 
-input {
-  background: #05070a;
-  border: 1px solid #263241;
-  color: #fff;
-  padding: 12px 14px;
-  border-radius: 14px;
-  min-width: 230px;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: opacity .15s, transform .1s;
+}
+
+.btn:active { transform: scale(.98); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  color: #020617;
+}
+
+.btn-primary:hover { opacity: .92; }
+
+.btn-secondary {
+  background: var(--bg3);
+  color: var(--text);
+  border: 1px solid var(--border2);
+}
+
+.btn-secondary:hover { border-color: var(--green); color: var(--green); }
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+}
+
+.hero-stat strong {
+  display: block;
+  font-size: 26px;
   font-weight: 900;
+  color: var(--text);
 }
 
-#tv_chart {
-  height: 570px;
-  width: 100%;
-  border-radius: 18px;
+.hero-stat span {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+/* hero right panel */
+.hero-panel {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: 24px;
+  position: relative;
   overflow: hidden;
-  background: #05070a;
-  border: 1px solid #1f2937;
 }
 
-.side {
+.hero-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--green-dim), var(--blue-dim));
+  pointer-events: none;
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--muted2);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+
+.signal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.signal-row:last-child { border-bottom: none; }
+
+.signal-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.signal-ticker {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  letter-spacing: .5px;
+}
+
+.badge-long { background: rgba(0,255,136,.15); color: var(--green); }
+.badge-wait { background: rgba(250,204,21,.1); color: var(--yellow); }
+.badge-short { background: rgba(255,77,109,.12); color: var(--red); }
+
+.panel-footer {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+/* ── SECTIONS ── */
+section { padding: 80px 32px; }
+
+.section-inner { max-width: 1200px; margin: 0 auto; }
+
+.section-label {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  color: var(--muted2);
+  font-size: 17px;
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 56px;
+}
+
+/* ── FEATURES ── */
+.features-bg { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.features-grid {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
-.watch button {
+.feature-card {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 28px;
+  transition: border-color .2s, transform .2s;
+}
+
+.feature-card:hover {
+  border-color: var(--green);
+  transform: translateY(-3px);
+}
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--green-dim);
+  border: 1px solid rgba(0,255,136,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.feature-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  color: var(--muted2);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* ── CHART ── */
+.chart-section { background: var(--bg); }
+
+.chart-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.chart-title { font-weight: 800; font-size: 16px; }
+
+.chart-tools {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.symbol-input {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  width: 200px;
+  outline: none;
+  transition: border-color .15s;
+}
+
+.symbol-input:focus { border-color: var(--green); }
+
+.chip {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+  padding: 7px 12px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.chip:hover, .chip.active { background: var(--green); color: #020617; border-color: var(--green); }
+
+#tv_chart {
+  height: 560px;
   width: 100%;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
+  background: var(--bg);
 }
 
-.signal {
+/* ── HOW IT WORKS ── */
+.hiw-bg { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  counter-reset: step;
+}
+
+.step {
+  position: relative;
+  padding: 32px;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+}
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  color: #020617;
+  border-radius: 10px;
   display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #1f2937;
+  align-items: center;
+  justify-content: center;
   font-weight: 900;
+  font-size: 16px;
+  margin-bottom: 18px;
 }
 
-.feed {
+.step h3 { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+.step p { color: var(--muted2); font-size: 14px; line-height: 1.65; }
+
+/* ── MARKETS ── */
+.markets-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.market-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.market-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 14px; color: var(--green); }
+
+.ticker-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ticker-tag {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
   font-family: monospace;
-  color: #a3aab8;
-  line-height: 1.8;
 }
 
-.green { color: #00ff88; }
-.red { color: #ff4d4d; }
-.yellow { color: #facc15; }
+/* ── PRICING ── */
+.pricing-bg { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pricing-card {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: 32px 28px;
+  position: relative;
+}
+
+.pricing-card.featured {
+  border-color: var(--green);
+  background: linear-gradient(180deg, rgba(0,255,136,.05) 0%, var(--bg) 100%);
+}
+
+.featured-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  color: #020617;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.plan-name { font-size: 14px; font-weight: 800; color: var(--muted2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+
+.plan-price {
+  font-size: 46px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 4px;
+}
+
+.plan-price sup { font-size: 22px; vertical-align: top; margin-top: 10px; display: inline-block; }
+.plan-price .per { font-size: 16px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+
+.plan-desc { color: var(--muted2); font-size: 14px; margin-bottom: 24px; }
+
+.plan-features { list-style: none; margin-bottom: 28px; }
+.plan-features li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--muted2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.plan-features li:last-child { border-bottom: none; }
+.plan-features li::before { content: '✓'; color: var(--green); font-weight: 900; }
+
+.plan-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  background: var(--bg2);
+  color: var(--text);
+  text-align: center;
+  transition: all .15s;
+  text-decoration: none;
+  display: block;
+}
+
+.plan-btn:hover { border-color: var(--green); color: var(--green); }
+.plan-btn.primary-btn {
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  color: #020617;
+  border: none;
+}
+.plan-btn.primary-btn:hover { opacity: .92; color: #020617; }
+
+/* ── CTA BANNER ── */
+.cta-section { background: var(--bg); }
+
+.cta-banner {
+  background: linear-gradient(135deg, rgba(0,255,136,.1), rgba(56,189,248,.06));
+  border: 1px solid rgba(0,255,136,.2);
+  border-radius: 28px;
+  padding: 64px 48px;
+  text-align: center;
+}
+
+.cta-banner h2 { font-size: 44px; margin-bottom: 16px; }
+.cta-banner p { color: var(--muted2); font-size: 17px; max-width: 500px; margin: 0 auto 36px; }
+
+/* ── FOOTER ── */
 footer {
-  padding: 24px 32px;
-  color: #6b7280;
-  border-top: 1px solid #1f2937;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 48px 32px 32px;
 }
 
-@media (max-width: 950px) {
-  .hero, .dashboard { grid-template-columns: 1fr; }
-  h1 { font-size: 34px; }
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 40px;
+}
+
+.footer-brand .brand-name { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
+.footer-brand p { color: var(--muted); font-size: 14px; max-width: 280px; line-height: 1.6; }
+
+.footer-col h4 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted2); margin-bottom: 16px; }
+.footer-col a { display: block; color: var(--muted); font-size: 14px; text-decoration: none; margin-bottom: 10px; transition: color .15s; }
+.footer-col a:hover { color: var(--green); }
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.footer-bottom a { color: var(--muted); text-decoration: none; }
+.footer-bottom a:hover { color: var(--green); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .features-grid, .steps, .pricing-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; padding: 60px 20px 40px; }
+  .hero-panel { display: none; }
+  h1 { font-size: 40px; }
+  h2 { font-size: 30px; }
+  .features-grid, .steps, .markets-grid, .pricing-grid { grid-template-columns: 1fr; }
+  section { padding: 60px 20px; }
+  header { padding: 0 20px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+  nav a:not(.nav-cta) { display: none; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header>
-  <div class="brand">
+  <a class="brand" href="/">
     <div class="logo">TT</div>
-    TrendTrooper
-  </div>
+    <div>
+      <div class="brand-name">TrendTrooper</div>
+      <span class="brand-tag">Signal Service</span>
+    </div>
+  </a>
 
   <nav>
-    <a href="https://www.trendtrooper.com/">Home</a>
-    <a href="https://www.trendtrooper.com/chart">Full Chart</a>
-    <a href="https://bot.trendtrooper.com/">Bot Status</a>
+    <a href="#features">Features</a>
+    <a href="#chart">Live Chart</a>
+    <a href="#markets">Markets</a>
+    <a href="#pricing">Pricing</a>
+    <a href="/chart">Full Chart</a>
+    <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+    <a href="#pricing" class="nav-cta">Get Started</a>
   </nav>
 </header>
 
-<section class="hero">
-  <div class="hero-card">
-    <div class="label">Live Command Center</div>
-    <h1>Elite Trading Dashboard</h1>
-    <p class="sub">Live chart control, watchlist switching, bot status, signal board, and strategy rules in one clean trading command center.</p>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-label">
+      <span class="pulse"></span>
+      Live Signals Active
+    </div>
 
-    <div class="actions">
-      <a class="btn primary" href="https://www.trendtrooper.com/chart">Open Full Chart</a>
-      <a class="btn" href="https://bot.trendtrooper.com/">Check Bot</a>
-      <a class="btn" href="https://www.tradingview.com/chart/ny1aIlyu/">TradingView Layout</a>
+    <h1>
+      Algorithmic<br>
+      <span class="accent">Trading Signals</span><br>
+      That Actually Work
+    </h1>
+
+    <p class="hero-sub">
+      TrendTrooper scans Canadian and US markets 24/7, delivering precise entry and exit signals powered by a battle-tested momentum algorithm. No noise. Just signals.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#pricing">Start Free Trial</a>
+      <a class="btn btn-secondary" href="#chart">View Live Chart</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>TSX + US</strong>
+        <span>Markets Covered</span>
+      </div>
+      <div class="hero-stat">
+        <strong>5-Min</strong>
+        <span>Signal Frequency</span>
+      </div>
+      <div class="hero-stat">
+        <strong>24 / 7</strong>
+        <span>Bot Monitoring</span>
+      </div>
     </div>
   </div>
 
-  <section class="card">
-    <h2>System Status</h2>
-    <div class="status-grid">
-      <div class="stat"><span>Bot</span><strong class="green">Online</strong></div>
-      <div class="stat"><span>Mode</span><strong>Paper</strong></div>
-      <div class="stat"><span>Symbol</span><strong id="activeSymbol">FTS</strong></div>
-      <div class="stat"><span>Timeframe</span><strong>5 Min</strong></div>
+  <div class="hero-panel">
+    <div class="panel-title">Live Signal Board</div>
+
+    <div class="signal-row">
+      <div>
+        <div class="signal-name">Fortis Inc.</div>
+        <div class="signal-ticker">TSX:FTS · 5m</div>
+      </div>
+      <span class="badge badge-long">LONG</span>
     </div>
-  </section>
-</section>
 
-<main class="dashboard">
+    <div class="signal-row">
+      <div>
+        <div class="signal-name">Canadian Natural</div>
+        <div class="signal-ticker">TSX:CNQ · 5m</div>
+      </div>
+      <span class="badge badge-wait">WAIT</span>
+    </div>
 
-<section class="card">
-  <h2>Live TradingView Chart</h2>
+    <div class="signal-row">
+      <div>
+        <div class="signal-name">S&P 500 ETF</div>
+        <div class="signal-ticker">AMEX:SPY · 5m</div>
+      </div>
+      <span class="badge badge-long">LONG</span>
+    </div>
 
-  <form class="chart-tools" id="symbolForm">
-    <input id="symbolInput" name="symbolInput" type="text" value="NYSE:FTS" autocomplete="off">
-    <button type="submit">Load</button>
-    <button type="button" data-symbol="NYSE:FTS">FTS</button>
-    <button type="button" data-symbol="AMEX:SPY">SPY</button>
-    <button type="button" data-symbol="NASDAQ:QQQ">QQQ</button>
-    <button type="button" data-symbol="NASDAQ:AAPL">AAPL</button>
-    <button type="button" data-symbol="NASDAQ:TSLA">TSLA</button>
-  </form>
+    <div class="signal-row">
+      <div>
+        <div class="signal-name">NVIDIA Corp.</div>
+        <div class="signal-ticker">NASDAQ:NVDA · 5m</div>
+      </div>
+      <span class="badge badge-wait">WAIT</span>
+    </div>
 
-  <div id="tv_chart"></div>
-</section>
+    <div class="signal-row">
+      <div>
+        <div class="signal-name">Direxion SOXL</div>
+        <div class="signal-ticker">NASDAQ:SOXL · 5m</div>
+      </div>
+      <span class="badge badge-long">LONG</span>
+    </div>
 
-<aside class="side">
+    <div class="panel-footer">
+      <span><span class="status-dot"></span>Bot online · Paper mode</span>
+      <span>Updated 5m ago</span>
+    </div>
+  </div>
+</div>
 
-<section class="card watch">
-  <h2>Watchlist</h2>
-  <button type="button" data-symbol="NYSE:FTS">FTS <span>Primary</span></button>
-  <button type="button" data-symbol="AMEX:SPY">SPY <span>Market</span></button>
-  <button type="button" data-symbol="NASDAQ:QQQ">QQQ <span>Tech</span></button>
-  <button type="button" data-symbol="NASDAQ:AAPL">AAPL <span>Watch</span></button>
-  <button type="button" data-symbol="NASDAQ:TSLA">TSLA <span>Volatile</span></button>
-</section>
+<!-- FEATURES -->
+<section class="features-bg" id="features">
+  <div class="section-inner">
+    <div class="section-label">Why TrendTrooper</div>
+    <h2>Built for serious traders</h2>
+    <p class="section-sub">Everything you need to trade smarter — real signals, real data, no fluff.</p>
 
-<section class="card">
-  <h2>Signal Board</h2>
-  <div class="signal">LONG FILTER <span class="green">READY</span></div>
-  <div class="signal">PULLBACK <span class="yellow">SCANNING</span></div>
-  <div class="signal">RISK <span class="green">CONTROLLED</span></div>
-  <div class="signal">CHASE <span class="red">BLOCKED</span></div>
-</section>
-
-<section class="card">
-  <h2>Bot Feed</h2>
-  <div class="feed">
-    &gt; webhook armed<br>
-    &gt; bot online<br>
-    &gt; waiting for TradingView alerts<br>
-    &gt; paper mode active
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Real-Time Signals</h3>
+        <p>Signals fire the moment the algorithm detects a setup — delivered via TradingView alerts, webhook, or the live dashboard.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🇨🇦</div>
+        <h3>Canadian & US Markets</h3>
+        <p>Full support for TSX, TSXV, NYSE, NASDAQ, and AMEX. Search any ticker symbol across all major exchanges.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>Automated Execution</h3>
+        <p>The TrendTrooper bot monitors positions, manages risk, and can execute trades automatically via IBKR integration.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Live TradingView Charts</h3>
+        <p>Full-featured TradingView charts embedded directly in the dashboard. Switch tickers instantly, any exchange.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Risk Management Built In</h3>
+        <p>The algorithm blocks chase trades, enforces pullback rules, and manages position sizing automatically.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Momentum Strategy</h3>
+        <p>Proprietary momentum + trend filter system backtested across thousands of setups on 5-minute candles.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-</aside>
+<!-- LIVE CHART -->
+<section class="chart-section" id="chart">
+  <div class="section-inner">
+    <div class="section-label">Live Market Data</div>
+    <h2>Chart any symbol, any exchange</h2>
+    <p class="section-sub">Search any ticker — TSX, TSXV, NYSE, NASDAQ, AMEX. Type a symbol or pick from the watchlist below.</p>
 
-</main>
+    <div class="chart-wrap">
+      <div class="chart-header">
+        <span class="chart-title">TradingView Live Chart</span>
+        <div class="chart-tools">
+          <input id="symbolInput" class="symbol-input" type="text" value="TSX:FTS" placeholder="e.g. TSX:FTS, NASDAQ:NVDA" autocomplete="off" spellcheck="false">
+          <button class="btn btn-secondary" id="loadBtn" style="padding:9px 16px; font-size:14px;">Load</button>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="chip active" data-symbol="TSX:FTS">FTS</button>
+          <button class="chip" data-symbol="TSX:CNQ">CNQ</button>
+          <button class="chip" data-symbol="TSX:HIVE">HIVE</button>
+          <button class="chip" data-symbol="TSXV:NFG">NFG</button>
+          <button class="chip" data-symbol="AMEX:SPY">SPY</button>
+          <button class="chip" data-symbol="NASDAQ:QQQ">QQQ</button>
+          <button class="chip" data-symbol="NASDAQ:NVDA">NVDA</button>
+          <button class="chip" data-symbol="NASDAQ:SOXL">SOXL</button>
+          <button class="chip" data-symbol="NASDAQ:TSLA">TSLA</button>
+          <button class="chip" data-symbol="NASDAQ:AMD">AMD</button>
+        </div>
+      </div>
+      <div id="tv_chart"></div>
+    </div>
+  </div>
+</section>
 
+<!-- HOW IT WORKS -->
+<section class="hiw-bg">
+  <div class="section-inner">
+    <div class="section-label">How It Works</div>
+    <h2>Signal to trade in three steps</h2>
+    <p class="section-sub">TrendTrooper does the heavy lifting. You just act on the signal.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Algorithm Scans Markets</h3>
+        <p>The momentum algorithm monitors price action on 5-minute candles across your entire watchlist — Canadian and US tickers — simultaneously, around the clock.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Signal Fires on Setup</h3>
+        <p>When the trend filter confirms and a pullback entry appears, TrendTrooper fires a signal. Long entries, exits, and risk filters are all automated. No discretion needed.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Execute or Automate</h3>
+        <p>Receive alerts via TradingView, webhook, or the live dashboard. Or connect the IBKR integration to let the bot execute and manage the trade for you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETS -->
+<section id="markets">
+  <div class="section-inner">
+    <div class="section-label">Coverage</div>
+    <h2>Canadian &amp; US markets</h2>
+    <p class="section-sub">TrendTrooper covers the full range of North American equities, ETFs, and leveraged instruments.</p>
+
+    <div class="markets-grid">
+      <div class="market-card">
+        <h3>🇨🇦 Canadian Markets</h3>
+        <div class="ticker-list">
+          <span class="ticker-tag">TSX:FTS</span>
+          <span class="ticker-tag">TSX:CNQ</span>
+          <span class="ticker-tag">TSX:HIVE</span>
+          <span class="ticker-tag">TSX:SU</span>
+          <span class="ticker-tag">TSX:RY</span>
+          <span class="ticker-tag">TSX:TD</span>
+          <span class="ticker-tag">TSX:ENB</span>
+          <span class="ticker-tag">TSX:BCE</span>
+          <span class="ticker-tag">TSX:SHOP</span>
+          <span class="ticker-tag">TSXV:NFG</span>
+          <span class="ticker-tag">+ any TSX/TSXV</span>
+        </div>
+      </div>
+      <div class="market-card">
+        <h3>🇺🇸 US Markets</h3>
+        <div class="ticker-list">
+          <span class="ticker-tag">AMEX:SPY</span>
+          <span class="ticker-tag">NASDAQ:QQQ</span>
+          <span class="ticker-tag">NASDAQ:NVDA</span>
+          <span class="ticker-tag">NASDAQ:SOXL</span>
+          <span class="ticker-tag">NASDAQ:TSLA</span>
+          <span class="ticker-tag">NASDAQ:AMD</span>
+          <span class="ticker-tag">NASDAQ:META</span>
+          <span class="ticker-tag">NASDAQ:MSFT</span>
+          <span class="ticker-tag">NASDAQ:AAPL</span>
+          <span class="ticker-tag">NYSE:BRK.B</span>
+          <span class="ticker-tag">+ any NYSE/NASDAQ</span>
+        </div>
+      </div>
+    </div>
+
+    <p style="color: var(--muted2); font-size: 14px; text-align: center;">
+      Any exchange:symbol format works — <code style="background: var(--bg2); padding: 2px 8px; border-radius: 6px; font-size: 13px;">TSX:FTS</code>, <code style="background: var(--bg2); padding: 2px 8px; border-radius: 6px; font-size: 13px;">NASDAQ:NVDA</code>, <code style="background: var(--bg2); padding: 2px 8px; border-radius: 6px; font-size: 13px;">AMEX:SPY</code> — or just type the ticker and we'll resolve it.
+    </p>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-bg" id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Pricing</div>
+    <h2 style="text-align:center;">Simple, transparent pricing</h2>
+    <p class="section-sub" style="text-align:center; margin: 0 auto 56px;">Start free, upgrade when you're ready.</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price"><sup>$</sup>0<span class="per">/mo</span></div>
+        <div class="plan-desc">Try TrendTrooper with no commitment.</div>
+        <ul class="plan-features">
+          <li>Live chart access</li>
+          <li>TSX &amp; US market coverage</li>
+          <li>Signal board (delayed)</li>
+          <li>1 watchlist ticker</li>
+        </ul>
+        <a href="#" class="plan-btn">Get Started Free</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price"><sup>$</sup>49<span class="per">/mo</span></div>
+        <div class="plan-desc">Full signals, full automation, full coverage.</div>
+        <ul class="plan-features">
+          <li>Real-time signals</li>
+          <li>Unlimited watchlist tickers</li>
+          <li>TradingView alert delivery</li>
+          <li>Webhook integration</li>
+          <li>Bot status dashboard</li>
+          <li>Email support</li>
+        </ul>
+        <a href="#" class="plan-btn primary-btn">Start Pro Trial</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="plan-name">Automated</div>
+        <div class="plan-price"><sup>$</sup>99<span class="per">/mo</span></div>
+        <div class="plan-desc">Fully automated execution via IBKR.</div>
+        <ul class="plan-features">
+          <li>Everything in Pro</li>
+          <li>IBKR auto-execution</li>
+          <li>Risk management bot</li>
+          <li>Position sizing automation</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="plan-btn">Join Waitlist</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-inner">
+    <div class="cta-banner">
+      <h2>Ready to trade with an edge?</h2>
+      <p>Join TrendTrooper and get algorithmic signals built for Canadian and US markets — starting free.</p>
+      <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+        <a class="btn btn-primary" href="#pricing">Start Free Trial</a>
+        <a class="btn btn-secondary" href="/chart">Open Full Chart</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-  TrendTrooper Command Center · Professional Homepage Dashboard
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div class="logo" style="width:36px; height:36px; font-size:13px;">TT</div>
+        <div class="brand-name">TrendTrooper</div>
+      </div>
+      <p>Algorithmic trading signals for Canadian and US markets. Built for traders who want precision without the noise.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#features">Features</a>
+      <a href="#chart">Live Chart</a>
+      <a href="#markets">Markets</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/chart">Full Chart</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+      <a href="https://www.tradingview.com/chart/ny1aIlyu/" target="_blank">TradingView Layout</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 TrendTrooper. All rights reserved.</span>
+    <span>Not financial advice. Trade at your own risk.</span>
+  </div>
 </footer>
 
 <script>
-function normalizeSymbol(input) {
-  let s = String(input || "").trim().toUpperCase();
+// ── Symbol normalization ──
+const KNOWN = {
+  // Canadian
+  FTS: "TSX:FTS", CNQ: "TSX:CNQ", HIVE: "TSX:HIVE", SU: "TSX:SU",
+  RY: "TSX:RY", TD: "TSX:TD", ENB: "TSX:ENB", BCE: "TSX:BCE",
+  SHOP: "TSX:SHOP", NFG: "TSXV:NFG",
+  // US
+  SPY: "AMEX:SPY", QQQ: "NASDAQ:QQQ", NVDA: "NASDAQ:NVDA",
+  SOXL: "NASDAQ:SOXL", TSLA: "NASDAQ:TSLA", AMD: "NASDAQ:AMD",
+  META: "NASDAQ:META", MSFT: "NASDAQ:MSFT", AAPL: "NASDAQ:AAPL",
+  AMZN: "NASDAQ:AMZN", GOOGL: "NASDAQ:GOOGL", COIN: "NASDAQ:COIN",
+  MSTR: "NASDAQ:MSTR", IWM: "AMEX:IWM", DIA: "AMEX:DIA",
+  TQQQ: "NASDAQ:TQQQ", SQQQ: "NASDAQ:SQQQ",
+};
 
-  if (!s) return "NYSE:FTS";
+function normalizeSymbol(raw) {
+  const s = (raw || "").trim().toUpperCase().replace(/\s+/g, "");
+  if (!s) return "TSX:FTS";
   if (s.includes(":")) return s;
-
-  if (s === "FTS") return "NYSE:FTS";
-  if (s === "SPY") return "AMEX:SPY";
-  if (s === "QQQ") return "NASDAQ:QQQ";
-  if (s === "AAPL") return "NASDAQ:AAPL";
-  if (s === "TSLA") return "NASDAQ:TSLA";
-  if (s === "NVDA") return "NASDAQ:NVDA";
-  if (s === "MSFT") return "NASDAQ:MSFT";
-  if (s === "META") return "NASDAQ:META";
-  if (s === "AMD") return "NASDAQ:AMD";
-
-  return "NYSE:" + s;
+  return KNOWN[s] || "TSX:" + s;
 }
 
-function shortSymbol(symbol) {
-  return symbol.includes(":") ? symbol.split(":")[1] : symbol;
-}
-
-function loadChart(symbolText) {
+// ── Chart loader ──
+function loadChart(symbolRaw) {
   const input = document.getElementById("symbolInput");
-  const chart = document.getElementById("tv_chart");
-  const active = document.getElementById("activeSymbol");
-
-  const symbol = normalizeSymbol(symbolText || input.value);
+  const container = document.getElementById("tv_chart");
+  const symbol = normalizeSymbol(symbolRaw || input.value);
 
   input.value = symbol;
-  active.textContent = shortSymbol(symbol);
 
-  chart.innerHTML = "";
+  // Update active chip
+  document.querySelectorAll(".chip").forEach(c => {
+    c.classList.toggle("active", c.dataset.symbol === symbol);
+  });
 
+  container.innerHTML = "";
   const iframe = document.createElement("iframe");
   iframe.src =
     "https://s.tradingview.com/widgetembed/?" +
     "symbol=" + encodeURIComponent(symbol) +
-    "&interval=5" +
-    "&theme=dark" +
-    "&style=1" +
-    "&timezone=America%2FNew_York" +
-    "&symboledit=1" +
-    "&saveimage=0" +
-    "&hidesidetoolbar=0";
-
-  iframe.style.width = "100%";
-  iframe.style.height = "100%";
-  iframe.style.border = "none";
+    "&interval=5&theme=dark&style=1&timezone=America%2FNew_York" +
+    "&symboledit=1&saveimage=0&hidesidetoolbar=0&withdateranges=1";
+  iframe.style.cssText = "width:100%;height:100%;border:none;display:block;";
   iframe.setAttribute("scrolling", "no");
-
-  chart.appendChild(iframe);
+  container.appendChild(iframe);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("symbolForm");
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("symbolInput");
+  const loadBtn = document.getElementById("loadBtn");
 
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    loadChart();
+  loadBtn.addEventListener("click", () => loadChart());
+  input.addEventListener("keydown", e => { if (e.key === "Enter") loadChart(); });
+
+  document.querySelectorAll(".chip").forEach(btn => {
+    btn.addEventListener("click", () => loadChart(btn.dataset.symbol));
   });
 
-  document.querySelectorAll("[data-symbol]").forEach(function(button) {
-    button.addEventListener("click", function() {
-      loadChart(button.getAttribute("data-symbol"));
-    });
-  });
-
-  loadChart("NYSE:FTS");
+  loadChart("TSX:FTS");
 });
 </script>
 
 </body>
-</html>
 </html>

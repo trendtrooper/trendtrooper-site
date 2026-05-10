@@ -8,81 +8,419 @@ const initialSymbol = (symbolParam && symbolParam.trim())
 ---
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TrendTrooper — Chart</title>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TrendTrooper — Full Chart</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <body style="margin:0; background:#060913; color:#e9eefc; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;">
-    <div style="max-width:1200px; margin:0 auto; padding:16px;">
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px;">
-        <h1 style="margin:0; font-size:18px;">Chart</h1>
+    :root {
+      --bg: #060a0f;
+      --bg2: #0b1118;
+      --bg3: #0f1923;
+      --border: #1a2535;
+      --border2: #223044;
+      --green: #00ff88;
+      --blue: #38bdf8;
+      --text: #e5e7eb;
+      --muted: #6b7280;
+      --muted2: #9ca3af;
+    }
 
-        <div style="display:flex; gap:8px; align-items:center; flex:1; min-width:280px;">
-          <input
-            id="symbolInput"
-            value={initialSymbol}
-            placeholder="e.g. TSX:FTS, TSXV:NFG, NYSE:SPY"
-            style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; outline:none;"
-          />
-          <button
-            id="goBtn"
-            style="padding:10px 14px; border-radius:10px; border:1px solid #1d2747; background:#111a33; color:#e9eefc; cursor:pointer;"
-          >
-            Go
-          </button>
-        </div>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="qp" data-sym="TSX:FTS" style="padding:8px 10px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; cursor:pointer;">FTS</button>
-          <button class="qp" data-sym="TSX:CNQ" style="padding:8px 10px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; cursor:pointer;">CNQ</button>
-          <button class="qp" data-sym="TSX:HIVE" style="padding:8px 10px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; cursor:pointer;">HIVE</button>
-          <button class="qp" data-sym="TSXV:NFG" style="padding:8px 10px; border-radius:10px; border:1px solid #1d2747; background:#0b0f19; color:#e9eefc; cursor:pointer;">NFG</button>
-        </div>
-      </div>
+    /* ── HEADER ── */
+    header {
+      height: 60px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
 
-      <!-- Chart -->
-      <TradingViewAdvancedChart symbol={initialSymbol} interval="5" theme="dark" height={760} />
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted2);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      transition: all .15s;
+      flex-shrink: 0;
+    }
 
-      <p style="opacity:.7; margin-top:10px; font-size:12px;">
-        Shareable link example:
-        <code style="background:#0b0f19; padding:2px 6px; border-radius:6px;">/chart?symbol=TSX%3AFTS</code>
-      </p>
-    </div>
+    .back-link:hover { color: var(--green); border-color: var(--green); }
 
-    <script is:inline>
-      (function () {
-        const input = document.getElementById("symbolInput");
-        const btn = document.getElementById("goBtn");
-        const qpButtons = document.querySelectorAll(".qp");
+    .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 12px;
+      color: #020617;
+      flex-shrink: 0;
+    }
 
-        function normalizeSymbol(s) {
-          return (s || "").trim().toUpperCase();
-        }
+    .brand {
+      font-size: 15px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
 
-        function setSymbol(sym) {
-          const symbol = normalizeSymbol(sym);
-          if (!symbol) return;
+    /* ── SEARCH BAR ── */
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
 
-          input.value = symbol;
+    .exchange-select {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      flex-shrink: 0;
+    }
 
-          window.dispatchEvent(new CustomEvent("tt:setSymbol", { detail: { symbol } }));
+    .exchange-select:focus { border-color: var(--green); }
 
-          const url = new URL(window.location.href);
-          url.searchParams.set("symbol", symbol);
-          window.history.replaceState({}, "", url.toString());
-        }
+    .symbol-input {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 700;
+      flex: 1;
+      min-width: 120px;
+      max-width: 240px;
+      outline: none;
+      font-family: monospace;
+      transition: border-color .15s;
+    }
 
-        btn.addEventListener("click", () => setSymbol(input.value));
-        input.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") setSymbol(input.value);
-        });
+    .symbol-input:focus { border-color: var(--green); }
 
-        qpButtons.forEach((b) => {
-          b.addEventListener("click", () => setSymbol(b.getAttribute("data-sym")));
-        });
-      })();
-    </script>
-  </body>
+    .go-btn {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      color: #020617;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity .15s;
+    }
+
+    .go-btn:hover { opacity: .9; }
+
+    /* ── QUICK PICKS ── */
+    .quickpicks {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      flex-shrink: 0;
+    }
+
+    .qp-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+
+    .qp-group {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .qp-divider {
+      width: 1px;
+      height: 18px;
+      background: var(--border2);
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .qp {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--muted2);
+      padding: 5px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .12s;
+      font-family: monospace;
+      white-space: nowrap;
+    }
+
+    .qp:hover, .qp.active {
+      background: var(--green);
+      color: #020617;
+      border-color: var(--green);
+    }
+
+    /* ── CHART ── */
+    .chart-container {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-container > div {
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── STATUS BAR ── */
+    .statusbar {
+      height: 32px;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+
+    .status-item {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+
+    .status-sym {
+      font-weight: 800;
+      color: var(--text);
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      header { height: auto; padding: 10px 12px; }
+      .brand { display: none; }
+      .quickpicks { gap: 4px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="back-link" href="/">← Home</a>
+  <div class="logo">TT</div>
+  <span class="brand">TrendTrooper</span>
+
+  <div class="search-wrap">
+    <select class="exchange-select" id="exchangeSelect">
+      <option value="">Auto</option>
+      <optgroup label="Canadian">
+        <option value="TSX">TSX</option>
+        <option value="TSXV">TSXV</option>
+        <option value="CSE">CSE</option>
+      </optgroup>
+      <optgroup label="US">
+        <option value="NYSE">NYSE</option>
+        <option value="NASDAQ">NASDAQ</option>
+        <option value="AMEX">AMEX</option>
+        <option value="CBOE">CBOE</option>
+      </optgroup>
+    </select>
+
+    <input
+      id="symbolInput"
+      class="symbol-input"
+      value={initialSymbol}
+      placeholder="TSX:FTS, NVDA, SOXL…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+
+    <button class="go-btn" id="goBtn">Go</button>
+  </div>
+</header>
+
+<!-- QUICK PICKS -->
+<div class="quickpicks">
+  <span class="qp-label">CA</span>
+  <div class="qp-group">
+    <button class="qp" data-sym="TSX:FTS">FTS</button>
+    <button class="qp" data-sym="TSX:CNQ">CNQ</button>
+    <button class="qp" data-sym="TSX:HIVE">HIVE</button>
+    <button class="qp" data-sym="TSX:SU">SU</button>
+    <button class="qp" data-sym="TSX:RY">RY</button>
+    <button class="qp" data-sym="TSX:SHOP">SHOP</button>
+    <button class="qp" data-sym="TSX:ENB">ENB</button>
+    <button class="qp" data-sym="TSXV:NFG">NFG</button>
+  </div>
+
+  <div class="qp-divider"></div>
+  <span class="qp-label">US</span>
+  <div class="qp-group">
+    <button class="qp" data-sym="AMEX:SPY">SPY</button>
+    <button class="qp" data-sym="NASDAQ:QQQ">QQQ</button>
+    <button class="qp" data-sym="NASDAQ:NVDA">NVDA</button>
+    <button class="qp" data-sym="NASDAQ:SOXL">SOXL</button>
+    <button class="qp" data-sym="NASDAQ:TSLA">TSLA</button>
+    <button class="qp" data-sym="NASDAQ:AMD">AMD</button>
+    <button class="qp" data-sym="NASDAQ:META">META</button>
+    <button class="qp" data-sym="NASDAQ:MSFT">MSFT</button>
+    <button class="qp" data-sym="NASDAQ:AAPL">AAPL</button>
+    <button class="qp" data-sym="NASDAQ:AMZN">AMZN</button>
+    <button class="qp" data-sym="NASDAQ:GOOGL">GOOGL</button>
+    <button class="qp" data-sym="NASDAQ:COIN">COIN</button>
+    <button class="qp" data-sym="NASDAQ:MSTR">MSTR</button>
+    <button class="qp" data-sym="NASDAQ:TQQQ">TQQQ</button>
+    <button class="qp" data-sym="NASDAQ:SQQQ">SQQQ</button>
+    <button class="qp" data-sym="AMEX:IWM">IWM</button>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="chart-container">
+  <TradingViewAdvancedChart
+    symbol={initialSymbol}
+    interval="5"
+    theme="dark"
+    height={720}
+    autosize={true}
+  />
+</div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div class="status-item"><div class="dot"></div> Bot online</div>
+  <div class="status-item">Symbol: <span class="status-sym" id="activeSym">{initialSymbol}</span></div>
+  <div class="status-item">Interval: <span style="color: var(--text); font-weight:700;">5m</span></div>
+  <div class="status-item" style="margin-left:auto;">
+    Shareable: <code id="shareLink" style="font-size:11px; background:var(--bg); padding:2px 8px; border-radius:5px; color:var(--muted2);"></code>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  const KNOWN = {
+    FTS: "TSX:FTS", CNQ: "TSX:CNQ", HIVE: "TSX:HIVE", SU: "TSX:SU",
+    RY: "TSX:RY", TD: "TSX:TD", ENB: "TSX:ENB", BCE: "TSX:BCE",
+    SHOP: "TSX:SHOP", NFG: "TSXV:NFG",
+    SPY: "AMEX:SPY", QQQ: "NASDAQ:QQQ", NVDA: "NASDAQ:NVDA",
+    SOXL: "NASDAQ:SOXL", TSLA: "NASDAQ:TSLA", AMD: "NASDAQ:AMD",
+    META: "NASDAQ:META", MSFT: "NASDAQ:MSFT", AAPL: "NASDAQ:AAPL",
+    AMZN: "NASDAQ:AMZN", GOOGL: "NASDAQ:GOOGL", COIN: "NASDAQ:COIN",
+    MSTR: "NASDAQ:MSTR", IWM: "AMEX:IWM", DIA: "AMEX:DIA",
+    TQQQ: "NASDAQ:TQQQ", SQQQ: "NASDAQ:SQQQ",
+  };
+
+  const input = document.getElementById("symbolInput");
+  const btn = document.getElementById("goBtn");
+  const exchSel = document.getElementById("exchangeSelect");
+  const activeSym = document.getElementById("activeSym");
+  const shareLink = document.getElementById("shareLink");
+
+  function normalizeSymbol(raw, exchOverride) {
+    let s = (raw || "").trim().toUpperCase().replace(/\s+/g, "");
+    if (!s) return "TSX:FTS";
+    if (s.includes(":")) return s;
+    if (exchOverride) return exchOverride + ":" + s;
+    return KNOWN[s] || "TSX:" + s;
+  }
+
+  function setSymbol(sym) {
+    const symbol = normalizeSymbol(sym, exchSel.value || null);
+    if (!symbol) return;
+
+    input.value = symbol;
+    if (activeSym) activeSym.textContent = symbol;
+
+    document.querySelectorAll(".qp").forEach(b => {
+      b.classList.toggle("active", b.dataset.sym === symbol);
+    });
+
+    if (shareLink) {
+      shareLink.textContent = "/chart?symbol=" + encodeURIComponent(symbol);
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("symbol", symbol);
+    window.history.replaceState({}, "", url.toString());
+
+    window.dispatchEvent(new CustomEvent("tt:setSymbol", { detail: { symbol } }));
+  }
+
+  btn.addEventListener("click", () => setSymbol(input.value));
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") setSymbol(input.value); });
+  document.querySelectorAll(".qp").forEach((b) => {
+    b.addEventListener("click", () => setSymbol(b.dataset.sym));
+  });
+
+  // Set initial state
+  const initSym = input.value;
+  if (activeSym) activeSym.textContent = initSym;
+  if (shareLink) shareLink.textContent = "/chart?symbol=" + encodeURIComponent(initSym);
+  document.querySelectorAll(".qp").forEach(b => {
+    b.classList.toggle("active", b.dataset.sym === initSym);
+  });
+})();
+</script>
+
+</body>
 </html>
