@@ -760,7 +760,11 @@ footer {
       <div class="stat"><span>IBKR</span><strong id="ibkrStatus" style="color:var(--muted2)">—</strong></div>
       <div class="stat"><span>Mode</span><strong id="botMode" style="color:var(--muted2)">—</strong></div>
       <div class="stat"><span>Positions</span><strong id="posCount" style="color:var(--muted2)">—</strong></div>
+      <div class="stat"><span>Today's Trades</span><strong id="todayTrades" style="color:var(--muted2)">—</strong></div>
+      <div class="stat"><span>Daily P&L</span><strong id="dailyPnl" style="color:var(--muted2)">—</strong></div>
     </div>
+
+    <div id="positionBoard" style="margin-bottom:12px;"></div>
 
     <div class="panel-title" style="margin-top:4px;">Recent Signals</div>
     <div id="signalBoard">
@@ -1120,23 +1124,35 @@ function fetchBotStatus() {
     .catch(() => updateBotUI(null));
 }
 
+function fmtPnl(val) {
+  if (val === null || val === undefined) return "—";
+  const sign = val >= 0 ? "+" : "";
+  return sign + "$" + val.toFixed(2);
+}
+
 function updateBotUI(d) {
-  const botStatus  = document.getElementById("botStatus");
-  const ibkrStatus = document.getElementById("ibkrStatus");
-  const botMode    = document.getElementById("botMode");
-  const posCount   = document.getElementById("posCount");
-  const signalBoard = document.getElementById("signalBoard");
-  const botFooter  = document.getElementById("botFooter");
-  const lastUpdated = document.getElementById("lastUpdated");
-  const botDot     = document.getElementById("botDot");
+  const botStatus    = document.getElementById("botStatus");
+  const ibkrStatus   = document.getElementById("ibkrStatus");
+  const botMode      = document.getElementById("botMode");
+  const posCount     = document.getElementById("posCount");
+  const todayTrades  = document.getElementById("todayTrades");
+  const dailyPnl     = document.getElementById("dailyPnl");
+  const positionBoard = document.getElementById("positionBoard");
+  const signalBoard  = document.getElementById("signalBoard");
+  const botFooter    = document.getElementById("botFooter");
+  const lastUpdated  = document.getElementById("lastUpdated");
+  const botDot       = document.getElementById("botDot");
 
   if (!d) {
     if (botStatus)  { botStatus.textContent = "Offline"; botStatus.style.color = "var(--red)"; }
     if (ibkrStatus) { ibkrStatus.textContent = "—"; ibkrStatus.style.color = "var(--muted)"; }
     if (botMode)    { botMode.textContent = "—"; }
     if (posCount)   { posCount.textContent = "—"; }
+    if (todayTrades){ todayTrades.textContent = "—"; }
+    if (dailyPnl)   { dailyPnl.textContent = "—"; dailyPnl.style.color = "var(--muted2)"; }
     if (botFooter)  { botFooter.textContent = "Bot offline"; }
     if (botDot)     { botDot.style.background = "var(--red)"; }
+    if (positionBoard) { positionBoard.innerHTML = ""; }
     if (signalBoard) { signalBoard.innerHTML = '<div class="signal-row" style="color:var(--muted);font-size:13px;padding:16px 0;">Bot is offline</div>'; }
     return;
   }
@@ -1147,10 +1163,36 @@ function updateBotUI(d) {
     ibkrStatus.textContent = d.ibkr_connected ? "Connected" : "Disconnected";
     ibkrStatus.style.color = d.ibkr_connected ? "var(--green)" : "var(--yellow)";
   }
-  if (botMode)  { botMode.textContent = d.mode || "—"; botMode.style.color = "var(--text)"; }
-  if (posCount) { posCount.textContent = (d.positions || []).length; posCount.style.color = "var(--text)"; }
-  if (botFooter) { botFooter.textContent = "Bot online · " + (d.mode || ""); }
+  if (botMode)     { botMode.textContent = d.mode || "—"; botMode.style.color = "var(--text)"; }
+  if (posCount)    { posCount.textContent = (d.positions || []).length; posCount.style.color = "var(--text)"; }
+  if (todayTrades) { todayTrades.textContent = d.today_trades ?? "—"; todayTrades.style.color = "var(--text)"; }
+  if (dailyPnl && d.daily_pnl !== undefined) {
+    dailyPnl.textContent = fmtPnl(d.daily_pnl);
+    dailyPnl.style.color = d.daily_pnl >= 0 ? "var(--green)" : "var(--red)";
+  }
+  if (botFooter)   { botFooter.textContent = "Bot online · " + (d.mode || ""); }
   if (lastUpdated && d.timestamp) { lastUpdated.textContent = timeAgo(d.timestamp); }
+
+  // Open positions detail
+  if (positionBoard) {
+    const positions = d.positions || [];
+    if (positions.length) {
+      positionBoard.innerHTML = positions.map(p => {
+        const unreal = p.unrealized_pnl;
+        const pnlStr = unreal !== null && unreal !== undefined ? fmtPnl(unreal) : "";
+        const pnlColor = unreal >= 0 ? "var(--green)" : "var(--red)";
+        const lastStr = p.last ? " · $" + p.last.toFixed(2) : "";
+        return `<div class="signal-row" style="font-size:12px;">
+          <div>
+            <div class="signal-name">${p.symbol} · ${p.qty} shares @ $${p.avg_cost}${lastStr}</div>
+          </div>
+          ${pnlStr ? `<span style="color:${pnlColor};font-weight:700;font-size:12px;">${pnlStr}</span>` : ""}
+        </div>`;
+      }).join("");
+    } else {
+      positionBoard.innerHTML = "";
+    }
+  }
 
   if (signalBoard) {
     const sigs = d.last_signals || [];
@@ -1162,12 +1204,13 @@ function updateBotUI(d) {
       const ticker  = s.ticker || s.symbol || "—";
       const action  = (s.action || "").toUpperCase();
       const price   = s.price ? " · $" + s.price : "";
+      const shares  = s.shares ? ` · ${s.shares} shares` : "";
       const time    = s.time ? new Date(s.time).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}) : "";
       const badgeClass = action === "BUY" ? "badge-long" : action === "SELL" ? "badge-short" : "badge-wait";
       const label   = action === "BUY" ? "LONG" : action === "SELL" ? "EXIT" : action;
       return `<div class="signal-row">
         <div>
-          <div class="signal-name">${ticker}${price}</div>
+          <div class="signal-name">${ticker}${price}${shares}</div>
           <div class="signal-ticker">${time}</div>
         </div>
         <span class="badge ${badgeClass}">${label}</span>
