@@ -708,6 +708,7 @@ footer {
     <a href="#markets">Markets</a>
     <a href="#pricing">Pricing</a>
     <a href="/chart">Full Chart</a>
+    <a href="/academy">Academy</a>
     <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
     <a href="#pricing" class="nav-cta">Get Started</a>
   </nav>
@@ -1038,6 +1039,7 @@ footer {
 
     <div class="footer-col">
       <h4>Resources</h4>
+      <a href="/academy">Academy</a>
       <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
       <a href="https://www.tradingview.com/chart/ny1aIlyu/" target="_blank">TradingView Layout</a>
     </div>
@@ -1052,11 +1054,9 @@ footer {
 <script>
 // ── Symbol normalization ──
 const KNOWN = {
-  // Canadian
   FTS: "TSX:FTS", CNQ: "TSX:CNQ", HIVE: "TSX:HIVE", SU: "TSX:SU",
   RY: "TSX:RY", TD: "TSX:TD", ENB: "TSX:ENB", BCE: "TSX:BCE",
   SHOP: "TSX:SHOP", NFG: "TSXV:NFG",
-  // US
   SPY: "AMEX:SPY", QQQ: "NASDAQ:QQQ", NVDA: "NASDAQ:NVDA",
   SOXL: "NASDAQ:SOXL", TSLA: "NASDAQ:TSLA", AMD: "NASDAQ:AMD",
   META: "NASDAQ:META", MSFT: "NASDAQ:MSFT", AAPL: "NASDAQ:AAPL",
@@ -1080,7 +1080,6 @@ function loadChart(symbolRaw) {
 
   input.value = symbol;
 
-  // Update active chip
   document.querySelectorAll(".chip").forEach(c => {
     c.classList.toggle("active", c.dataset.symbol === symbol);
   });
@@ -1137,17 +1136,17 @@ function fmtPnl(val) {
 }
 
 function updateBotUI(d) {
-  const botStatus    = document.getElementById("botStatus");
-  const ibkrStatus   = document.getElementById("ibkrStatus");
-  const botMode      = document.getElementById("botMode");
-  const posCount     = document.getElementById("posCount");
-  const todayTrades  = document.getElementById("todayTrades");
-  const dailyPnl     = document.getElementById("dailyPnl");
+  const botStatus     = document.getElementById("botStatus");
+  const ibkrStatus    = document.getElementById("ibkrStatus");
+  const botMode       = document.getElementById("botMode");
+  const posCount      = document.getElementById("posCount");
+  const todayTrades   = document.getElementById("todayTrades");
+  const dailyPnl      = document.getElementById("dailyPnl");
   const positionBoard = document.getElementById("positionBoard");
-  const signalBoard  = document.getElementById("signalBoard");
-  const botFooter    = document.getElementById("botFooter");
-  const lastUpdated  = document.getElementById("lastUpdated");
-  const botDot       = document.getElementById("botDot");
+  const signalBoard   = document.getElementById("signalBoard");
+  const botFooter     = document.getElementById("botFooter");
+  const lastUpdated   = document.getElementById("lastUpdated");
+  const botDot        = document.getElementById("botDot");
 
   if (!d) {
     if (botStatus)  { botStatus.textContent = "Offline"; botStatus.style.color = "var(--red)"; }
@@ -1179,7 +1178,6 @@ function updateBotUI(d) {
   if (botFooter)   { botFooter.textContent = "Bot online · " + (d.mode || ""); }
   if (lastUpdated && d.timestamp) { lastUpdated.textContent = timeAgo(d.timestamp); }
 
-  // Open positions detail
   if (positionBoard) {
     const positions = d.positions || [];
     if (positions.length) {
