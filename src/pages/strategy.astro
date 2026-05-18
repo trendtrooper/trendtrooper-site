@@ -220,7 +220,7 @@ atr    = <span class="fn">ta.atr</span>(atrLen)
 vwap   = <span class="fn">ta.vwap</span>(hlc3)
 
 <span class="cmt">// — Conditions —</span>
-bullish = ema9 > ema20 <span class="kw">and</span> close > vwap <span class="kw">and</span> rsi > <span class="num">50</span> <span class="kw">and</span> rsi < <span class="num">70</span>
+bullish = ema9 > ema20 <span class="kw">and</span> close > vwap <span class="kw">and</span> rsi > <span class="num">50</span> <span class="kw">and</span> rsi &lt; <span class="num">70</span>
 bearish = ema9 < ema20 <span class="kw">and</span> close < vwap <span class="kw">and</span> rsi < <span class="num">50</span> <span class="kw">and</span> rsi > <span class="num">30</span>
 
 <span class="cmt">// — Entries —</span>
