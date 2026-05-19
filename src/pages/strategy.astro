@@ -35,7 +35,6 @@
     .btn:hover{background:rgba(255,255,255,.08)}
     .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#070e1c;font-weight:700}
     .wrap{max-width:var(--max);margin:0 auto;padding:48px 24px}
-    /* HERO */
     .strat-hero{text-align:center;padding-bottom:48px;border-bottom:1px solid var(--border2);margin-bottom:48px}
     .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;border:1px solid rgba(110,231,255,.25);background:rgba(110,231,255,.07);color:var(--accent);font-size:12.5px;font-weight:600;margin-bottom:20px}
     .strat-hero h1{font-size:clamp(32px,4vw,52px);font-weight:700;letter-spacing:-.6px;margin-bottom:16px;line-height:1.1}
@@ -45,7 +44,6 @@
     .hs{text-align:center}
     .hs .v{font-size:28px;font-weight:700;font-family:var(--mono);color:var(--accent)}
     .hs .l{font-size:12px;color:var(--muted);margin-top:3px}
-    /* PIPELINE */
     .pipeline{display:flex;align-items:stretch;gap:0;margin-bottom:48px;overflow-x:auto}
     .pipe-step{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border2);padding:20px 16px;position:relative;text-align:center}
     .pipe-step:first-child{border-radius:var(--r) 0 0 var(--r)}
@@ -55,7 +53,6 @@
     .pipe-icon{font-size:24px;margin-bottom:10px}
     .pipe-step h3{font-size:13px;font-weight:700;margin-bottom:6px}
     .pipe-step p{font-size:11.5px;color:var(--muted);line-height:1.5}
-    /* SECTIONS */
     .section{margin-bottom:48px}
     .sec-label{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:1px;font-family:var(--mono);margin-bottom:8px}
     .section h2{font-size:22px;font-weight:700;margin-bottom:6px}
@@ -65,14 +62,12 @@
     .card{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);padding:20px}
     .card h4{font-size:14px;font-weight:700;margin-bottom:8px}
     .card p{color:var(--muted);font-size:13px;line-height:1.55}
-    /* CODE BLOCK */
     .code-block{border-radius:var(--r);border:1px solid var(--border2);background:#040b18;overflow:hidden;margin-bottom:24px}
     .code-head{padding:12px 16px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between}
     .code-head span{font-size:12px;color:var(--muted);font-family:var(--mono)}
     .code-head .lang{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(110,231,255,.10);color:var(--accent);border:1px solid rgba(110,231,255,.2)}
     .code-body{padding:16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto;color:rgba(220,240,255,.85)}
     .kw{color:#a78bfa}.str{color:#22d673}.num{color:#6ee7ff}.cmt{color:#4a6490}.fn{color:#f59e0b}
-    /* RULES LIST */
     .rules{display:grid;gap:10px}
     .rule{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:12px;border:1px solid var(--border2);background:rgba(255,255,255,.025)}
     .rule-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto}
@@ -81,7 +76,6 @@
     .rule-icon.b{background:rgba(110,231,255,.10);border:1px solid rgba(110,231,255,.2)}
     .rule b{display:block;font-size:13.5px;margin-bottom:3px}
     .rule small{color:var(--muted);font-size:12.5px;line-height:1.5}
-    /* SWITCH LOGIC */
     .switch-table{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);overflow:hidden}
     table{width:100%;border-collapse:collapse}
     th{padding:12px 16px;font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:.8px;text-align:left;border-bottom:1px solid var(--border2);background:rgba(255,255,255,.02)}
@@ -92,13 +86,11 @@
     .tag.buy{background:rgba(34,214,115,.12);border:1px solid rgba(34,214,115,.3);color:var(--green)}
     .tag.sell{background:rgba(255,92,106,.12);border:1px solid rgba(255,92,106,.3);color:var(--red)}
     .tag.hold{background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
-    /* BACKTEST CHART */
     .chart-wrap{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);overflow:hidden}
     .chart-head{padding:14px 18px;border-bottom:1px solid var(--border2);display:flex;justify-content:space-between;align-items:center}
     .chart-head h3{font-size:14px;font-weight:700}
     .chart-body{padding:20px}
     .chart-container{position:relative;width:100%;height:260px}
-    /* DISCLAIMER */
     .disclaimer{padding:16px 20px;border-radius:12px;border:1px solid rgba(245,158,11,.2);background:rgba(245,158,11,.06);color:rgba(245,158,11,.85);font-size:12.5px;line-height:1.6;margin-top:24px}
     footer{max-width:var(--max);margin:40px auto 0;padding:24px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted2);font-size:13px}
     .foot-links{display:flex;gap:18px}.foot-links a:hover{color:var(--muted)}
@@ -185,11 +177,11 @@
       <table>
         <thead><tr><th>CONDITION</th><th>INDICATORS</th><th>ACTION</th><th>ETF TARGET</th></tr></thead>
         <tbody>
-          <tr><td>Strong bullish trend</td><td style="font-family:var(--mono);font-size:12px">EMA9 > EMA20 · Price > VWAP · RSI 50–70</td><td><span class="tag buy">BUY BULL</span></td><td style="color:var(--green);font-family:var(--mono)">SPXL / TQQQ</td></tr>
+          <tr><td>Strong bullish trend</td><td style="font-family:var(--mono);font-size:12px">EMA9 &gt; EMA20 · Price &gt; VWAP · RSI 50–70</td><td><span class="tag buy">BUY BULL</span></td><td style="color:var(--green);font-family:var(--mono)">SPXL / TQQQ</td></tr>
           <tr><td>Momentum confirmed</td><td style="font-family:var(--mono);font-size:12px">MACD histogram positive · ATR expanding</td><td><span class="tag buy">HOLD BULL</span></td><td style="color:var(--green);font-family:var(--mono)">SPXL / TQQQ</td></tr>
           <tr><td>Trend weakening</td><td style="font-family:var(--mono);font-size:12px">EMA crossunder · RSI near 50 · MACD flat</td><td><span class="tag hold">CLOSE</span></td><td style="color:var(--amber);font-family:var(--mono)">CASH</td></tr>
-          <tr><td>Bearish momentum</td><td style="font-family:var(--mono);font-size:12px">EMA9 < EMA20 · Price < VWAP · RSI 30–50</td><td><span class="tag sell">BUY BEAR</span></td><td style="color:var(--red);font-family:var(--mono)">SPXS / SQQQ</td></tr>
-          <tr><td>Oversold extreme</td><td style="font-family:var(--mono);font-size:12px">RSI < 30 · VIX spike · ATR elevated</td><td><span class="tag hold">WAIT</span></td><td style="color:var(--amber);font-family:var(--mono)">NO TRADE</td></tr>
+          <tr><td>Bearish momentum</td><td style="font-family:var(--mono);font-size:12px">EMA9 &lt; EMA20 · Price &lt; VWAP · RSI 30–50</td><td><span class="tag sell">BUY BEAR</span></td><td style="color:var(--red);font-family:var(--mono)">SPXS / SQQQ</td></tr>
+          <tr><td>Oversold extreme</td><td style="font-family:var(--mono);font-size:12px">RSI &lt; 30 · VIX spike · ATR elevated</td><td><span class="tag hold">WAIT</span></td><td style="color:var(--amber);font-family:var(--mono)">NO TRADE</td></tr>
         </tbody>
       </table>
     </div>
@@ -220,7 +212,8 @@ atr    = <span class="fn">ta.atr</span>(atrLen)
 vwap   = <span class="fn">ta.vwap</span>(hlc3)
 
 <span class="cmt">// — Conditions —</span>
-bearish = ema9 < ema20 <span class="kw">and</span> close < vwap <span class="kw">and</span> rsi < <span class="num">50</span> <span class="kw">and</span> rsi > <span class="num">30</span>
+bullish = ema9 &gt; ema20 <span class="kw">and</span> close &gt; vwap <span class="kw">and</span> rsi &gt; <span class="num">50</span> <span class="kw">and</span> rsi &lt; <span class="num">70</span>
+bearish = ema9 &lt; ema20 <span class="kw">and</span> close &lt; vwap <span class="kw">and</span> rsi &lt; <span class="num">50</span> <span class="kw">and</span> rsi &gt; <span class="num">30</span>
 
 <span class="cmt">// — Entries —</span>
 <span class="kw">if</span> <span class="fn">ta.crossover</span>(ema9, ema20) <span class="kw">and</span> bullish
@@ -240,12 +233,12 @@ bearish = ema9 < ema20 <span class="kw">and</span> close < vwap <span class="kw"
   <!-- RISK RULES -->
   <div class="section">
     <div class="sec-label">RISK RULES</div>
-    <h2>Guardrails & Safety Controls</h2>
+    <h2>Guardrails &amp; Safety Controls</h2>
     <p class="sub">These rules run before every order. A single failed check cancels the trade and logs the reason.</p>
     <div class="two-col">
       <div class="rules">
         <div class="rule"><div class="rule-icon g">✓</div><div><b>Max 1% risk per trade</b><small>Dollar risk = account × 1%. Position size = dollar risk ÷ ATR stop distance.</small></div></div>
-        <div class="rule"><div class="rule-icon g">✓</div><div><b>Max 3% daily loss limit</b><small>If total daily P&L reaches -3%, all trading halts until next session open.</small></div></div>
+        <div class="rule"><div class="rule-icon g">✓</div><div><b>Max 3% daily loss limit</b><small>If total daily P&amp;L reaches -3%, all trading halts until next session open.</small></div></div>
         <div class="rule"><div class="rule-icon g">✓</div><div><b>Signal authentication</b><small>Every webhook validated against shared secret. Unsigned requests rejected instantly.</small></div></div>
         <div class="rule"><div class="rule-icon b">✓</div><div><b>Replay protection</b><small>Each signal carries a unique signal_id. Duplicates within 60s window are dropped.</small></div></div>
       </div>
@@ -268,7 +261,7 @@ bearish = ema9 < ema20 <span class="kw">and</span> close < vwap <span class="kw"
         <h3>Portfolio Equity — Simulated 6 Month Run</h3>
         <div style="display:flex;gap:14px;font-size:12px;font-family:var(--mono)">
           <span style="color:var(--green)">● Strategy</span>
-          <span style="color:var(--muted)">● Buy & Hold SPX</span>
+          <span style="color:var(--muted)">● Buy &amp; Hold SPX</span>
         </div>
       </div>
       <div class="chart-body">
@@ -315,7 +308,6 @@ bearish = ema9 < ema20 <span class="kw">and</span> close < vwap <span class="kw"
 <script>
 document.getElementById('yr').textContent=new Date().getFullYear();
 
-// Generate simulated equity curves
 const n=120;
 const labels=[...Array(n)].map((_,i)=>{
   const d=new Date(2024,10,1);d.setDate(d.getDate()+i);
