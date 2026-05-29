@@ -1169,21 +1169,13 @@ function updateBotUI(d) {
     ibkrStatus.style.color = d.ibkr_connected ? "var(--green)" : "var(--yellow)";
   }
   if (botMode)     { botMode.textContent = d.mode || "—"; botMode.style.color = "var(--text)"; }
-  if (posCount)    { posCount.textContent = d.positions_count ?? d.positions ?? 0; posCount.style.color = "var(--text)"; }
+  if (posCount)    { posCount.textContent = (d.positions || []).length; posCount.style.color = "var(--text)"; }
   if (todayTrades) { todayTrades.textContent = d.today_trades ?? "—"; todayTrades.style.color = "var(--text)"; }
   if (dailyPnl && d.daily_pnl !== undefined) {
     dailyPnl.textContent = fmtPnl(d.daily_pnl);
     dailyPnl.style.color = d.daily_pnl >= 0 ? "var(--green)" : "var(--red)";
   }
-  if (botFooter) {
-    if (d.trading_halted) {
-      botFooter.textContent = "⚠ TRADING HALTED — " + (d.halt_reason || "");
-      botFooter.style.color = "var(--red)";
-    } else {
-      botFooter.textContent = "Bot online · " + (d.mode || "");
-      botFooter.style.color = "";
-    }
-  }
+  if (botFooter)   { botFooter.textContent = "Bot online · " + (d.mode || ""); }
   if (lastUpdated && d.timestamp) { lastUpdated.textContent = timeAgo(d.timestamp); }
 
   if (positionBoard) {
@@ -1212,17 +1204,17 @@ function updateBotUI(d) {
       signalBoard.innerHTML = '<div class="signal-row" style="color:var(--muted);font-size:13px;padding:16px 0;">No signals yet</div>';
       return;
     }
-    signalBoard.innerHTML = sigs.map(s => {
+    signalBoard.innerHTML = [...sigs].reverse().map(s => {
       const ticker  = s.ticker || s.symbol || "—";
       const action  = (s.action || "").toUpperCase();
       const price   = s.price ? " · $" + s.price : "";
-      const qty     = s.qty ? ` · ${s.qty} shares` : "";
-      const time    = s.time ? s.time.substring(11, 16) : "";
+      const shares  = s.shares ? ` · ${s.shares} shares` : "";
+      const time    = s.time ? new Date(s.time).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}) : "";
       const badgeClass = action === "BUY" ? "badge-long" : action === "SELL" ? "badge-short" : "badge-wait";
       const label   = action === "BUY" ? "LONG" : action === "SELL" ? "EXIT" : action;
       return `<div class="signal-row">
         <div>
-          <div class="signal-name">${ticker}${price}${qty}</div>
+          <div class="signal-name">${ticker}${price}${shares}</div>
           <div class="signal-ticker">${time}</div>
         </div>
         <span class="badge ${badgeClass}">${label}</span>
