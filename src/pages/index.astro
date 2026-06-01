@@ -710,8 +710,81 @@ footer{
   section{padding:60px 20px;}
   header{padding:0 20px;}
   .footer-inner{grid-template-columns:1fr;gap:32px;}
-  nav a:not(.nav-cta){display:none;}
+  nav{display:none;}
+  .hamburger{display:flex;}
 }
+
+/* ── HAMBURGER ── */
+.hamburger{
+  display:none;flex-direction:column;justify-content:center;gap:5px;
+  background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;
+}
+.hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* ── MOBILE MENU ── */
+.mobile-menu{
+  display:none;position:sticky;top:70px;z-index:99;
+  background:rgba(2,5,20,0.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);flex-direction:column;padding:8px 20px 16px;
+}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{
+  color:var(--muted2);text-decoration:none;font-weight:600;
+  font-size:15px;letter-spacing:1px;padding:12px 0;
+  border-bottom:1px solid var(--border);transition:color .15s;cursor:pointer;
+}
+.mobile-menu a:last-child{border-bottom:none;}
+.mobile-menu a:hover{color:var(--cyan);}
+.mobile-menu .m-cta{color:var(--cyan) !important;font-weight:800;}
+
+/* ── WAITLIST MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(2,5,20,0.88);backdrop-filter:blur(12px);
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:#04081e;border:1px solid rgba(0,200,255,0.25);
+  border-radius:20px;padding:44px 40px;max-width:460px;width:100%;
+  position:relative;text-align:center;
+}
+.modal-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);
+}
+.modal-close{
+  position:absolute;top:14px;right:18px;background:none;border:none;
+  color:var(--muted2);font-size:26px;cursor:pointer;line-height:1;transition:color .15s;
+}
+.modal-close:hover{color:var(--text);}
+.modal-email-input{
+  width:100%;padding:13px 16px;border-radius:10px;
+  border:1px solid var(--border2);background:rgba(255,255,255,0.04);
+  color:var(--text);font-size:14px;font-family:'Rajdhani',sans-serif;
+  outline:none;transition:border-color .15s;margin-bottom:12px;letter-spacing:.5px;
+}
+.modal-email-input:focus{border-color:var(--cyan);}
+.modal-email-input.error{border-color:var(--red);}
+.modal-success{display:none;}
+
+/* ── FAQ ── */
+.faq-bg{background:rgba(4,8,30,0.6);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.faq-grid{display:grid;gap:10px;max-width:800px;margin:0 auto;}
+.faq-item{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.faq-q{
+  padding:18px 22px;font-weight:700;font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  transition:color .15s;user-select:none;
+}
+.faq-q:hover{color:var(--cyan);}
+.faq-toggle{color:var(--cyan);font-size:22px;font-weight:300;line-height:1;flex-shrink:0;transition:transform .2s;}
+.faq-item.open .faq-toggle{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;color:var(--muted2);font-size:14px;line-height:1.7;transition:max-height .35s ease,padding .35s ease;padding:0 22px;}
+.faq-item.open .faq-a{max-height:250px;padding:0 22px 18px;}
 </style>
 </head>
 
@@ -737,7 +810,20 @@ footer{
     <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
     <a href="#pricing" class="nav-cta">Get Started</a>
   </nav>
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Open navigation">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features" onclick="closeMobileMenu()">Features</a>
+  <a href="#chart" onclick="closeMobileMenu()">Live Chart</a>
+  <a href="#markets" onclick="closeMobileMenu()">Markets</a>
+  <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+  <a href="/chart">Full Chart</a>
+  <a href="/academy">Academy</a>
+  <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+  <a class="m-cta" onclick="openWaitlist();closeMobileMenu()">Get Started →</a>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -746,10 +832,6 @@ footer{
       <span class="pulse"></span>
       Live Signals Active
     </div>
-    <div class="test-badge">
-      ⚠ This site is in testing mode — not open to subscribers yet
-    </div>
-
     <h1>
       Algorithmic<br>
       <span class="accent">Trading Signals</span>
@@ -761,7 +843,7 @@ footer{
     </p>
 
     <div class="hero-actions">
-      <a class="btn btn-primary" href="#pricing">Start Free Trial</a>
+      <a class="btn btn-primary" href="#" onclick="openWaitlist();return false;">Join Waitlist</a>
       <a class="btn btn-secondary" href="#chart">View Live Chart</a>
     </div>
 
@@ -981,7 +1063,7 @@ footer{
           <li>Signal board (delayed)</li>
           <li>1 watchlist ticker</li>
         </ul>
-        <a href="#" class="plan-btn">Get Started Free</a>
+        <a href="#" class="plan-btn" onclick="openWaitlist();return false;">Get Started Free</a>
       </div>
 
       <div class="pricing-card featured">
@@ -997,7 +1079,7 @@ footer{
           <li>Bot status dashboard</li>
           <li>Email support</li>
         </ul>
-        <a href="#" class="plan-btn primary-btn">Start Pro Trial</a>
+        <a href="#" class="plan-btn primary-btn" onclick="openWaitlist();return false;">Start Pro Trial</a>
       </div>
 
       <div class="pricing-card">
@@ -1011,7 +1093,42 @@ footer{
           <li>Position sizing automation</li>
           <li>Priority support</li>
         </ul>
-        <a href="#" class="plan-btn">Join Waitlist</a>
+        <a href="#" class="plan-btn" onclick="openWaitlist();return false;">Join Waitlist</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-bg" id="faq">
+  <div class="section-inner">
+    <div class="section-label">FAQ</div>
+    <h2 style="text-align:center;">Common Questions</h2>
+    <p class="section-sub" style="text-align:center;margin:0 auto 48px;">Everything traders ask before getting started.</p>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">Is TrendTrooper financial advice?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">No. TrendTrooper is algorithmic signal software, not a registered investment adviser. All signals are generated by an automated algorithm. You are solely responsible for your trading decisions and any outcomes.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What broker do I need?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">For manual signal trading, no specific broker is required — signals can be delivered via TradingView alerts. For automated execution, TrendTrooper integrates with Interactive Brokers (IBKR) via their API.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How are signals delivered?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">Signals are delivered via TradingView alerts (desktop/mobile push notifications), webhook to your own server, and the live bot status dashboard. Pro subscribers get real-time delivery; the free tier shows delayed signals.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What markets does TrendTrooper cover?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">TrendTrooper covers Canadian equities (TSX, TSXV), US equities (NYSE, NASDAQ, AMEX), leveraged ETFs, and major forex pairs. Any symbol searchable on TradingView can be added to your watchlist.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is there a free trial?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">TrendTrooper is currently in private beta. The Free tier will offer delayed signals and live chart access with no credit card required. Join the waitlist to be notified when access opens.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What timeframe does the algorithm use?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">The primary signal timeframe is the 5-minute chart. The momentum algorithm scans for entry setups on 5-minute bars and applies a trend filter to confirm direction — no manual chart reading required.</div>
       </div>
     </div>
   </div>
@@ -1024,7 +1141,7 @@ footer{
       <h2>Ready to trade with an edge?</h2>
       <p>Join TrendTrooper and get algorithmic signals built for Canadian and US markets — starting free.</p>
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
-        <a class="btn btn-primary" href="#pricing">Start Free Trial</a>
+        <a class="btn btn-primary" href="#" onclick="openWaitlist();return false;">Join Waitlist</a>
         <a class="btn btn-secondary" href="/chart">Open Full Chart</a>
       </div>
     </div>
@@ -1060,7 +1177,7 @@ footer{
   </div>
 
   <div class="footer-bottom">
-    <span>© 2025 TrendTrooper. All rights reserved.</span>
+    <span>© <span id="copyrightYear"></span> TrendTrooper. All rights reserved.</span>
     <span>Not financial advice. Trade at your own risk.</span>
   </div>
 </footer>
@@ -1109,6 +1226,7 @@ function updateBotUI(d){
     if(get("botStatus")){get("botStatus").textContent="Offline";get("botStatus").style.color="var(--red)";}
     if(get("botDot"))get("botDot").style.background="var(--red)";
     if(get("botFooter"))get("botFooter").textContent="Bot offline";
+    if(get("lastUpdated"))get("lastUpdated").textContent="Checked "+new Date().toLocaleTimeString();
     if(get("signalBoard"))get("signalBoard").innerHTML='<div class="signal-row" style="color:var(--muted2);font-size:13px;padding:16px 0;">Bot is offline</div>';
     return;
   }
@@ -1120,9 +1238,88 @@ function updateBotUI(d){
   if(get("todayTrades")){get("todayTrades").textContent=d.trades??0;get("todayTrades").style.color="var(--cyan)";}
   if(get("dailyPnl")&&d.daily_pnl!==undefined){get("dailyPnl").textContent=fmtPnl(d.daily_pnl);get("dailyPnl").style.color=d.daily_pnl>=0?"var(--green)":"var(--red)";}
   if(get("botFooter"))get("botFooter").textContent="Bot online · "+(d.mode||"");
-  if(get("signalBoard"))get("signalBoard").innerHTML='<div class="signal-row" style="color:var(--muted2);font-size:13px;padding:16px 0;letter-spacing:1px;">No signals yet</div>';
+  if(get("lastUpdated"))get("lastUpdated").textContent=d.timestamp?timeAgo(d.timestamp):"Updated "+new Date().toLocaleTimeString();
+  if(get("signalBoard")){
+    const trades=d.recent_trades||d.signals||[];
+    if(trades.length>0){
+      get("signalBoard").innerHTML=trades.slice(0,3).map(t=>{
+        const act=(t.action||t.direction||"").toUpperCase();
+        const cls=act==="BUY"||act==="LONG"?"badge-long":act==="SELL"||act==="SHORT"?"badge-short":"badge-wait";
+        return`<div class="signal-row"><div><div class="signal-name">${t.symbol||t.ticker||"—"}</div><div class="signal-ticker">${t.timestamp?timeAgo(t.timestamp):""}</div></div><span class="badge ${cls}">${act||"—"}</span></div>`;
+      }).join('');
+    } else {
+      get("signalBoard").innerHTML='<div class="signal-row" style="color:var(--muted2);font-size:13px;padding:16px 0;letter-spacing:1px;">Bot running · awaiting setup</div>';
+    }
+  }
 }
+
+// ── Mobile menu ──
+function toggleMobileMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+  document.getElementById('hamburgerBtn').classList.toggle('open');
+}
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+}
+
+// ── Waitlist modal ──
+function openWaitlist(){
+  document.getElementById('waitlistModal').classList.add('open');
+  setTimeout(()=>document.getElementById('waitlistEmail').focus(),50);
+}
+function closeWaitlist(){
+  document.getElementById('waitlistModal').classList.remove('open');
+  document.getElementById('waitlistForm').style.display='';
+  document.getElementById('waitlistSuccess').style.display='none';
+  document.getElementById('waitlistEmail').value='';
+  document.getElementById('waitlistEmail').classList.remove('error');
+}
+function submitWaitlist(){
+  const input=document.getElementById('waitlistEmail');
+  const email=input.value.trim();
+  if(!email||!email.includes('@')){input.classList.add('error');input.focus();return;}
+  input.classList.remove('error');
+  try{localStorage.setItem('tt_waitlist',email);}catch(e){}
+  window.open('mailto:chrishicks83@hotmail.com?subject=TrendTrooper%20Waitlist&body=Please%20add%20me%20to%20the%20TrendTrooper%20waitlist.%0AEmail%3A%20'+encodeURIComponent(email),'_blank');
+  document.getElementById('waitlistForm').style.display='none';
+  document.getElementById('waitlistSuccess').style.display='block';
+  document.getElementById('waitlistEmailDisplay').textContent=email;
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWaitlist();});
+
+// ── FAQ accordion ──
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click',()=>{
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!isOpen)item.classList.add('open');
+  });
+});
+
+// ── Copyright year ──
+const cyEl=document.getElementById('copyrightYear');
+if(cyEl)cyEl.textContent=new Date().getFullYear();
 </script>
+
+<!-- WAITLIST MODAL -->
+<div class="modal-overlay" id="waitlistModal" onclick="if(event.target===this)closeWaitlist()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeWaitlist()" aria-label="Close">×</button>
+    <div style="font-size:36px;margin-bottom:14px;">🚀</div>
+    <h2 style="font-family:'Orbitron',monospace;font-size:20px;font-weight:900;margin-bottom:8px;letter-spacing:1px;">Join the Waitlist</h2>
+    <p style="color:var(--muted2);font-size:14px;line-height:1.6;margin-bottom:28px;">TrendTrooper is in private beta. Enter your email and we'll reach out when access opens.</p>
+    <div id="waitlistForm">
+      <input id="waitlistEmail" class="modal-email-input" type="email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')submitWaitlist()">
+      <button onclick="submitWaitlist()" class="btn btn-primary" style="width:100%;justify-content:center;font-size:14px;padding:13px;">Request Access</button>
+    </div>
+    <div id="waitlistSuccess" class="modal-success">
+      <div style="color:var(--green);font-size:44px;margin-bottom:12px;">✓</div>
+      <p style="color:var(--green);font-weight:700;font-size:16px;margin-bottom:8px;">You're on the list!</p>
+      <p style="color:var(--muted2);font-size:13px;">We'll reach out to <strong id="waitlistEmailDisplay" style="color:var(--text)"></strong> when TrendTrooper opens access.</p>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

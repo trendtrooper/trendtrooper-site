@@ -11,7 +11,7 @@
   <meta name="theme-color" content="#0b1220" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root{
       --bg:#070e1c;
@@ -55,15 +55,13 @@
       max-width:var(--max);margin:0 auto;padding:14px 24px;
       display:flex;align-items:center;justify-content:space-between;gap:20px;
     }
-    .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:13px;font-family:'Orbitron',monospace;letter-spacing:.5px;}
     .logo{
-      width:32px;height:32px;border-radius:10px;flex:0 0 auto;
+      width:34px;height:34px;border-radius:10px;flex:0 0 auto;
       background:linear-gradient(135deg,var(--accent),var(--accent2));
-      position:relative;
-    }
-    .logo:after{
-      content:"";position:absolute;inset:8px;
-      border:1.5px solid rgba(255,255,255,.5);border-radius:7px;transform:rotate(8deg);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Orbitron',monospace;font-weight:900;font-size:11px;
+      color:#fff;letter-spacing:.5px;box-shadow:0 0 16px rgba(110,231,255,.25);
     }
     .brand-sub{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.3px}
     .navlinks{display:flex;gap:22px;color:var(--muted);font-size:13.5px;font-weight:500}
@@ -286,8 +284,19 @@
       .stats{grid-template-columns:repeat(2,1fr)}
       .ma-compare,.calc-body{grid-template-columns:1fr}
       .navlinks{display:none}
+      .hamburger{display:flex;}
       .patterns{grid-template-columns:repeat(2,1fr)}
     }
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
+    .hamburger span{width:20px;height:2px;background:var(--text);border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .inner-mobile-menu{display:none;flex-direction:column;position:sticky;top:61px;z-index:99;background:rgba(7,14,28,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);padding:8px 24px 16px;}
+    .inner-mobile-menu.open{display:flex;}
+    .inner-mobile-menu a{color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;padding:11px 0;border-bottom:1px solid var(--border2);transition:color .15s;}
+    .inner-mobile-menu a:last-child{border-bottom:none;}
+    .inner-mobile-menu a:hover{color:var(--text);}
   </style>
 </head>
 <body>
@@ -295,7 +304,7 @@
 <header>
   <div class="nav">
     <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
+      <div class="logo">TT</div>
       <div>
         <div>TrendTrooper</div>
         <div class="brand-sub">ACADEMY</div>
@@ -312,9 +321,19 @@
     <div style="display:flex;gap:10px;align-items:center">
       <a class="btn" href="/">← Back to HQ</a>
       <a class="btn primary" href="#modules">Start Learning</a>
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleInnerMenu()" aria-label="Open navigation"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
+<div class="inner-mobile-menu" id="innerMobileMenu">
+  <a href="/">Home</a>
+  <a href="#modules">Modules</a>
+  <a href="#indicators">Indicators</a>
+  <a href="#patterns">Patterns</a>
+  <a href="#tools">Risk Calculator</a>
+  <a href="#glossary">Glossary</a>
+  <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+</div>
 
 <main>
   <div class="hero-wrap">
@@ -540,10 +559,12 @@
       <div class="pat-card">
         <div class="pat-img">
           <svg class="candle-demo" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <polyline points="10,60 35,20 60,60 85,20 110,60" stroke="#ff5c6a" stroke-width="1.5" fill="none"/>
-            <line x1="10" y1="20" x2="110" y2="20" stroke="rgba(255,92,106,.2)" stroke-width="0.5" stroke-dasharray="3,3"/>
-            <line x1="10" y1="60" x2="110" y2="60" stroke="rgba(255,92,106,.2)" stroke-width="0.5" stroke-dasharray="3,3"/>
-            <text x="60" y="78" fill="rgba(122,150,187,.8)" font-size="8" text-anchor="middle" font-family="monospace">HEAD & SHLDRS</text>
+            <polyline points="5,65 20,42 38,58 60,20 82,58 100,42 115,65" stroke="#ff5c6a" stroke-width="1.5" fill="none"/>
+            <line x1="38" y1="58" x2="82" y2="58" stroke="rgba(255,92,106,.35)" stroke-width="1" stroke-dasharray="3,3"/>
+            <circle cx="60" cy="20" r="3" fill="rgba(255,92,106,.6)"/>
+            <circle cx="20" cy="42" r="2.5" fill="rgba(255,92,106,.45)"/>
+            <circle cx="100" cy="42" r="2.5" fill="rgba(255,92,106,.45)"/>
+            <text x="60" y="78" fill="rgba(122,150,187,.8)" font-size="8" text-anchor="middle" font-family="monospace">HEAD &amp; SHLDRS</text>
           </svg>
         </div>
         <h4>Head & Shoulders</h4>
@@ -649,6 +670,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
+  function toggleInnerMenu(){
+    document.getElementById('innerMobileMenu').classList.toggle('open');
+    document.getElementById('hamburgerBtn').classList.toggle('open');
+  }
 
   function genPrice(n,start,vol){const p=[start];for(let i=1;i<n;i++){p.push(+(p[i-1]+((Math.random()-.47)*vol)).toFixed(2))}return p}
   function sma(arr,n){return arr.map((_,i)=>i<n-1?null:+(arr.slice(i-n+1,i+1).reduce((a,b)=>a+b)/n).toFixed(2))}
@@ -701,6 +726,19 @@
   }
   document.querySelectorAll('#calcBody input').forEach(i=>i.addEventListener('input',calcRisk));
   calcRisk();
+
+  // Module cards — coming soon toast
+  function showToast(msg){
+    const t=document.createElement('div');
+    t.textContent=msg;
+    t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0f1b33;border:1px solid rgba(110,231,255,.35);color:#6ee7ff;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;pointer-events:none;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:opacity .3s;';
+    document.body.appendChild(t);
+    setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},3000);
+  }
+  document.querySelectorAll('.mod-card').forEach(card=>{
+    card.style.cursor='pointer';
+    card.addEventListener('click',()=>showToast('Module content coming soon — check back after launch!'));
+  });
 
   let answered=false;
   function checkAnswer(btn,correct){
