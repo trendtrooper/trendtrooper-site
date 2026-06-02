@@ -1,761 +1,1278 @@
 ---
-// TrendTrooper Academy — src/pages/academy.astro
+// TrendTrooper Academy — Cyberpunk Edition
 ---
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TrendTrooper Academy — Learn to Trade Systematically</title>
-  <meta name="description" content="Master technical analysis, risk management, and systematic trading. Free education from TrendTrooper." />
-  <meta name="theme-color" content="#0b1220" />
+  <title>TrendTrooper Academy — Trade with Structure. Not Hope.</title>
+  <meta name="description" content="Systematic trading education from beginner to professional. Free forever. Cyberpunk-grade curriculum." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --bg:#070e1c;
-      --surface:#0c1526;
-      --card:#0f1b33;
-      --card2:#111e38;
-      --muted:#7a96bb;
-      --muted2:#4a6490;
-      --text:#ddeeff;
-      --text2:#b8d0ee;
-      --accent:#6ee7ff;
-      --accent2:#a78bfa;
-      --green:#22d673;
-      --red:#ff5c6a;
-      --amber:#f59e0b;
-      --border:rgba(110,231,255,.10);
-      --border2:rgba(255,255,255,.06);
-      --shadow:0 24px 80px rgba(0,0,0,.55);
-      --r:16px;
+      --bg:#020510;
+      --bg2:rgba(4,8,30,0.92);
+      --bg3:rgba(6,12,40,0.7);
+      --panel:#060d1f;
+      --card:#080f22;
+      --cyan:#00cfff;
+      --cyan-dim:rgba(0,200,255,0.08);
+      --cyan-glow:rgba(0,200,255,0.25);
+      --green:#00ff88;
+      --green-dim:rgba(0,255,136,0.08);
+      --purple:#7040ff;
+      --purple-dim:rgba(112,64,255,0.15);
+      --magenta:#ff0080;
+      --yellow:#ffd060;
+      --red:#ff4060;
+      --text:#e8eeff;
+      --muted:rgba(180,210,255,0.6);
+      --border:rgba(0,200,255,0.1);
+      --border2:rgba(0,200,255,0.2);
       --max:1160px;
-      --mono:'JetBrains Mono',ui-monospace,monospace;
-      --sans:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+      --mono:'Share Tech Mono',ui-monospace,monospace;
+      --sans:'Rajdhani',sans-serif;
+      --head:'Orbitron',monospace;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{
       font-family:var(--sans);
       color:var(--text);
-      background:var(--bg);
-      line-height:1.5;
-      min-height:100vh;
+      background:var(--bg) url('/city-bg.png') center center/cover no-repeat fixed;
+      overflow-x:hidden;
+      position:relative;
     }
+
+    /* GRID */
+    body::before{
+      content:'';position:fixed;inset:0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px);
+      background-size:50px 50px;
+      z-index:0;pointer-events:none;
+    }
+    /* RADIAL GLOW */
+    body::after{
+      content:'';position:fixed;inset:0;
+      background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,200,255,0.06) 0%,transparent 70%);
+      z-index:0;pointer-events:none;
+    }
+    /* SCANLINES */
+    .scanlines{
+      position:fixed;inset:0;z-index:1;pointer-events:none;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
+    }
+
     a{color:inherit;text-decoration:none}
+
+    /* ── NAV ── */
     header{
       position:sticky;top:0;z-index:100;
-      background:rgba(7,14,28,.88);
-      backdrop-filter:blur(16px);
+      background:rgba(2,5,16,0.92);
       border-bottom:1px solid var(--border2);
+      backdrop-filter:blur(20px);
+      box-shadow:0 0 40px rgba(0,200,255,0.08);
     }
     .nav{
       max-width:var(--max);margin:0 auto;padding:14px 24px;
       display:flex;align-items:center;justify-content:space-between;gap:20px;
     }
-    .brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:13px;font-family:'Orbitron',monospace;letter-spacing:.5px;}
+    .brand{display:flex;align-items:center;gap:12px;}
     .logo{
-      width:34px;height:34px;border-radius:10px;flex:0 0 auto;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      width:36px;height:36px;border-radius:8px;
+      background:linear-gradient(135deg,var(--cyan),var(--purple));
       display:flex;align-items:center;justify-content:center;
-      font-family:'Orbitron',monospace;font-weight:900;font-size:11px;
-      color:#fff;letter-spacing:.5px;box-shadow:0 0 16px rgba(110,231,255,.25);
+      font-family:var(--head);font-weight:900;font-size:10px;color:#000;
+      letter-spacing:.5px;box-shadow:0 0 20px rgba(0,200,255,0.3);
     }
-    .brand-sub{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.3px}
-    .navlinks{display:flex;gap:22px;color:var(--muted);font-size:13.5px;font-weight:500}
-    .navlinks a:hover{color:var(--text)}
-    .navlinks a.active{color:var(--accent)}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:9px 18px;border-radius:12px;font-weight:600;font-size:13.5px;
-      border:1px solid var(--border2);background:rgba(255,255,255,.05);
-      color:var(--text);cursor:pointer;transition:.15s;font-family:var(--sans);
+    .brand-name{font-family:var(--head);font-weight:900;font-size:12px;letter-spacing:1px;color:var(--cyan);text-shadow:0 0 15px rgba(0,200,255,0.5);}
+    .brand-sub{font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:2px;}
+    .navlinks{display:flex;gap:20px;}
+    .navlinks a{font-family:var(--mono);font-size:0.7rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;transition:.2s;}
+    .navlinks a:hover,.navlinks a.active{color:var(--cyan);text-shadow:0 0 10px rgba(0,200,255,0.5);}
+    .nav-btn{
+      font-family:var(--mono);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;
+      padding:8px 18px;border:1px solid var(--border2);
+      background:var(--cyan-dim);color:var(--cyan);cursor:pointer;transition:.2s;
+      clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
     }
-    .btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}
-    .btn.primary{
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      border:none;color:#070e1c;font-weight:700;
-      box-shadow:0 8px 30px rgba(110,231,255,.18);
-    }
-    .btn.primary:hover{filter:brightness(1.06)}
-    .hero-wrap{
-      position:relative;overflow:hidden;
+    .nav-btn:hover{background:rgba(0,200,255,0.15);box-shadow:0 0 20px rgba(0,200,255,0.2);}
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+    .hamburger span{width:20px;height:2px;background:var(--text);border-radius:1px;display:block;transition:.2s;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{display:none;flex-direction:column;position:sticky;top:61px;z-index:99;background:rgba(2,5,16,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);padding:8px 24px 16px;}
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{font-family:var(--mono);font-size:0.75rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 0;border-bottom:1px solid var(--border);transition:.15s;}
+    .mobile-menu a:hover{color:var(--cyan);}
+
+    /* ── TICKER ── */
+    .ticker{overflow:hidden;background:rgba(0,200,255,0.04);border-bottom:1px solid var(--border);padding:6px 0;white-space:nowrap;}
+    .ticker-inner{display:inline-block;animation:ticker 40s linear infinite;}
+    .ticker-inner span{font-family:var(--mono);font-size:0.65rem;color:var(--muted);letter-spacing:1px;margin:0 2.5rem;}
+    .ticker-inner .up{color:var(--green);}
+    .ticker-inner .dn{color:var(--red);}
+    @keyframes ticker{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+
+    /* ── LAYOUT ── */
+    main{position:relative;z-index:2;}
+    .container{max-width:var(--max);margin:0 auto;padding:0 24px;}
+
+    /* ── HERO ── */
+    .hero{
       padding:80px 24px 60px;
       max-width:var(--max);margin:0 auto;
-      text-align:center;
+      text-align:center;position:relative;
     }
     .hero-glow{
-      position:absolute;
-      top:-120px;left:50%;transform:translateX(-50%);
+      position:absolute;top:-100px;left:50%;transform:translateX(-50%);
       width:900px;height:500px;
-      background:radial-gradient(ellipse, rgba(110,231,255,.12) 0%, rgba(167,139,250,.08) 45%, transparent 70%);
+      background:radial-gradient(ellipse,rgba(0,200,255,0.1) 0%,rgba(112,64,255,0.06) 45%,transparent 70%);
       pointer-events:none;
     }
     .badge{
       display:inline-flex;align-items:center;gap:8px;
-      padding:6px 14px;border-radius:999px;
-      border:1px solid rgba(110,231,255,.25);
-      background:rgba(110,231,255,.07);
-      color:var(--accent);font-size:12.5px;font-weight:600;
-      margin-bottom:22px;letter-spacing:.3px;
+      padding:5px 14px;border:1px solid rgba(0,200,255,0.3);
+      background:rgba(0,200,255,0.06);color:var(--cyan);
+      font-family:var(--mono);font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;
+      margin-bottom:24px;
     }
-    .badge .pulse{
-      width:7px;height:7px;border-radius:50%;
-      background:var(--green);
-      box-shadow:0 0 12px rgba(34,214,115,.6);
-      animation:pulse 2s ease-in-out infinite;
+    .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(0,255,136,0.8);animation:blink 2s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+    .hero h1{
+      font-family:var(--head);
+      font-size:clamp(2.5rem,6vw,5rem);
+      font-weight:900;line-height:1;letter-spacing:-1px;
+      margin-bottom:20px;
     }
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    h1{
-      font-size:clamp(36px,5vw,62px);
-      font-weight:700;line-height:1.05;letter-spacing:-.8px;
-      margin-bottom:18px;
+    .hero h1 .glitch{
+      color:var(--cyan);
+      text-shadow:0 0 40px rgba(0,200,255,0.5);
+      position:relative;
+      animation:glitch 10s infinite;
     }
-    h1 .grad{
-      background:linear-gradient(90deg,var(--accent),var(--accent2));
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    @keyframes glitch{
+      0%,93%,100%{transform:translate(0)}
+      94%{transform:translate(-3px,1px)}
+      95%{transform:translate(3px,-1px)}
+      96%{transform:translate(-2px,2px)}
     }
-    .hero-sub{
-      color:var(--muted);font-size:17px;max-width:58ch;margin:0 auto 32px;line-height:1.6;
+    .hero h1 .accent{color:var(--yellow);text-shadow:0 0 30px rgba(255,208,96,0.4);}
+
+    .hero-sub{color:var(--muted);font-size:1.15rem;max-width:55ch;margin:0 auto 36px;line-height:1.6;}
+    .hero-sub strong{color:var(--cyan);}
+
+    .hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:36px;}
+    .stat{text-align:center;}
+    .stat-num{
+      font-family:var(--head);font-size:2.4rem;font-weight:900;
+      color:var(--cyan);text-shadow:0 0 20px rgba(0,200,255,0.5);
+      display:block;line-height:1;
     }
-    .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .stats{
-      max-width:var(--max);margin:0 auto 10px;padding:0 24px;
-      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+    .stat-lbl{font-family:var(--mono);font-size:0.6rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+
+    .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    .btn{
+      font-family:var(--head);font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      padding:12px 28px;cursor:pointer;transition:.2s;display:inline-block;
     }
-    .stat-card{
-      padding:18px 20px;border-radius:var(--r);
-      border:1px solid var(--border2);
-      background:var(--card);
-      text-align:center;
+    .btn-primary{
+      background:linear-gradient(135deg,var(--cyan),var(--purple));
+      color:#000;border:none;
+      clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+      box-shadow:0 0 30px rgba(0,200,255,0.3);
     }
-    .stat-card .val{font-size:26px;font-weight:700;color:var(--accent);line-height:1}
-    .stat-card .lbl{font-size:12px;color:var(--muted);margin-top:5px;font-weight:500}
-    .section{max-width:var(--max);margin:0 auto;padding:48px 24px 0}
-    .sec-head{
-      display:flex;align-items:baseline;justify-content:space-between;
-      margin-bottom:20px;gap:16px;
+    .btn-primary:hover{box-shadow:0 0 50px rgba(0,200,255,0.5);filter:brightness(1.1);}
+    .btn-outline{background:transparent;color:var(--cyan);border:1px solid var(--border2);}
+    .btn-outline:hover{background:var(--cyan-dim);box-shadow:0 0 20px rgba(0,200,255,0.15);}
+
+    /* ── SECTION ── */
+    section{padding:64px 0;position:relative;z-index:2;}
+    section.alt{background:rgba(0,200,255,0.02);}
+
+    .sec-tag{font-family:var(--mono);font-size:0.6rem;letter-spacing:4px;color:var(--magenta);text-transform:uppercase;display:block;margin-bottom:8px;}
+    .sec-title{font-family:var(--head);font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:900;color:#fff;margin-bottom:12px;}
+    .sec-title .c{color:var(--cyan);text-shadow:0 0 20px rgba(0,200,255,0.4);}
+    .sec-title .g{color:var(--green);text-shadow:0 0 20px rgba(0,255,136,0.4);}
+    .sec-title .y{color:var(--yellow);text-shadow:0 0 20px rgba(255,208,96,0.4);}
+    .sec-title .p{color:var(--purple);text-shadow:0 0 20px rgba(112,64,255,0.4);}
+    .sec-desc{color:var(--muted);font-size:1rem;max-width:55ch;}
+    .sec-head{margin-bottom:40px;}
+
+    /* CYBER DIVIDER */
+    .cyber-line{height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);opacity:0.25;margin:0;}
+
+    /* ── PATH ── */
+    .path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+    .path-card{
+      background:var(--card);border:1px solid var(--border);
+      padding:24px 20px;position:relative;transition:.3s;
+      clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
     }
-    .sec-head h2{font-size:20px;font-weight:700}
-    .sec-head .sec-sub{color:var(--muted);font-size:13.5px}
-    .tag-line{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .tag-line span{width:28px;height:2px;border-radius:1px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
-    .modules{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .mod-card{
-      border-radius:var(--r);border:1px solid var(--border2);
-      background:var(--card);padding:22px;
-      position:relative;overflow:hidden;
-      transition:.2s;cursor:pointer;
+    .path-card::before{content:'';position:absolute;inset:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));background:linear-gradient(135deg,rgba(0,200,255,0.03),transparent);pointer-events:none;}
+    .path-card:hover{transform:translateY(-4px);}
+    .path-card.r1{border-color:rgba(0,255,136,0.25);} .path-card.r1:hover{border-color:var(--green);box-shadow:0 8px 30px rgba(0,255,136,0.1);}
+    .path-card.r2{border-color:rgba(0,200,255,0.25);} .path-card.r2:hover{border-color:var(--cyan);box-shadow:0 8px 30px rgba(0,200,255,0.1);}
+    .path-card.r3{border-color:rgba(255,208,96,0.25);} .path-card.r3:hover{border-color:var(--yellow);box-shadow:0 8px 30px rgba(255,208,96,0.1);}
+    .path-card.r4{border-color:rgba(255,0,128,0.25);} .path-card.r4:hover{border-color:var(--magenta);box-shadow:0 8px 30px rgba(255,0,128,0.1);}
+
+    .rank-tag{font-family:var(--mono);font-size:0.55rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+    .r1 .rank-tag{color:var(--green);} .r2 .rank-tag{color:var(--cyan);} .r3 .rank-tag{color:var(--yellow);} .r4 .rank-tag{color:var(--magenta);}
+    .rank-name{font-family:var(--head);font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:4px;}
+    .rank-time{font-family:var(--mono);font-size:0.65rem;color:var(--muted);margin-bottom:16px;}
+    .rank-skills{list-style:none;}
+    .rank-skills li{font-size:0.85rem;color:var(--text);padding:4px 0;padding-left:16px;position:relative;border-bottom:1px solid rgba(255,255,255,0.04);}
+    .rank-skills li::before{content:'▸';position:absolute;left:0;font-size:0.65rem;}
+    .r1 .rank-skills li::before{color:var(--green);} .r2 .rank-skills li::before{color:var(--cyan);} .r3 .rank-skills li::before{color:var(--yellow);} .r4 .rank-skills li::before{color:var(--magenta);}
+
+    /* ── MODULES ── */
+    .mods-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .mod{
+      background:var(--card);border:1px solid var(--border);
+      padding:22px;position:relative;overflow:hidden;transition:.3s;
     }
-    .mod-card:hover{transform:translateY(-3px);border-color:rgba(110,231,255,.25);box-shadow:0 16px 50px rgba(0,0,0,.4)}
-    .mod-card::before{
-      content:"";position:absolute;top:0;left:0;right:0;height:2px;
-      background:linear-gradient(90deg,var(--accent),var(--accent2));
-      opacity:0;transition:.2s;
+    .mod::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;transition:height .3s;}
+    .mod.beg::before{background:linear-gradient(var(--green),transparent);}
+    .mod.int::before{background:linear-gradient(var(--cyan),transparent);}
+    .mod.adv::before{background:linear-gradient(var(--magenta),transparent);}
+    .mod.beg:hover{border-color:rgba(0,255,136,0.35);box-shadow:0 8px 40px rgba(0,255,136,0.06);}
+    .mod.int:hover{border-color:rgba(0,200,255,0.35);box-shadow:0 8px 40px rgba(0,200,255,0.06);}
+    .mod.adv:hover{border-color:rgba(255,0,128,0.35);box-shadow:0 8px 40px rgba(255,0,128,0.06);}
+    .mod:hover{transform:translateY(-3px);}
+    .mod-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+    .mod-n{font-family:var(--head);font-size:1.8rem;font-weight:900;opacity:.15;line-height:1;}
+    .beg .mod-n{color:var(--green);} .int .mod-n{color:var(--cyan);} .adv .mod-n{color:var(--magenta);}
+    .mod-badge{font-family:var(--mono);font-size:0.5rem;letter-spacing:2px;text-transform:uppercase;padding:2px 7px;display:inline-block;margin-bottom:5px;}
+    .beg .mod-badge{background:rgba(0,255,136,0.08);color:var(--green);border:1px solid rgba(0,255,136,0.25);}
+    .int .mod-badge{background:rgba(0,200,255,0.08);color:var(--cyan);border:1px solid rgba(0,200,255,0.25);}
+    .adv .mod-badge{background:rgba(255,0,128,0.08);color:var(--magenta);border:1px solid rgba(255,0,128,0.25);}
+    .mod h3{font-family:var(--head);font-size:0.9rem;font-weight:700;color:#fff;line-height:1.3;}
+    .mod p{font-size:0.85rem;color:var(--muted);line-height:1.55;margin-bottom:14px;}
+    .mod-topics{list-style:none;}
+    .mod-topics li{font-family:var(--mono);font-size:0.7rem;color:var(--text);padding:3px 0;padding-left:18px;position:relative;border-bottom:1px solid rgba(255,255,255,0.04);}
+    .mod-topics li::before{content:'//';position:absolute;left:0;font-size:0.6rem;}
+    .beg .mod-topics li::before{color:var(--green);} .int .mod-topics li::before{color:var(--cyan);} .adv .mod-topics li::before{color:var(--magenta);}
+    .mod-wide{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;}
+
+    /* ── INDICATORS ── */
+    .ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .ind{background:var(--card);border:1px solid var(--border);padding:18px;transition:.3s;position:relative;overflow:hidden;}
+    .ind:hover{border-color:var(--border2);box-shadow:0 4px 24px rgba(0,200,255,0.08);transform:translateY(-2px);}
+    .ind::after{content:'';position:absolute;bottom:0;right:0;width:50px;height:50px;border-top:1px solid rgba(0,200,255,0.08);border-left:1px solid rgba(0,200,255,0.08);}
+    .ind-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+    .ind-name{font-family:var(--head);font-size:1.1rem;font-weight:900;color:var(--cyan);text-shadow:0 0 10px rgba(0,200,255,0.3);}
+    .ind-type{font-family:var(--mono);font-size:0.55rem;letter-spacing:2px;color:var(--purple);border:1px solid rgba(112,64,255,0.3);padding:2px 6px;}
+    .ind-desc{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:10px;}
+    .ind-set{font-family:var(--mono);font-size:0.7rem;color:var(--yellow);background:rgba(255,208,96,0.05);border:1px solid rgba(255,208,96,0.12);padding:6px 10px;}
+
+    /* ── PATTERNS ── */
+    .pat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+    .pat{background:var(--card);border:1px solid var(--border);padding:16px;text-align:center;transition:.3s;}
+    .pat:hover{transform:translateY(-3px);border-color:var(--border2);}
+    .pat.bull{border-top:2px solid var(--green);} .pat.bear{border-top:2px solid var(--red);} .pat.cont{border-top:2px solid var(--yellow);}
+    .pat-sig{font-family:var(--mono);font-size:0.55rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+    .bull .pat-sig{color:var(--green);} .bear .pat-sig{color:var(--red);} .cont .pat-sig{color:var(--yellow);}
+    .pat-chart{height:75px;display:flex;align-items:flex-end;justify-content:center;gap:2px;margin:10px 0;}
+    .c{width:7px;border-radius:1px;}
+    .pat-name{font-family:var(--head);font-size:0.8rem;font-weight:700;color:#fff;margin-bottom:5px;}
+    .pat p{font-size:0.78rem;color:var(--muted);line-height:1.4;}
+
+    /* ── RESOURCES ── */
+    .res-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid var(--border);}
+    .rtab{
+      font-family:var(--mono);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;
+      padding:10px 20px;background:transparent;border:none;color:var(--muted);cursor:pointer;transition:.2s;
+      border-bottom:2px solid transparent;margin-bottom:-1px;
     }
-    .mod-card:hover::before{opacity:1}
-    .mod-num{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:1px;margin-bottom:12px;font-family:var(--mono)}
-    .mod-icon{
-      width:42px;height:42px;border-radius:12px;
-      background:rgba(110,231,255,.10);border:1px solid rgba(110,231,255,.18);
-      display:flex;align-items:center;justify-content:center;
-      margin-bottom:14px;font-size:20px;
+    .rtab.on,.rtab:hover{color:var(--cyan);border-bottom-color:var(--cyan);}
+    .tab{display:none;} .tab.on{display:block;}
+
+    .res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .res{
+      background:var(--card);border:1px solid var(--border);
+      padding:16px;display:flex;gap:12px;align-items:flex-start;
+      transition:.3s;text-decoration:none;
     }
-    .mod-card h3{font-size:15.5px;font-weight:700;margin-bottom:8px}
-    .mod-card p{color:var(--muted);font-size:13px;line-height:1.55}
-    .mod-meta{display:flex;gap:12px;margin-top:14px}
-    .mod-pill{
-      font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;
-      border:1px solid var(--border2);color:var(--muted2);font-family:var(--mono);
+    .res:hover{border-color:var(--border2);transform:translateX(3px);box-shadow:0 4px 20px rgba(0,200,255,0.06);}
+    .res-ico{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border);background:var(--cyan-dim);flex-shrink:0;}
+    .res-name{font-family:var(--head);font-size:0.8rem;font-weight:700;color:#fff;margin-bottom:3px;}
+    .res-type{font-family:var(--mono);font-size:0.55rem;letter-spacing:2px;color:var(--purple);margin-bottom:6px;text-transform:uppercase;}
+    .res-desc{font-size:0.8rem;color:var(--muted);line-height:1.5;}
+    .lvl{font-family:var(--mono);font-size:0.55rem;letter-spacing:1px;padding:2px 7px;margin-top:6px;display:inline-block;}
+    .lvl.b{background:rgba(0,255,136,0.07);color:var(--green);border:1px solid rgba(0,255,136,0.2);}
+    .lvl.i{background:rgba(0,200,255,0.07);color:var(--cyan);border:1px solid rgba(0,200,255,0.2);}
+    .lvl.a{background:rgba(255,0,128,0.07);color:var(--magenta);border:1px solid rgba(255,0,128,0.2);}
+    .lvl.all{background:rgba(255,208,96,0.07);color:var(--yellow);border:1px solid rgba(255,208,96,0.2);}
+
+    /* ── CALCULATOR ── */
+    .calc-wrap{
+      max-width:680px;margin:0 auto;
+      background:var(--card);border:1px solid var(--border2);
+      padding:36px;position:relative;overflow:hidden;
     }
-    .mod-pill.green{border-color:rgba(34,214,115,.25);color:var(--green);background:rgba(34,214,115,.07)}
-    .mod-pill.blue{border-color:rgba(110,231,255,.25);color:var(--accent);background:rgba(110,231,255,.07)}
-    .indicator-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-    .ind-card{
-      border-radius:var(--r);border:1px solid var(--border2);
-      background:var(--card);padding:18px 20px;
-      display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;
+    .calc-wrap::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--magenta));}
+    .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+    .cfield label{display:block;font-family:var(--mono);font-size:0.6rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+    .cfield input{
+      width:100%;background:rgba(0,200,255,0.04);border:1px solid var(--border);
+      color:var(--cyan);font-family:var(--mono);font-size:0.95rem;
+      padding:10px 14px;outline:none;transition:.2s;
     }
-    .ind-icon{
-      width:38px;height:38px;border-radius:10px;flex:0 0 auto;
-      display:flex;align-items:center;justify-content:center;font-size:17px;
+    .cfield input:focus{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,200,255,0.12);}
+    .calc-btn{
+      width:100%;font-family:var(--head);font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+      padding:14px;background:linear-gradient(90deg,var(--cyan),var(--purple));
+      border:none;color:#000;cursor:pointer;transition:.2s;margin-top:4px;
     }
-    .ind-icon.mo{background:rgba(110,231,255,.10);border:1px solid rgba(110,231,255,.18)}
-    .ind-icon.os{background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.18)}
-    .ind-icon.vl{background:rgba(34,214,115,.10);border:1px solid rgba(34,214,115,.18)}
-    .ind-icon.tr{background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.18)}
-    .ind-name{font-size:14.5px;font-weight:700;margin-bottom:4px}
-    .ind-desc{color:var(--muted);font-size:12.5px;line-height:1.5}
-    .ind-signal{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
-    .signal-bull{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(34,214,115,.12);color:var(--green);border:1px solid rgba(34,214,115,.25)}
-    .signal-bear{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,92,106,.12);color:var(--red);border:1px solid rgba(255,92,106,.25)}
-    .signal-neut{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(245,158,11,.10);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
-    .chart-section{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);overflow:hidden}
-    .chart-head{
-      padding:16px 20px;border-bottom:1px solid var(--border2);
-      display:flex;align-items:center;justify-content:space-between;
+    .calc-btn:hover{opacity:.85;box-shadow:0 0 30px rgba(0,200,255,0.3);}
+    .calc-out{
+      background:rgba(0,200,255,0.04);border:1px solid rgba(0,200,255,0.2);
+      padding:20px;text-align:center;margin-top:18px;display:none;
     }
-    .chart-head h3{font-size:14.5px;font-weight:700}
-    .chart-body{padding:20px}
-    .chart-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
-    .ctab{
-      padding:7px 14px;border-radius:10px;font-size:12.5px;font-weight:600;
-      border:1px solid var(--border2);color:var(--muted);cursor:pointer;
-      background:transparent;font-family:var(--sans);transition:.15s;
+    .calc-out-lbl{font-family:var(--mono);font-size:0.6rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+    .calc-out-val{font-family:var(--head);font-size:2.2rem;font-weight:900;color:var(--cyan);text-shadow:0 0 20px rgba(0,200,255,0.4);}
+    .calc-out-sub{font-size:0.82rem;color:var(--muted);margin-top:6px;}
+
+    /* ── QUIZ ── */
+    .quiz-wrap{
+      max-width:680px;margin:0 auto;
+      background:var(--card);border:1px solid var(--border);
+      padding:32px;position:relative;
     }
-    .ctab:hover{color:var(--text);background:rgba(255,255,255,.05)}
-    .ctab.active{background:rgba(110,231,255,.12);border-color:rgba(110,231,255,.30);color:var(--accent)}
-    .patterns{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .pat-card{
-      border-radius:var(--r);border:1px solid var(--border2);
-      background:var(--card);padding:16px;text-align:center;
-      transition:.2s;cursor:pointer;
+    .quiz-q{font-family:var(--head);font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:20px;line-height:1.4;}
+    .quiz-opts{display:grid;gap:8px;}
+    .qopt{
+      background:rgba(255,255,255,0.03);border:1px solid var(--border);
+      padding:12px 18px;font-family:var(--sans);font-size:0.9rem;color:var(--muted);
+      cursor:pointer;transition:.2s;text-align:left;
     }
-    .pat-card:hover{border-color:rgba(110,231,255,.3);transform:translateY(-2px)}
-    .pat-img{
-      width:100%;aspect-ratio:16/9;border-radius:10px;
-      background:var(--card2);margin-bottom:10px;
-      display:flex;align-items:center;justify-content:center;overflow:hidden;
-    }
-    .pat-card h4{font-size:13px;font-weight:700;margin-bottom:4px}
-    .pat-card p{font-size:11.5px;color:var(--muted)}
-    .candle-demo{width:100%;height:80px}
-    .glossary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .gloss-item{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);padding:16px}
-    .gloss-term{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px}
-    .gloss-def{color:var(--muted);font-size:12.5px;line-height:1.5}
-    .risk-calc{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);overflow:hidden}
-    .calc-head{padding:14px 20px;border-bottom:1px solid var(--border2);font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px}
-    .calc-body{padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .inp-group label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;letter-spacing:.3px}
-    .inp-group input{
-      width:100%;padding:10px 14px;border-radius:10px;
-      border:1px solid var(--border2);background:rgba(255,255,255,.04);
-      color:var(--text);font-size:14px;font-family:var(--sans);outline:none;transition:.15s;
-    }
-    .inp-group input:focus{border-color:rgba(110,231,255,.4);background:rgba(110,231,255,.04)}
-    .calc-result{
-      grid-column:1/-1;padding:14px 16px;border-radius:10px;
-      background:rgba(110,231,255,.07);border:1px solid rgba(110,231,255,.2);
-      display:flex;justify-content:space-between;align-items:center;
-    }
-    .calc-result .res-label{font-size:12.5px;color:var(--muted);font-weight:600}
-    .calc-result .res-val{font-size:20px;font-weight:700;color:var(--accent);font-family:var(--mono)}
-    .ma-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-    .ma-box{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);padding:18px}
-    .ma-box h4{font-size:13.5px;font-weight:700;margin-bottom:8px}
-    .ma-box p{color:var(--muted);font-size:12.5px;line-height:1.55;margin-bottom:10px}
-    .ma-tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700}
-    .ma-tag.fast{background:rgba(110,231,255,.10);color:var(--accent);border:1px solid rgba(110,231,255,.25)}
-    .ma-tag.slow{background:rgba(167,139,250,.10);color:var(--accent2);border:1px solid rgba(167,139,250,.25)}
-    .quiz{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);padding:24px}
-    .quiz h3{font-size:15px;font-weight:700;margin-bottom:16px}
-    .quiz-q{font-size:14px;color:var(--text2);margin-bottom:14px;line-height:1.55}
-    .quiz-opts{display:grid;gap:8px}
-    .quiz-opt{
-      padding:12px 16px;border-radius:10px;border:1px solid var(--border2);
-      background:rgba(255,255,255,.03);cursor:pointer;font-size:13.5px;
-      transition:.15s;color:var(--text2);font-family:var(--sans);text-align:left;width:100%;
-    }
-    .quiz-opt:hover{border-color:rgba(110,231,255,.3);background:rgba(110,231,255,.05);color:var(--text)}
-    .quiz-opt.correct{border-color:rgba(34,214,115,.5)!important;background:rgba(34,214,115,.10)!important;color:var(--green)!important}
-    .quiz-opt.wrong{border-color:rgba(255,92,106,.5)!important;background:rgba(255,92,106,.08)!important;color:var(--red)!important}
-    .quiz-feedback{margin-top:14px;padding:12px 16px;border-radius:10px;font-size:13px;display:none}
-    .quiz-feedback.show{display:block}
-    .quiz-feedback.ok{background:rgba(34,214,115,.08);border:1px solid rgba(34,214,115,.25);color:var(--green)}
-    .quiz-feedback.no{background:rgba(255,92,106,.08);border:1px solid rgba(255,92,106,.25);color:var(--red)}
-    .chart-container{position:relative;width:100%;height:220px}
+    .qopt:hover{border-color:rgba(0,200,255,0.35);color:var(--cyan);background:var(--cyan-dim);}
+    .qopt.ok{border-color:rgba(0,255,136,0.5)!important;background:rgba(0,255,136,0.08)!important;color:var(--green)!important;}
+    .qopt.no{border-color:rgba(255,64,96,0.5)!important;background:rgba(255,64,96,0.07)!important;color:var(--red)!important;}
+    .qfeed{margin-top:14px;padding:12px 16px;font-family:var(--mono);font-size:0.72rem;display:none;line-height:1.6;}
+    .qfeed.show{display:block;}
+    .qfeed.ok{background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.25);color:var(--green);}
+    .qfeed.no{background:rgba(255,64,96,0.06);border:1px solid rgba(255,64,96,0.25);color:var(--red);}
+    .quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
+    .quiz-prog{font-family:var(--mono);font-size:0.65rem;color:var(--muted);letter-spacing:2px;}
+
+    /* ── GLOSSARY ── */
+    .glos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .glos{background:var(--card);border:1px solid var(--border);padding:14px;transition:.2s;}
+    .glos:hover{border-color:var(--border2);}
+    .glos-term{font-family:var(--mono);font-size:0.75rem;color:var(--cyan);text-shadow:0 0 8px rgba(0,200,255,0.3);margin-bottom:6px;font-weight:700;}
+    .glos-def{font-size:0.8rem;color:var(--muted);line-height:1.5;}
+
+    /* ── FOOTER ── */
     footer{
       max-width:var(--max);margin:60px auto 0;padding:30px 24px 48px;
-      border-top:1px solid var(--border2);
+      border-top:1px solid var(--border);
       display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
-      color:var(--muted2);font-size:13px;
+      color:var(--muted);font-size:0.8rem;position:relative;z-index:2;
     }
-    .foot-links{display:flex;gap:18px}
-    .foot-links a:hover{color:var(--muted)}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-    .fade-in{animation:fadeUp .5s ease both}
-    .fade-in-2{animation:fadeUp .5s ease .1s both}
-    .fade-in-3{animation:fadeUp .5s ease .2s both}
+    .foot-logo{font-family:var(--head);font-size:0.9rem;font-weight:900;color:var(--cyan);text-shadow:0 0 15px rgba(0,200,255,0.4);}
+    .foot-links{display:flex;gap:20px;}
+    .foot-links a{font-family:var(--mono);font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);transition:.2s;}
+    .foot-links a:hover{color:var(--cyan);}
+
+    /* ── TERMINAL ── */
+    .terminal{background:#000;border:1px solid rgba(0,200,255,0.25);padding:18px;position:relative;box-shadow:0 0 20px rgba(0,200,255,0.05);margin:28px 0;}
+    .terminal::before{content:'● ● ●';position:absolute;top:.7rem;left:1rem;font-size:.45rem;color:var(--muted);letter-spacing:4px;}
+    .term-body{margin-top:.5rem;line-height:2;}
+    .tp{color:var(--cyan);} .tc{color:var(--green);} .to{color:var(--muted);padding-left:1rem;}
+
+    /* ── FADE ── */
+    .fi{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+    .fi.vis{opacity:1;transform:none;}
+
+    /* ── RESPONSIVE ── */
     @media(max-width:900px){
-      .modules,.indicator-grid,.patterns,.glossary{grid-template-columns:1fr}
-      .stats{grid-template-columns:repeat(2,1fr)}
-      .ma-compare,.calc-body{grid-template-columns:1fr}
-      .navlinks{display:none}
+      .path-grid,.mods-grid,.ind-grid,.pat-grid,.res-grid,.glos-grid{grid-template-columns:1fr;}
+      .calc-grid{grid-template-columns:1fr;}
+      .navlinks{display:none;}
       .hamburger{display:flex;}
-      .patterns{grid-template-columns:repeat(2,1fr)}
+      .pat-grid{grid-template-columns:repeat(2,1fr);}
+      .hero-stats{gap:1.5rem;}
     }
-    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
-    .hamburger span{width:20px;height:2px;background:var(--text);border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
-    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-    .hamburger.open span:nth-child(2){opacity:0;}
-    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-    .inner-mobile-menu{display:none;flex-direction:column;position:sticky;top:61px;z-index:99;background:rgba(7,14,28,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);padding:8px 24px 16px;}
-    .inner-mobile-menu.open{display:flex;}
-    .inner-mobile-menu a{color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;padding:11px 0;border-bottom:1px solid var(--border2);transition:color .15s;}
-    .inner-mobile-menu a:last-child{border-bottom:none;}
-    .inner-mobile-menu a:hover{color:var(--text);}
   </style>
 </head>
 <body>
+<div class="scanlines" aria-hidden="true"></div>
 
+<!-- NAV -->
 <header>
   <div class="nav">
     <div class="brand">
       <div class="logo">TT</div>
       <div>
-        <div>TrendTrooper</div>
+        <div class="brand-name">TrendTrooper</div>
         <div class="brand-sub">ACADEMY</div>
       </div>
     </div>
     <nav class="navlinks" aria-label="Primary">
       <a href="/">Home</a>
+      <a href="#path">Path</a>
       <a href="#modules" class="active">Modules</a>
       <a href="#indicators">Indicators</a>
-      <a href="#patterns">Patterns</a>
-      <a href="#tools">Tools</a>
+      <a href="#resources">Resources</a>
+      <a href="#calculator">Calculator</a>
       <a href="#glossary">Glossary</a>
     </nav>
     <div style="display:flex;gap:10px;align-items:center">
-      <a class="btn" href="/">← Back to HQ</a>
-      <a class="btn primary" href="#modules">Start Learning</a>
-      <button class="hamburger" id="hamburgerBtn" onclick="toggleInnerMenu()" aria-label="Open navigation"><span></span><span></span><span></span></button>
+      <a class="nav-btn" href="/">← HQ</a>
+      <button class="hamburger" id="hbBtn" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
-<div class="inner-mobile-menu" id="innerMobileMenu">
-  <a href="/">Home</a>
-  <a href="#modules">Modules</a>
-  <a href="#indicators">Indicators</a>
-  <a href="#patterns">Patterns</a>
-  <a href="#tools">Risk Calculator</a>
-  <a href="#glossary">Glossary</a>
-  <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/">Home</a><a href="#path">Learning Path</a><a href="#modules">Modules</a>
+  <a href="#indicators">Indicators</a><a href="#resources">Resources</a>
+  <a href="#calculator">Calculator</a><a href="#glossary">Glossary</a>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="up">SPY +1.2% ▲</span><span>QQQ +0.8%</span><span class="dn">VIX -3.4% ▼</span>
+    <span class="up">BTC +2.1% ▲</span><span>ETH +1.5%</span><span class="up">GOLD +0.3% ▲</span>
+    <span class="dn">DXY -0.2% ▼</span><span>EUR/USD +0.1%</span><span class="up">GBP/USD +0.4% ▲</span>
+    <span class="dn">OIL -1.1% ▼</span><span class="up">AAPL +0.9% ▲</span><span class="up">NVDA +3.2% ▲</span>
+    <span>10Y YIELD 4.32%</span><span class="up">TSLA +0.6% ▲</span><span class="dn">META -0.3% ▼</span>
+    <span class="up">SPY +1.2% ▲</span><span>QQQ +0.8%</span><span class="dn">VIX -3.4% ▼</span>
+    <span class="up">BTC +2.1% ▲</span><span>ETH +1.5%</span><span class="up">GOLD +0.3% ▲</span>
+  </div>
 </div>
 
 <main>
-  <div class="hero-wrap">
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="badge fade-in"><span class="pulse"></span> 7 Free Modules • No Account Required</div>
-    <h1 class="fade-in-2">Trade with <span class="grad">structure</span>.<br>Not hope.</h1>
-    <p class="hero-sub fade-in-3">From reading a candlestick to sizing a position — every concept you need to trade systematically, built into TrendTrooper's pipeline.</p>
-    <div class="hero-cta fade-in-3">
-      <a class="btn primary" href="#modules">Begin Module 1</a>
-      <a class="btn" href="#tools">Jump to Risk Calculator</a>
+
+<!-- HERO -->
+<div class="hero fi">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="badge"><span class="dot"></span>// TRENDTROOPER ACADEMY // SYSTEM ONLINE //</div>
+  <h1>
+    <span class="glitch">TRADE WITH</span><br>
+    <span class="accent">STRUCTURE.</span>
+  </h1>
+  <p class="hero-sub">Not hope. Not luck. <strong>Systematic edge</strong> over emotion — from recruit to legend. Free forever. No paywall.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num" data-target="7">0</span><span class="stat-lbl">Core Modules</span></div>
+    <div class="stat"><span class="stat-num" data-target="24">0</span><span class="stat-lbl">Indicators</span></div>
+    <div class="stat"><span class="stat-num" data-target="50">0</span><span class="stat-lbl">Free Resources</span></div>
+    <div class="stat"><span class="stat-num" style="font-size:2rem">∞</span><span class="stat-lbl">Free Forever</span></div>
+  </div>
+  <div class="hero-btns">
+    <a href="#path" class="btn btn-primary">Begin Training</a>
+    <a href="#resources" class="btn btn-outline">View Resources</a>
+  </div>
+</div>
+
+<div class="cyber-line"></div>
+
+<!-- LEARNING PATH -->
+<section id="path" class="alt">
+  <div class="container">
+    <div class="sec-head fi">
+      <span class="sec-tag">// 01 / learning path</span>
+      <h2 class="sec-title">CHOOSE YOUR <span class="c">RANK</span></h2>
+      <p class="sec-desc">Every legend started as a recruit. Progress through the ranks as your skills evolve.</p>
+    </div>
+    <div class="path-grid">
+
+      <div class="path-card r1 fi">
+        <div class="rank-tag">Rank 01</div>
+        <div class="rank-name">RECRUIT</div>
+        <div class="rank-time">// Beginner · 0–6 months</div>
+        <ul class="rank-skills">
+          <li>How markets work</li><li>Reading candlestick charts</li><li>Support &amp; resistance basics</li>
+          <li>Risk management fundamentals</li><li>Order types &amp; execution</li><li>Paper trading practice</li>
+        </ul>
+      </div>
+
+      <div class="path-card r2 fi">
+        <div class="rank-tag">Rank 02</div>
+        <div class="rank-name">OPERATOR</div>
+        <div class="rank-time">// Intermediate · 6–18 months</div>
+        <ul class="rank-skills">
+          <li>Technical indicators &amp; setups</li><li>Trend analysis &amp; structure</li><li>Position sizing &amp; drawdown</li>
+          <li>Strategy development &amp; testing</li><li>Trading journal discipline</li><li>Multi-timeframe analysis</li>
+        </ul>
+      </div>
+
+      <div class="path-card r3 fi">
+        <div class="rank-tag">Rank 03</div>
+        <div class="rank-name">GHOST</div>
+        <div class="rank-time">// Advanced · 18 months–3 years</div>
+        <ul class="rank-skills">
+          <li>Options &amp; derivatives</li><li>Order flow &amp; volume analysis</li><li>Backtesting &amp; system design</li>
+          <li>Algorithmic signal systems</li><li>Psychology &amp; discipline mastery</li><li>Portfolio management</li>
+        </ul>
+      </div>
+
+      <div class="path-card r4 fi">
+        <div class="rank-tag">Rank 04</div>
+        <div class="rank-name">LEGEND</div>
+        <div class="rank-time">// Elite · 3+ years</div>
+        <ul class="rank-skills">
+          <li>Full automation &amp; quant methods</li><li>Institutional order flow</li><li>Fund-level risk models</li>
+          <li>Macro &amp; cross-asset trading</li><li>System optimization &amp; AI</li><li>Teaching &amp; mentoring others</li>
+        </ul>
+      </div>
+
     </div>
   </div>
+</section>
 
-  <div class="stats">
-    <div class="stat-card"><div class="val">7</div><div class="lbl">Learning Modules</div></div>
-    <div class="stat-card"><div class="val">24+</div><div class="lbl">Indicators Covered</div></div>
-    <div class="stat-card"><div class="val">12</div><div class="lbl">Chart Patterns</div></div>
-    <div class="stat-card"><div class="val">Free</div><div class="lbl">Forever. No Paywall.</div></div>
-  </div>
+<div class="cyber-line"></div>
 
-  <div class="section" id="modules">
-    <div class="tag-line"><span></span></div>
-    <div class="sec-head">
-      <h2>Learning Modules</h2>
-      <span class="sec-sub">Work through these in order for best results</span>
+<!-- MODULES -->
+<section id="modules">
+  <div class="container">
+    <div class="sec-head fi">
+      <span class="sec-tag">// 02 / core curriculum</span>
+      <h2 class="sec-title">TRAINING <span class="p">MODULES</span></h2>
+      <p class="sec-desc">Seven battle-tested modules. Built for traders who want systematic edge — not hot tips.</p>
     </div>
-    <div class="modules">
-      <div class="mod-card">
-        <div class="mod-num">MODULE 01</div>
-        <div class="mod-icon">📊</div>
-        <h3>Market Structure Basics</h3>
-        <p>Understand how markets move: order flow, price action, support & resistance, and the mechanics behind every candle.</p>
-        <div class="mod-meta"><span class="mod-pill blue">9 topics</span><span class="mod-pill green">Beginner</span></div>
+
+    <div class="terminal fi">
+      <div class="term-body">
+        <div><span class="tp">$ </span><span class="tc">load --curriculum trendtrooper --modules all</span></div>
+        <div class="to">Loading 7 modules... [████████████████████] 100%</div>
+        <div class="to">Status: READY | Access: FREE FOREVER | Range: BEGINNER → ADVANCED</div>
       </div>
-      <div class="mod-card">
-        <div class="mod-num">MODULE 02</div>
-        <div class="mod-icon">📈</div>
-        <h3>Technical Analysis</h3>
-        <p>Read charts with precision. Identify trends, interpret Japanese candlesticks, and understand chart patterns used by professionals.</p>
-        <div class="mod-meta"><span class="mod-pill blue">6 topics</span><span class="mod-pill green">Beginner</span></div>
+    </div>
+
+    <div class="mods-grid">
+
+      <div class="mod beg fi">
+        <div class="mod-top">
+          <div class="mod-n">01</div>
+          <div><span class="mod-badge">Beginner</span><h3>Market Structure Basics</h3></div>
+        </div>
+        <p>Understand how price actually moves — not textbook theory, but real order flow, auction mechanics, and why support/resistance works.</p>
+        <ul class="mod-topics">
+          <li>How price discovers value (auction theory)</li><li>Bulls vs bears: order flow dynamics</li>
+          <li>Support, resistance &amp; key levels</li><li>Trend structure: HH, HL, LH, LL</li>
+          <li>Liquidity zones &amp; stop hunts</li><li>Market sessions &amp; volatility windows</li>
+        </ul>
       </div>
-      <div class="mod-card">
-        <div class="mod-num">MODULE 03</div>
-        <div class="mod-icon">🛡️</div>
-        <h3>Risk & Money Management</h3>
-        <p>Protect your capital first. Learn position sizing, max daily loss rules, ATR-based stops, and drawdown control.</p>
-        <div class="mod-meta"><span class="mod-pill blue">6 topics</span><span class="mod-pill" style="border-color:rgba(245,158,11,.3);color:var(--amber)">Intermediate</span></div>
+
+      <div class="mod beg fi">
+        <div class="mod-top">
+          <div class="mod-n">02</div>
+          <div><span class="mod-badge">Beginner</span><h3>Technical Analysis</h3></div>
+        </div>
+        <p>Learn to read price through charts, candlesticks, and patterns — the universal language of every market on earth.</p>
+        <ul class="mod-topics">
+          <li>Candlestick anatomy &amp; reading</li><li>Key reversal candles: doji, hammer, engulfing</li>
+          <li>Chart types: line, bar, candle, Heikin-Ashi</li><li>Trendlines, channels &amp; wedges</li>
+          <li>Volume analysis &amp; confirmation</li><li>Breakouts vs fakeouts</li>
+        </ul>
       </div>
-      <div class="mod-card">
-        <div class="mod-num">MODULE 04</div>
-        <div class="mod-icon">⚙️</div>
-        <h3>Strategy Development</h3>
-        <p>Build repeatable edge. Combine indicators, define entry/exit rules, backtest your logic, and avoid common pitfalls.</p>
-        <div class="mod-meta"><span class="mod-pill blue">9 topics</span><span class="mod-pill" style="border-color:rgba(245,158,11,.3);color:var(--amber)">Intermediate</span></div>
+
+      <div class="mod int fi">
+        <div class="mod-top">
+          <div class="mod-n">03</div>
+          <div><span class="mod-badge">Intermediate</span><h3>Risk &amp; Money Management</h3></div>
+        </div>
+        <p>The single most important skill a trader can master. Most blow accounts not from bad entries — but from ignoring this module.</p>
+        <ul class="mod-topics">
+          <li>The 1–2% rule &amp; why it works</li><li>Position sizing formulas</li>
+          <li>Stop-loss placement logic</li><li>Reward-to-risk ratios (&gt;1:2)</li>
+          <li>Drawdown recovery math</li><li>Expectancy &amp; win-rate balance</li>
+        </ul>
       </div>
-      <div class="mod-card">
-        <div class="mod-num">MODULE 05</div>
-        <div class="mod-icon">🧠</div>
-        <h3>Trader Psychology</h3>
-        <p>Your edge means nothing if your emotions override it. Learn to control fear, greed, and overtrading before they control you.</p>
-        <div class="mod-meta"><span class="mod-pill blue">6 topics</span><span class="mod-pill" style="border-color:rgba(245,158,11,.3);color:var(--amber)">Intermediate</span></div>
+
+      <div class="mod int fi">
+        <div class="mod-top">
+          <div class="mod-n">04</div>
+          <div><span class="mod-badge">Intermediate</span><h3>Strategy Development</h3></div>
+        </div>
+        <p>Build a real, repeatable edge. Learn how to combine indicators, define setups, and backtest before risking a single dollar.</p>
+        <ul class="mod-topics">
+          <li>Defining a trading setup precisely</li><li>Entry triggers &amp; confirmation</li>
+          <li>Backtesting methodology</li><li>TradingView strategy testing</li>
+          <li>Building a rules-based system</li><li>Optimizing without overfitting</li>
+        </ul>
       </div>
-      <div class="mod-card">
-        <div class="mod-num">MODULE 06</div>
-        <div class="mod-icon">🤖</div>
-        <h3>Automation & Signals</h3>
-        <p>Connect TradingView alerts to execution. Understand webhooks, signal validation, and how TrendTrooper's pipeline works end-to-end.</p>
-        <div class="mod-meta"><span class="mod-pill blue">8 topics</span><span class="mod-pill" style="border-color:rgba(255,92,106,.3);color:var(--red)">Advanced</span></div>
+
+      <div class="mod int fi">
+        <div class="mod-top">
+          <div class="mod-n">05</div>
+          <div><span class="mod-badge">Intermediate</span><h3>Trader Psychology</h3></div>
+        </div>
+        <p>Your greatest enemy sits between your ears. This module tackles the fear, greed, and FOMO that destroys most traders before markets ever do.</p>
+        <ul class="mod-topics">
+          <li>Thinking in probabilities (Mark Douglas)</li><li>The psychology of losses</li>
+          <li>Revenge trading &amp; overtrading</li><li>Process over outcome focus</li>
+          <li>Pre-market routine &amp; mental state</li><li>Journaling for self-improvement</li>
+        </ul>
       </div>
-      <div class="mod-card" style="grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;min-height:auto">
-        <div style="display:flex;align-items:center;gap:14px">
-          <div class="mod-icon" style="margin:0">💡</div>
+
+      <div class="mod adv fi">
+        <div class="mod-top">
+          <div class="mod-n">06</div>
+          <div><span class="mod-badge">Advanced</span><h3>Automation &amp; Signals</h3></div>
+        </div>
+        <p>Move beyond manual trading. Automate alerts, connect webhooks, and build systematic signal pipelines on TradingView.</p>
+        <ul class="mod-topics">
+          <li>TradingView Pine Script basics</li><li>Setting up alert webhooks</li>
+          <li>Connecting to broker APIs</li><li>Building automated alert systems</li>
+          <li>3Commas, Alertatron &amp; similar tools</li><li>System monitoring &amp; failsafes</li>
+        </ul>
+      </div>
+
+      <div class="mod beg mod-wide fi">
+        <div class="mod-top">
+          <div class="mod-n">07</div>
           <div>
-            <div class="mod-num" style="margin-bottom:4px">MODULE 07</div>
-            <h3 style="margin-bottom:6px">Tips from Systematic Traders</h3>
-            <p>Concrete lessons from real trading systems: what works, what blows accounts, and how to build sustainable discipline.</p>
+            <span class="mod-badge" style="background:rgba(0,200,255,0.08);color:var(--cyan);border:1px solid rgba(0,200,255,0.25)">All Levels</span>
+            <h3>Tips from Systematic Traders</h3>
           </div>
         </div>
-        <div class="mod-meta" style="justify-content:flex-end">
-          <span class="mod-pill blue">14 topics</span>
-          <span class="mod-pill green">All Levels</span>
-        </div>
+        <p>Lessons from real systematic traders — distilled from decades of losses, wins, and hard-won clarity. No fluff, no social media hype. Trade the system, not the emotion.</p>
+        <ul class="mod-topics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0 2rem">
+          <li>Trade the system, not the emotion</li><li>Why simple beats complex</li>
+          <li>The importance of consistency</li><li>When to break rules (and when not to)</li>
+          <li>Lessons from Market Wizards</li><li>Building a sustainable edge</li>
+        </ul>
       </div>
-    </div>
-  </div>
 
-  <div class="section" id="indicators">
-    <div class="tag-line"><span></span></div>
-    <div class="sec-head">
-      <h2>Technical Indicator Reference</h2>
-      <span class="sec-sub">Key indicators used inside TrendTrooper strategies</span>
-    </div>
-    <div class="indicator-grid">
-      <div class="ind-card">
-        <div class="ind-icon mo">📊</div>
-        <div>
-          <div class="ind-name">EMA — Exponential Moving Average</div>
-          <div class="ind-desc">Weights recent prices more heavily. Reacts faster to price changes. Common settings: EMA 9, 20, 50, 200. Used for trend direction and crossover signals.</div>
-        </div>
-        <div class="ind-signal"><span class="signal-bull">Trend</span></div>
-      </div>
-      <div class="ind-card">
-        <div class="ind-icon os">📉</div>
-        <div>
-          <div class="ind-name">RSI — Relative Strength Index</div>
-          <div class="ind-desc">Oscillates 0–100. Above 70 = overbought, below 30 = oversold. Default period: 14. TrendTrooper uses RSI to filter trades against exhausted momentum.</div>
-        </div>
-        <div class="ind-signal"><span class="signal-bear">Oscillator</span></div>
-      </div>
-      <div class="ind-card">
-        <div class="ind-icon vl">📦</div>
-        <div>
-          <div class="ind-name">VWAP — Volume Weighted Avg Price</div>
-          <div class="ind-desc">Average price weighted by volume for the session. Institutional benchmark. Price above VWAP = bullish bias. Resets daily. Critical for intraday signals.</div>
-        </div>
-        <div class="ind-signal"><span class="signal-bull">Intraday</span></div>
-      </div>
-      <div class="ind-card">
-        <div class="ind-icon tr">🔥</div>
-        <div>
-          <div class="ind-name">ATR — Average True Range</div>
-          <div class="ind-desc">Measures volatility, not direction. Used to calculate stop-loss distances and position size. TrendTrooper multiplies ATR × 1.5–2.5 for dynamic stops.</div>
-        </div>
-        <div class="ind-signal"><span class="signal-neut">Volatility</span></div>
-      </div>
-      <div class="ind-card">
-        <div class="ind-icon mo" style="background:rgba(34,214,115,.1);border-color:rgba(34,214,115,.2)">〰️</div>
-        <div>
-          <div class="ind-name">MACD — Moving Average Convergence Divergence</div>
-          <div class="ind-desc">Shows relationship between two EMAs (typically 12 and 26). Signal line = 9-period EMA of MACD. Histogram shows momentum strength and direction.</div>
-        </div>
-        <div class="ind-signal"><span class="signal-bull">Momentum</span></div>
-      </div>
-      <div class="ind-card">
-        <div class="ind-icon os" style="background:rgba(255,92,106,.08);border-color:rgba(255,92,106,.2)">🎯</div>
-        <div>
-          <div class="ind-name">Bollinger Bands</div>
-          <div class="ind-desc">20-period SMA with ±2 standard deviation bands. Price touching upper = extended. Lower = oversold. Band squeeze signals a volatility breakout ahead.</div>
-        </div>
-        <div class="ind-signal"><span class="signal-neut">Volatility</span></div>
-      </div>
     </div>
   </div>
+</section>
 
-  <div class="section">
-    <div class="tag-line"><span></span></div>
-    <div class="sec-head">
-      <h2>Moving Averages Deep Dive</h2>
-      <span class="sec-sub">The backbone of TrendTrooper's signal logic</span>
-    </div>
-    <div class="chart-section">
-      <div class="chart-head">
-        <h3>MA Types — Live Comparison Chart</h3>
-        <div class="chart-tabs" id="maTabs">
-          <button class="ctab active" data-tab="compare">SMA vs EMA</button>
-          <button class="ctab" data-tab="cross">Crossover</button>
-          <button class="ctab" data-tab="rsi">RSI</button>
-        </div>
-      </div>
-      <div class="chart-body">
-        <div class="chart-container"><canvas id="maChart" role="img" aria-label="Comparison of Simple Moving Average and Exponential Moving Average">Chart loading…</canvas></div>
-      </div>
-    </div>
-    <div class="ma-compare">
-      <div class="ma-box">
-        <h4>Simple Moving Average (SMA)</h4>
-        <p>Adds the last N closing prices and divides by N. Equal weight to all periods. Slower to react — smooths out noise better. Better for longer-term trend identification.</p>
-        <span class="ma-tag slow">Lagging • Smooth</span>
-      </div>
-      <div class="ma-box">
-        <h4>Exponential Moving Average (EMA)</h4>
-        <p>Applies a multiplier giving more weight to recent candles. Reacts faster to price changes. More signals — but also more false positives. Preferred for shorter-term strategies.</p>
-        <span class="ma-tag fast">Reactive • Responsive</span>
-      </div>
-    </div>
-  </div>
+<div class="cyber-line"></div>
 
-  <div class="section" id="patterns">
-    <div class="tag-line"><span></span></div>
-    <div class="sec-head">
-      <h2>Chart Patterns</h2>
-      <span class="sec-sub">Repeat setups that occur across all markets and timeframes</span>
+<!-- INDICATORS -->
+<section id="indicators" class="alt">
+  <div class="container">
+    <div class="sec-head fi">
+      <span class="sec-tag">// 03 / technical tools</span>
+      <h2 class="sec-title">KEY <span class="c">INDICATORS</span></h2>
+      <p class="sec-desc">Master these before adding more. Signal stacking without understanding is noise, not edge.</p>
     </div>
-    <div class="patterns">
-      <div class="pat-card">
-        <div class="pat-img">
-          <svg class="candle-demo" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <polyline points="10,65 20,50 30,55 45,40 55,45 70,30 80,35 95,20 110,25" stroke="#6ee7ff" stroke-width="1.5" fill="none"/>
-            <line x1="45" y1="20" x2="45" y2="70" stroke="rgba(110,231,255,.2)" stroke-width="0.5" stroke-dasharray="3,3"/>
-            <line x1="10" y1="30" x2="110" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="0.5"/>
-            <text x="60" y="78" fill="rgba(122,150,187,.8)" font-size="8" text-anchor="middle" font-family="monospace">BREAKOUT →</text>
-          </svg>
-        </div>
-        <h4>Horizontal Resistance Break</h4>
-        <p>Bullish • All timeframes</p>
-      </div>
-      <div class="pat-card">
-        <div class="pat-img">
-          <svg class="candle-demo" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <polyline points="10,60 25,35 40,28 55,42 70,35 85,50 100,42" stroke="#22d673" stroke-width="1.5" fill="none"/>
-            <polyline points="10,40 25,52 40,45 55,58 70,50 85,62 100,55" stroke="rgba(34,214,115,.3)" stroke-width="1" fill="none"/>
-            <rect x="8" y="18" width="96" height="45" rx="4" fill="rgba(34,214,115,.05)" stroke="rgba(34,214,115,.15)" stroke-width="0.5"/>
-            <text x="60" y="78" fill="rgba(122,150,187,.8)" font-size="8" text-anchor="middle" font-family="monospace">CHANNEL UP</text>
-          </svg>
-        </div>
-        <h4>Rising Channel</h4>
-        <p>Bullish • Swing trades</p>
-      </div>
-      <div class="pat-card">
-        <div class="pat-img">
-          <svg class="candle-demo" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <line x1="10" y1="35" x2="110" y2="35" stroke="rgba(110,231,255,.2)" stroke-width="0.5" stroke-dasharray="3,3"/>
-            <polyline points="10,20 30,35 45,15 65,35 80,10 100,35 110,50" stroke="#6ee7ff" stroke-width="1.5" fill="none"/>
-            <circle cx="30" cy="35" r="3" fill="rgba(110,231,255,.4)"/>
-            <circle cx="65" cy="35" r="3" fill="rgba(110,231,255,.4)"/>
-            <circle cx="100" cy="35" r="3" fill="rgba(110,231,255,.4)"/>
-            <text x="60" y="78" fill="rgba(122,150,187,.8)" font-size="8" text-anchor="middle" font-family="monospace">TRIPLE TOP</text>
-          </svg>
-        </div>
-        <h4>Triple Top</h4>
-        <p>Bearish reversal • Strong signal</p>
-      </div>
-      <div class="pat-card">
-        <div class="pat-img">
-          <svg class="candle-demo" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <polyline points="5,65 20,42 38,58 60,20 82,58 100,42 115,65" stroke="#ff5c6a" stroke-width="1.5" fill="none"/>
-            <line x1="38" y1="58" x2="82" y2="58" stroke="rgba(255,92,106,.35)" stroke-width="1" stroke-dasharray="3,3"/>
-            <circle cx="60" cy="20" r="3" fill="rgba(255,92,106,.6)"/>
-            <circle cx="20" cy="42" r="2.5" fill="rgba(255,92,106,.45)"/>
-            <circle cx="100" cy="42" r="2.5" fill="rgba(255,92,106,.45)"/>
-            <text x="60" y="78" fill="rgba(122,150,187,.8)" font-size="8" text-anchor="middle" font-family="monospace">HEAD &amp; SHLDRS</text>
-          </svg>
-        </div>
-        <h4>Head & Shoulders</h4>
-        <p>Bearish reversal • High reliability</p>
-      </div>
-    </div>
-  </div>
+    <div class="ind-grid">
 
-  <div class="section" id="tools">
-    <div class="tag-line"><span></span></div>
-    <div class="sec-head">
-      <h2>Position Size Calculator</h2>
-      <span class="sec-sub">The same logic TrendTrooper's risk validator uses</span>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">EMA</div><div class="ind-type">Trend</div></div>
+        <p class="ind-desc">Exponential Moving Average weights recent price heavier. Reacts faster than SMA. The backbone of most trend-following systems globally.</p>
+        <div class="ind-set">Settings: 9 / 20 / 50 / 200 | Use: Trend direction, dynamic S&amp;R, crossovers</div>
+      </div>
+
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">RSI</div><div class="ind-type">Oscillator</div></div>
+        <p class="ind-desc">Relative Strength Index oscillates 0–100. Measures momentum speed. Best used for divergence signals — not just overbought/oversold readings.</p>
+        <div class="ind-set">Period: 14 | OB: &gt;70 | OS: &lt;30 | Divergence is the real signal</div>
+      </div>
+
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">VWAP</div><div class="ind-type">Intraday</div></div>
+        <p class="ind-desc">Volume Weighted Average Price — the institutional benchmark. Institutions judge their fills against it. Above = bullish bias. Resets daily.</p>
+        <div class="ind-set">Resets daily | Use: Intraday bias, institutional entries, mean reversion</div>
+      </div>
+
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">ATR</div><div class="ind-type">Volatility</div></div>
+        <p class="ind-desc">Average True Range measures volatility — not direction. Sets stops that adapt to current conditions, not arbitrary fixed amounts.</p>
+        <div class="ind-set">Period: 14 | Stop: 1.5–2.5× ATR | Adapts to volatility regime</div>
+      </div>
+
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">MACD</div><div class="ind-type">Momentum</div></div>
+        <p class="ind-desc">Measures momentum via EMA relationships. Histogram shows acceleration — the leading signal within MACD that most traders ignore.</p>
+        <div class="ind-set">12/26/9 default | Histogram flip + crossover | Look for divergence</div>
+      </div>
+
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">BB</div><div class="ind-type">Volatility</div></div>
+        <p class="ind-desc">Bollinger Bands: 20-period SMA ± 2 standard deviations. Price visits outer bands 5% of the time. Squeeze = breakout incoming.</p>
+        <div class="ind-set">20 SMA ± 2 StdDev | Squeeze = bands converging | Walk bands in trends</div>
+      </div>
+
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">FIBO</div><div class="ind-type">Price Tool</div></div>
+        <p class="ind-desc">Fibonacci retracement levels mark potential S/R within pullbacks. The 0.618 (golden ratio) is the most respected level among professional traders.</p>
+        <div class="ind-set">Key: 0.236 / 0.382 / 0.5 / 0.618 / 0.786 | Draw swing high to low</div>
+      </div>
+
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">STOCH</div><div class="ind-type">Oscillator</div></div>
+        <p class="ind-desc">Stochastic oscillator compares closing price to range over a period. Works best in ranging markets. Avoid using in strong trends.</p>
+        <div class="ind-set">14,3,3 default | OB: &gt;80 | OS: &lt;20 | Crossovers near extremes</div>
+      </div>
+
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">ICHIMOKU</div><div class="ind-type">Multi-Signal</div></div>
+        <p class="ind-desc">All-in-one Japanese system: trend, momentum, S/R in one view. The cloud (Kumo) projects future levels. Complex but extremely powerful once mastered.</p>
+        <div class="ind-set">5 components: Tenkan, Kijun, Senkou A&amp;B, Chikou | Cloud = trend bias</div>
+      </div>
+
     </div>
-    <div class="risk-calc">
-      <div class="calc-head">🧮 Risk Calculator</div>
-      <div class="calc-body" id="calcBody">
-        <div class="inp-group">
-          <label>ACCOUNT SIZE ($)</label>
-          <input type="number" id="accSize" value="25000" step="500" />
+  </div>
+</section>
+
+<div class="cyber-line"></div>
+
+<!-- PATTERNS -->
+<section id="patterns">
+  <div class="container">
+    <div class="sec-head fi">
+      <span class="sec-tag">// 04 / chart patterns</span>
+      <h2 class="sec-title">PATTERN <span class="y">RECOGNITION</span></h2>
+      <p class="sec-desc">Patterns repeat because human psychology repeats. Learn the setups professionals watch every single day.</p>
+    </div>
+    <div class="pat-grid">
+
+      <div class="pat bull fi">
+        <div class="pat-sig">▲ Bullish</div>
+        <div class="pat-chart">
+          <div class="c" style="height:30px;background:var(--green)"></div>
+          <div class="c" style="height:25px;background:var(--green)"></div>
+          <div class="c" style="height:20px;background:var(--red)"></div>
+          <div class="c" style="height:18px;background:var(--red)"></div>
+          <div class="c" style="height:22px;background:var(--green)"></div>
+          <div class="c" style="height:42px;background:var(--green)"></div>
+          <div class="c" style="height:58px;background:var(--green)"></div>
         </div>
-        <div class="inp-group">
-          <label>RISK PER TRADE (%)</label>
-          <input type="number" id="riskPct" value="1" step="0.1" min="0.1" max="5" />
+        <div class="pat-name">Horizontal Breakout</div>
+        <p>Price consolidates below resistance, then closes above on volume. High-probability continuation signal.</p>
+      </div>
+
+      <div class="pat bull fi">
+        <div class="pat-sig">▲ Bullish</div>
+        <div class="pat-chart">
+          <div class="c" style="height:18px;background:var(--green)"></div>
+          <div class="c" style="height:26px;background:var(--green)"></div>
+          <div class="c" style="height:34px;background:var(--green)"></div>
+          <div class="c" style="height:42px;background:var(--green)"></div>
+          <div class="c" style="height:50px;background:var(--green)"></div>
+          <div class="c" style="height:58px;background:var(--green)"></div>
+          <div class="c" style="height:66px;background:var(--green)"></div>
         </div>
-        <div class="inp-group">
-          <label>ENTRY PRICE ($)</label>
-          <input type="number" id="entryPrice" value="450" step="0.01" />
+        <div class="pat-name">Rising Channel</div>
+        <p>Higher highs &amp; higher lows within parallel trendlines. Buy the floor, target the ceiling.</p>
+      </div>
+
+      <div class="pat bull fi">
+        <div class="pat-sig">▲ Bullish</div>
+        <div class="pat-chart" style="align-items:center">
+          <div class="c" style="height:52px;background:var(--red)"></div>
+          <div class="c" style="height:30px;background:var(--red)"></div>
+          <div class="c" style="height:18px;background:var(--green)"></div>
+          <div class="c" style="height:14px;background:var(--green)"></div>
+          <div class="c" style="height:22px;background:var(--green)"></div>
+          <div class="c" style="height:44px;background:var(--green)"></div>
+          <div class="c" style="height:62px;background:var(--green)"></div>
         </div>
-        <div class="inp-group">
-          <label>STOP LOSS ($)</label>
-          <input type="number" id="stopPrice" value="445" step="0.01" />
+        <div class="pat-name">Double Bottom (W)</div>
+        <p>Two equal lows form a W. Break of neckline confirms reversal. High-probability bullish signal.</p>
+      </div>
+
+      <div class="pat bull fi">
+        <div class="pat-sig">▲ Bullish</div>
+        <div class="pat-chart" style="align-items:center">
+          <div class="c" style="height:38px;background:var(--red)"></div>
+          <div class="c" style="height:24px;background:var(--red)"></div>
+          <div class="c" style="height:12px;background:var(--green)"></div>
+          <div class="c" style="height:52px;background:var(--red)"></div>
+          <div class="c" style="height:10px;background:var(--green)"></div>
+          <div class="c" style="height:36px;background:var(--green)"></div>
+          <div class="c" style="height:60px;background:var(--green)"></div>
         </div>
-        <div class="calc-result">
-          <div>
-            <div class="res-label">SHARES TO BUY</div>
-            <div style="font-size:11px;color:var(--muted2);margin-top:3px">Based on your risk rules</div>
-          </div>
-          <div class="res-val" id="sharesOut">50</div>
+        <div class="pat-name">Inv. Head &amp; Shoulders</div>
+        <p>Neckline break = confirmed reversal. One of the most reliable patterns in TA.</p>
+      </div>
+
+      <div class="pat bear fi">
+        <div class="pat-sig">▼ Bearish</div>
+        <div class="pat-chart" style="align-items:flex-start;padding-top:8px">
+          <div class="c" style="height:56px;background:var(--red)"></div>
+          <div class="c" style="height:38px;background:var(--green)"></div>
+          <div class="c" style="height:55px;background:var(--red)"></div>
+          <div class="c" style="height:38px;background:var(--green)"></div>
+          <div class="c" style="height:54px;background:var(--red)"></div>
+          <div class="c" style="height:24px;background:var(--red)"></div>
+          <div class="c" style="height:12px;background:var(--red)"></div>
         </div>
-        <div class="calc-result" style="background:rgba(34,214,115,.06);border-color:rgba(34,214,115,.18)">
-          <div>
-            <div class="res-label" style="color:rgba(34,214,115,.7)">$ AT RISK</div>
-            <div style="font-size:11px;color:var(--muted2);margin-top:3px">Must not exceed account risk limit</div>
-          </div>
-          <div class="res-val" id="dollarRiskOut" style="color:var(--green)">$250</div>
+        <div class="pat-name">Triple Top</div>
+        <p>Three failed attempts to break resistance. Bears regaining control. Break below support = confirmed reversal.</p>
+      </div>
+
+      <div class="pat bear fi">
+        <div class="pat-sig">▼ Bearish</div>
+        <div class="pat-chart" style="align-items:flex-start;padding-top:8px">
+          <div class="c" style="height:44px;background:var(--red)"></div>
+          <div class="c" style="height:28px;background:var(--green)"></div>
+          <div class="c" style="height:62px;background:var(--red)"></div>
+          <div class="c" style="height:28px;background:var(--green)"></div>
+          <div class="c" style="height:40px;background:var(--red)"></div>
+          <div class="c" style="height:18px;background:var(--red)"></div>
+          <div class="c" style="height:8px;background:var(--red)"></div>
+        </div>
+        <div class="pat-name">Head &amp; Shoulders</div>
+        <p>Classic topping formation. Neckline break = confirmed reversal. Measure head height for price target.</p>
+      </div>
+
+      <div class="pat cont fi">
+        <div class="pat-sig">◆ Continuation</div>
+        <div class="pat-chart" style="align-items:center">
+          <div class="c" style="height:62px;background:var(--green)"></div>
+          <div class="c" style="height:40px;background:var(--red)"></div>
+          <div class="c" style="height:30px;background:var(--red)"></div>
+          <div class="c" style="height:30px;background:var(--green)"></div>
+          <div class="c" style="height:24px;background:var(--red)"></div>
+          <div class="c" style="height:56px;background:var(--green)"></div>
+          <div class="c" style="height:72px;background:var(--green)"></div>
+        </div>
+        <div class="pat-name">Bull Flag</div>
+        <p>Strong move (flagpole), tight pullback (flag). Volume dries on flag, surges on breakout. High-probability continuation.</p>
+      </div>
+
+      <div class="pat cont fi">
+        <div class="pat-sig">◆ Continuation</div>
+        <div class="pat-chart" style="align-items:center">
+          <div class="c" style="height:62px;background:var(--green)"></div>
+          <div class="c" style="height:48px;background:var(--red)"></div>
+          <div class="c" style="height:42px;background:var(--red)"></div>
+          <div class="c" style="height:44px;background:var(--green)"></div>
+          <div class="c" style="height:40px;background:var(--red)"></div>
+          <div class="c" style="height:44px;background:var(--green)"></div>
+          <div class="c" style="height:70px;background:var(--green)"></div>
+        </div>
+        <div class="pat-name">Ascending Triangle</div>
+        <p>Flat resistance, higher lows. Buyers getting more aggressive. Breakout above flat ceiling = strong continuation.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="cyber-line"></div>
+
+<!-- RESOURCES -->
+<section id="resources" class="alt">
+  <div class="container">
+    <div class="sec-head fi">
+      <span class="sec-tag">// 05 / external intel</span>
+      <h2 class="sec-title">CURATED <span class="g">RESOURCES</span></h2>
+      <p class="sec-desc">Hand-picked platforms, channels, books, and tools — filtered for quality, not popularity.</p>
+    </div>
+
+    <div class="res-tabs fi">
+      <button class="rtab on" onclick="switchTab('yt',this)">YouTube Channels</button>
+      <button class="rtab" onclick="switchTab('books',this)">Books</button>
+      <button class="rtab" onclick="switchTab('platforms',this)">Platforms</button>
+      <button class="rtab" onclick="switchTab('tools',this)">Free Tools</button>
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="tab on" id="tab-yt">
+      <div class="res-grid">
+        <a href="https://www.youtube.com/@Rayner-Teo" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">▶</div>
+          <div><div class="res-name">Rayner Teo</div><div class="res-type">YouTube · Technical Analysis</div>
+          <p class="res-desc">Clean price action, MAs, trend following. Clearest explainer for building a real system. Beginner-friendly but deep enough for operators.</p>
+          <span class="lvl b">Beginner</span></div>
+        </a>
+        <a href="https://www.youtube.com/@TheChartGuys" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">▶</div>
+          <div><div class="res-name">The Chart Guys</div><div class="res-type">YouTube · Technical Analysis</div>
+          <p class="res-desc">Methodical TA frameworks across stocks, crypto, and commodities. Led by Dan with daily live streams and chart breakdowns.</p>
+          <span class="lvl i">Intermediate</span></div>
+        </a>
+        <a href="https://www.youtube.com/@UrbanForex" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">▶</div>
+          <div><div class="res-name">Urban Forex</div><div class="res-type">YouTube · Forex</div>
+          <p class="res-desc">Structure-based forex trading covering price action, S&amp;R, and psychology. Real trade breakdowns with discipline focus.</p>
+          <span class="lvl i">Intermediate</span></div>
+        </a>
+        <a href="https://www.youtube.com/@ClayTrader" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">▶</div>
+          <div><div class="res-name">ClayTrader</div><div class="res-type">YouTube · Day Trading</div>
+          <p class="res-desc">Practical day trading content with no hype. TA-focused lessons, live webinars, and straight execution breakdowns.</p>
+          <span class="lvl b">Beginner</span></div>
+        </a>
+        <a href="https://academy.avatrade.com/courses/" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">▶</div>
+          <div><div class="res-name">AvaAcademy</div><div class="res-type">Free Course Platform</div>
+          <p class="res-desc">Free structured courses across forex, stocks, crypto, and commodities. No account required. All levels covered.</p>
+          <span class="lvl all">All Levels</span></div>
+        </a>
+        <a href="https://academy.binance.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">▶</div>
+          <div><div class="res-name">Binance Academy</div><div class="res-type">Free Education · Crypto</div>
+          <p class="res-desc">400+ free articles and videos from DeFi to futures. The most extensive free crypto education library available.</p>
+          <span class="lvl all">All Levels</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- BOOKS -->
+    <div class="tab" id="tab-books">
+      <div class="res-grid">
+        <div class="res" style="cursor:default">
+          <div class="res-ico">📖</div>
+          <div><div class="res-name">Trading in the Zone</div><div class="res-type">Psychology · Mark Douglas</div>
+          <p class="res-desc">The single most recommended trading psychology book ever written. Teaches you to think in probabilities and trade without fear or greed. Read it twice.</p>
+          <span class="lvl i">Intermediate</span></div>
+        </div>
+        <div class="res" style="cursor:default">
+          <div class="res-ico">📖</div>
+          <div><div class="res-name">Market Wizards</div><div class="res-type">Interviews · Jack Schwager</div>
+          <p class="res-desc">Interviews with Paul Tudor Jones, Ed Seykota, and others. Uncovers the philosophies and breakthroughs that shaped the world's best traders.</p>
+          <span class="lvl all">All Levels</span></div>
+        </div>
+        <div class="res" style="cursor:default">
+          <div class="res-ico">📖</div>
+          <div><div class="res-name">Technical Analysis of Financial Markets</div><div class="res-type">TA Bible · John Murphy</div>
+          <p class="res-desc">The definitive TA textbook. Covers every major concept from chart patterns to intermarket analysis. The reference book — keep it on your desk.</p>
+          <span class="lvl i">Intermediate</span></div>
+        </div>
+        <div class="res" style="cursor:default">
+          <div class="res-ico">📖</div>
+          <div><div class="res-name">Reminiscences of a Stock Operator</div><div class="res-type">Classic · Edwin Lefèvre</div>
+          <p class="res-desc">Semi-autobiographical account of Jesse Livermore. Timeless lessons on speculation, psychology, and market behavior. Every trader must read this.</p>
+          <span class="lvl all">All Levels</span></div>
+        </div>
+        <div class="res" style="cursor:default">
+          <div class="res-ico">📖</div>
+          <div><div class="res-name">The Intelligent Investor</div><div class="res-type">Value Investing · Benjamin Graham</div>
+          <p class="res-desc">Graham's value investing philosophy with margin of safety. 70+ years of tested wisdom. Buffett calls it the best investing book ever written.</p>
+          <span class="lvl b">Beginner</span></div>
+        </div>
+        <div class="res" style="cursor:default">
+          <div class="res-ico">📖</div>
+          <div><div class="res-name">Thinking, Fast and Slow</div><div class="res-type">Psychology · Daniel Kahneman</div>
+          <p class="res-desc">Nobel Prize winner explains why human brains fail with money. Understanding cognitive biases is a genuine trading edge most traders overlook entirely.</p>
+          <span class="lvl a">Advanced</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLATFORMS -->
+    <div class="tab" id="tab-platforms">
+      <div class="res-grid">
+        <a href="https://www.tradingview.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">📊</div>
+          <div><div class="res-name">TradingView</div><div class="res-type">Charting Platform</div>
+          <p class="res-desc">The world's best charting platform. Free tier: real-time charts, 3 indicators, Pine Script, paper trading, and market replay. Used by professionals globally.</p>
+          <span class="lvl all">All Levels</span></div>
+        </a>
+        <a href="https://www.thinkorswim.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">📊</div>
+          <div><div class="res-name">thinkorswim paperMoney</div><div class="res-type">Paper Trading Simulator</div>
+          <p class="res-desc">Best paper trading simulator of 2026. $100K virtual buying power, live market data, full-featured platform. Free to Schwab clients.</p>
+          <span class="lvl all">All Levels</span></div>
+        </a>
+        <a href="https://www.webull.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">📊</div>
+          <div><div class="res-name">Webull</div><div class="res-type">Paper Trading · Broker</div>
+          <p class="res-desc">Approachable paper trading for stocks, ETFs, and options. Clean interface with real-time data. No financial commitment required to practice.</p>
+          <span class="lvl b">Beginner</span></div>
+        </a>
+        <a href="https://www.ninjatrader.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">📊</div>
+          <div><div class="res-name">NinjaTrader</div><div class="res-type">Advanced Platform · Futures</div>
+          <p class="res-desc">Advanced platform for futures and forex. Tick-by-tick market replay, unlimited sim trading with live data. Ideal for strategy testing and automation.</p>
+          <span class="lvl a">Advanced</span></div>
+        </a>
+        <a href="https://naga.com/en/academy" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">📊</div>
+          <div><div class="res-name">NAGA Academy</div><div class="res-type">Free Course Platform</div>
+          <p class="res-desc">Free trading, investing, and crypto courses. Structured curriculum for all levels. No account required, no paywall — just free education.</p>
+          <span class="lvl all">All Levels</span></div>
+        </a>
+        <a href="https://www.investopedia.com/simulator" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">📊</div>
+          <div><div class="res-name">Investopedia Simulator</div><div class="res-type">Stock Simulator · Free</div>
+          <p class="res-desc">Free stock market simulator with $100K virtual cash. Pairs with Investopedia's massive free education library. Perfect entry point for absolute beginners.</p>
+          <span class="lvl b">Beginner</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- TOOLS -->
+    <div class="tab" id="tab-tools">
+      <div class="res-grid">
+        <a href="https://finviz.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">🔧</div>
+          <div><div class="res-name">Finviz</div><div class="res-type">Stock Screener · Heatmap</div>
+          <p class="res-desc">Powerful free stock screener, sector heatmap, and chart scanner. Find breakout setups and visualize market breadth at a glance.</p>
+          <span class="lvl all">All Levels</span></div>
+        </a>
+        <a href="https://unusualwhales.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">🔧</div>
+          <div><div class="res-name">Unusual Whales</div><div class="res-type">Options Flow · Dark Pool</div>
+          <p class="res-desc">Track unusual options activity, dark pool prints, and congressional trading. Follow smart money before it shows up on your chart.</p>
+          <span class="lvl a">Advanced</span></div>
+        </a>
+        <a href="https://www.barchart.com/options/unusual-activity" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">🔧</div>
+          <div><div class="res-name">Barchart Options Flow</div><div class="res-type">Options Scanner · Free</div>
+          <p class="res-desc">Free unusual options activity scanner. See where big money is betting with large unusual calls/puts before major moves. Institutional-grade data.</p>
+          <span class="lvl a">Advanced</span></div>
+        </a>
+        <a href="https://coinmarketcap.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">🔧</div>
+          <div><div class="res-name">CoinMarketCap</div><div class="res-type">Crypto Data</div>
+          <p class="res-desc">Real-time crypto prices, market caps, volume, and on-chain data. Track dominance metrics, fear &amp; greed index, and newly listed tokens.</p>
+          <span class="lvl all">All Levels</span></div>
+        </a>
+        <a href="https://www.moomoo.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">🔧</div>
+          <div><div class="res-name">Moomoo</div><div class="res-type">Mobile Paper Trading</div>
+          <p class="res-desc">$1M virtual paper trading account in the mobile app. Real-time quotes, level 2 data, seamless switch between paper and live trading.</p>
+          <span class="lvl b">Beginner</span></div>
+        </a>
+        <a href="https://www.earningswhispers.com" target="_blank" rel="noopener" class="res">
+          <div class="res-ico">🔧</div>
+          <div><div class="res-name">Earnings Whispers</div><div class="res-type">Earnings Calendar</div>
+          <p class="res-desc">Track upcoming earnings reports. Essential for options traders. Avoid getting caught by surprise catalyst events with this free calendar tool.</p>
+          <span class="lvl i">Intermediate</span></div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="cyber-line"></div>
+
+<!-- CALCULATOR -->
+<section id="calculator">
+  <div class="container">
+    <div class="sec-head fi" style="text-align:center">
+      <span class="sec-tag">// 06 / risk tool</span>
+      <h2 class="sec-title">POSITION SIZE <span class="c">CALCULATOR</span></h2>
+      <p class="sec-desc" style="margin:0 auto">Never guess your position size again. Risk exactly what you decide — nothing more.</p>
+    </div>
+    <div class="calc-wrap fi">
+      <div class="calc-grid">
+        <div class="cfield"><label>Account Size ($)</label><input type="number" id="acc" value="10000" placeholder="10000"></div>
+        <div class="cfield"><label>Risk Per Trade (%)</label><input type="number" id="risk" value="1" step="0.1" placeholder="1"></div>
+        <div class="cfield"><label>Entry Price ($)</label><input type="number" id="entry" placeholder="150.00"></div>
+        <div class="cfield"><label>Stop Loss Price ($)</label><input type="number" id="stop" placeholder="145.00"></div>
+      </div>
+      <button class="calc-btn" onclick="doCalc()">CALCULATE POSITION SIZE</button>
+      <div class="calc-out" id="calcOut">
+        <div class="calc-out-lbl">// POSITION SIZE //</div>
+        <div class="calc-out-val" id="calcShares">— shares</div>
+        <div class="calc-out-sub" id="calcInfo"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cyber-line"></div>
+
+<!-- QUIZ -->
+<section class="alt">
+  <div class="container">
+    <div class="sec-head fi" style="text-align:center">
+      <span class="sec-tag">// 07 / knowledge check</span>
+      <h2 class="sec-title">TEST YOUR <span class="p">INTEL</span></h2>
+      <p class="sec-desc" style="margin:0 auto">10 questions across all modules. Explained answers. No scores stored.</p>
+    </div>
+    <div class="quiz-wrap fi">
+      <div id="quizContainer">
+        <div class="quiz-q" id="quizQ"></div>
+        <div class="quiz-opts" id="quizOpts"></div>
+        <div class="qfeed" id="quizFeed"></div>
+        <div class="quiz-nav">
+          <span class="quiz-prog" id="quizProg"></span>
+          <button class="btn btn-primary" id="quizNext" onclick="nextQ()" style="display:none;clip-path:none;padding:10px 24px">NEXT →</button>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="section">
-    <div class="tag-line"><span></span></div>
-    <div class="sec-head">
-      <h2>Quick Knowledge Check</h2>
-      <span class="sec-sub">Test what you've learned — answers are explained</span>
+<div class="cyber-line"></div>
+
+<!-- GLOSSARY -->
+<section id="glossary">
+  <div class="container">
+    <div class="sec-head fi">
+      <span class="sec-tag">// 08 / terminology</span>
+      <h2 class="sec-title">TRADING <span class="y">GLOSSARY</span></h2>
+      <p class="sec-desc">The language of markets. Know these terms before you read a chart or place a trade.</p>
     </div>
-    <div class="quiz">
-      <h3>Module 3 — Risk Management</h3>
-      <div class="quiz-q">You have a $30,000 account and risk 1% per trade. Your entry is $100 and stop is $97. How many shares should you buy?</div>
-      <div class="quiz-opts">
-        <button class="quiz-opt" onclick="checkAnswer(this, false)">150 shares</button>
-        <button class="quiz-opt" onclick="checkAnswer(this, true)">100 shares</button>
-        <button class="quiz-opt" onclick="checkAnswer(this, false)">50 shares</button>
-        <button class="quiz-opt" onclick="checkAnswer(this, false)">200 shares</button>
-      </div>
-      <div class="quiz-feedback" id="qFeedback"></div>
+    <div class="glos-grid">
+      <div class="glos fi"><div class="glos-term">Support</div><div class="glos-def">A price level where buying interest prevents further decline. Historical floors where demand exceeds supply.</div></div>
+      <div class="glos fi"><div class="glos-term">Resistance</div><div class="glos-def">A price level where selling pressure prevents further advance. Historical ceilings where supply exceeds demand.</div></div>
+      <div class="glos fi"><div class="glos-term">Trend</div><div class="glos-def">Uptrend: higher highs &amp; higher lows. Downtrend: lower highs &amp; lower lows. Sideways: no clear direction.</div></div>
+      <div class="glos fi"><div class="glos-term">Stop Loss</div><div class="glos-def">A predefined exit price that limits your loss. Non-negotiable. Moving your stop to avoid a loss is how accounts get blown.</div></div>
+      <div class="glos fi"><div class="glos-term">Risk/Reward</div><div class="glos-def">Potential profit ÷ potential loss. A 1:2 R:R means risking $100 to make $200. Minimum acceptable is 1:1.5.</div></div>
+      <div class="glos fi"><div class="glos-term">Position Sizing</div><div class="glos-def">Calculating how many shares/contracts to buy based on your risk per trade. The most important mechanical skill in trading.</div></div>
+      <div class="glos fi"><div class="glos-term">Drawdown</div><div class="glos-def">Peak-to-trough decline in your account. A 50% drawdown requires a 100% gain to recover. Manage it obsessively.</div></div>
+      <div class="glos fi"><div class="glos-term">Breakout</div><div class="glos-def">Price moving decisively beyond a key S/R level on increased volume. Confirms a new directional move.</div></div>
+      <div class="glos fi"><div class="glos-term">Fakeout</div><div class="glos-def">A false breakout — price briefly pierces a level then reverses. Designed to trigger stop losses before reversing.</div></div>
+      <div class="glos fi"><div class="glos-term">Divergence</div><div class="glos-def">Price makes a new high/low but an indicator doesn't confirm it. One of the strongest signals in technical analysis.</div></div>
+      <div class="glos fi"><div class="glos-term">Confluence</div><div class="glos-def">Multiple technical factors aligning at the same price. S/R + Fibonacci + EMA = high-confluence setup. More factors = higher probability.</div></div>
+      <div class="glos fi"><div class="glos-term">Backtesting</div><div class="glos-def">Testing your strategy on historical data to evaluate past performance. Essential before committing real capital.</div></div>
+      <div class="glos fi"><div class="glos-term">Expectancy</div><div class="glos-def">(Win% × Avg Win) − (Loss% × Avg Loss). Positive over hundreds of trades = a real edge.</div></div>
+      <div class="glos fi"><div class="glos-term">VWAP Bias</div><div class="glos-def">Price above VWAP = bullish intraday sentiment. Below = bearish. TrendTrooper uses this as an intraday filter.</div></div>
+      <div class="glos fi"><div class="glos-term">Webhook</div><div class="glos-def">HTTP POST request TradingView sends to TrendTrooper when an alert fires. Contains the full signal payload.</div></div>
+      <div class="glos fi"><div class="glos-term">Paper Trading</div><div class="glos-def">Simulated trading with virtual money. No real financial risk. Always validate a strategy here before going live.</div></div>
+      <div class="glos fi"><div class="glos-term">Liquidity</div><div class="glos-def">How easily an asset can be bought or sold without moving price. High liquidity = tight spreads, easy fills.</div></div>
+      <div class="glos fi"><div class="glos-term">ATR Stop</div><div class="glos-def">Stop-loss set at Entry ± (ATR × multiplier). Adapts to current volatility. TrendTrooper uses 1.5–2.5× ATR.</div></div>
     </div>
   </div>
+</section>
 
-  <div class="section" id="glossary">
-    <div class="tag-line"><span></span></div>
-    <div class="sec-head">
-      <h2>Trading Glossary</h2>
-      <span class="sec-sub">Key terms used throughout TrendTrooper</span>
-    </div>
-    <div class="glossary">
-      <div class="gloss-item"><div class="gloss-term">ATR</div><div class="gloss-def">Average True Range. Measures volatility over N periods. Used for dynamic stop placement.</div></div>
-      <div class="gloss-item"><div class="gloss-term">Signal ID</div><div class="gloss-def">Unique identifier attached to each TradingView alert. Used by TrendTrooper for replay protection.</div></div>
-      <div class="gloss-item"><div class="gloss-term">Drawdown</div><div class="gloss-def">The peak-to-trough decline in account value. Controlling drawdown is the #1 rule of longevity.</div></div>
-      <div class="gloss-item"><div class="gloss-term">Webhook</div><div class="gloss-def">HTTP POST request TradingView sends to TrendTrooper when an alert fires. Contains the full signal payload.</div></div>
-      <div class="gloss-item"><div class="gloss-term">Bracket Order</div><div class="gloss-def">An entry with pre-defined stop-loss and take-profit attached. Removes emotion from exits.</div></div>
-      <div class="gloss-item"><div class="gloss-term">VWAP Bias</div><div class="gloss-def">Price above VWAP = bullish intraday sentiment. Below VWAP = bearish. TrendTrooper uses this as a filter.</div></div>
-      <div class="gloss-item"><div class="gloss-term">Paper Mode</div><div class="gloss-def">Simulated trading. Orders execute against real prices but no real money moves. Always test here first.</div></div>
-      <div class="gloss-item"><div class="gloss-term">Confluence</div><div class="gloss-def">Two or more indicators or price levels agreeing. Stronger signals come from confluent setups.</div></div>
-      <div class="gloss-item"><div class="gloss-term">R:R Ratio</div><div class="gloss-def">Risk-to-Reward. A 1:2 ratio means risking $100 to make $200. Never take trades below 1:1.5.</div></div>
-    </div>
-  </div>
 </main>
 
+<!-- FOOTER -->
 <footer>
   <div>
-    <strong style="color:var(--text2)">TrendTrooper Academy</strong> &nbsp;•&nbsp; © <span id="yr"></span> &nbsp;•&nbsp; Built on Cloudflare
+    <span class="foot-logo">TRENDTROOPER</span>
+    &nbsp;•&nbsp; Academy &nbsp;•&nbsp; © <span id="yr"></span> &nbsp;•&nbsp; Free Forever &nbsp;•&nbsp; Built on Cloudflare
   </div>
   <div class="foot-links">
     <a href="/">Home</a>
+    <a href="#path">Path</a>
     <a href="#modules">Modules</a>
-    <a href="#tools">Tools</a>
+    <a href="#resources">Resources</a>
+    <a href="#calculator">Calculator</a>
     <a href="#glossary">Glossary</a>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-  document.getElementById('yr').textContent = new Date().getFullYear();
-  function toggleInnerMenu(){
-    document.getElementById('innerMobileMenu').classList.toggle('open');
-    document.getElementById('hamburgerBtn').classList.toggle('open');
-  }
+document.getElementById('yr').textContent = new Date().getFullYear();
 
-  function genPrice(n,start,vol){const p=[start];for(let i=1;i<n;i++){p.push(+(p[i-1]+((Math.random()-.47)*vol)).toFixed(2))}return p}
-  function sma(arr,n){return arr.map((_,i)=>i<n-1?null:+(arr.slice(i-n+1,i+1).reduce((a,b)=>a+b)/n).toFixed(2))}
-  function ema(arr,n){const k=2/(n+1),out=[null];let e=arr[0];for(let i=1;i<arr.length;i++){if(i<n){out.push(null)}else if(i===n-1){e=arr.slice(0,n).reduce((a,b)=>a+b)/n;out.push(+e.toFixed(2))}else{e=arr[i]*k+e*(1-k);out.push(+e.toFixed(2))}}return out}
-  function rsi(arr,n){const out=Array(n).fill(null);for(let i=n;i<arr.length;i++){let g=0,l=0;for(let j=i-n+1;j<=i;j++){const d=arr[j]-arr[j-1];if(d>0)g+=d;else l-=d}const rs=l===0?100:g/n/(l/n);out.push(+(100-100/(1+rs)).toFixed(1))}return out}
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+  document.getElementById('hbBtn').classList.toggle('open');
+}
 
-  const labels=[...Array(60)].map((_,i)=>`D${i+1}`);
-  const price=genPrice(60,420,4);
-  const sma20=sma(price,20);
-  const ema20=ema(price,20);
-  const rsiData=rsi(price,14);
-  const gridColor='rgba(255,255,255,.05)';
-  const tickColor='rgba(122,150,187,.7)';
-  const baseOpts={responsive:true,maintainAspectRatio:false,animation:{duration:600},plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,backgroundColor:'#0f1b33',titleColor:'#7a96bb',bodyColor:'#ddeeff',borderColor:'rgba(110,231,255,.2)',borderWidth:1}},scales:{x:{ticks:{color:tickColor,font:{size:10},maxTicksLimit:10},grid:{color:gridColor}},y:{ticks:{color:tickColor,font:{size:10}},grid:{color:gridColor}}}};
+// Tab switcher
+function switchTab(id, btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on');
+  btn.classList.add('on');
+}
 
-  let maChart=null;
-  function buildCompare(){return{labels,datasets:[{label:'Price',data:price,borderColor:'#6ee7ff',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},{label:'SMA 20',data:sma20,borderColor:'#a78bfa',borderWidth:1.5,borderDash:[6,3],pointRadius:0,tension:.3,fill:false},{label:'EMA 20',data:ema20,borderColor:'#f59e0b',borderWidth:1.5,pointRadius:0,tension:.3,fill:false}]}}
-  function buildCross(){const ema9=ema(price,9);return{labels,datasets:[{label:'Price',data:price,borderColor:'#6ee7ff',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},{label:'EMA 9',data:ema9,borderColor:'#22d673',borderWidth:1.5,pointRadius:0,tension:.3,fill:false},{label:'EMA 20',data:ema20,borderColor:'#f59e0b',borderWidth:1.5,borderDash:[4,2],pointRadius:0,tension:.3,fill:false}]}}
-  function buildRSI(){return{labels,datasets:[{label:'RSI 14',data:rsiData,borderColor:'#22d673',borderWidth:1.5,pointRadius:0,tension:.3,fill:false}]}}
+// Position calculator
+function doCalc(){
+  const acc=parseFloat(document.getElementById('acc').value);
+  const riskPct=parseFloat(document.getElementById('risk').value);
+  const entry=parseFloat(document.getElementById('entry').value);
+  const stop=parseFloat(document.getElementById('stop').value);
+  if(!acc||!riskPct||!entry||!stop){alert('Please fill in all fields.');return;}
+  const riskAmt=acc*(riskPct/100);
+  const dist=Math.abs(entry-stop);
+  if(dist===0){alert('Entry and stop cannot be the same.');return;}
+  const shares=Math.floor(riskAmt/dist);
+  const actualRisk=(shares*dist).toFixed(2);
+  const cost=(shares*entry).toLocaleString('en-US',{style:'currency',currency:'USD'});
+  const el=document.getElementById('calcOut');
+  el.style.display='block';
+  document.getElementById('calcShares').textContent=shares.toLocaleString()+' shares';
+  document.getElementById('calcInfo').textContent=`Dollar risk: $${actualRisk} (${riskPct}%)  |  Position cost: ${cost}  |  Stop distance: $${dist.toFixed(2)}/share`;
+}
 
-  function initChart(type){
-    if(maChart){maChart.destroy()}
-    const ctx=document.getElementById('maChart').getContext('2d');
-    const data=type==='compare'?buildCompare():type==='cross'?buildCross():buildRSI();
-    const opts={...baseOpts};
-    if(type==='rsi'){opts.scales={...opts.scales,y:{...opts.scales.y,min:0,max:100}}}
-    maChart=new Chart(ctx,{type:'line',data,options:opts});
-  }
-  initChart('compare');
+// Counter animation
+function animateNum(el){
+  const target=parseInt(el.dataset.target);
+  if(!target)return;
+  let cur=0;const inc=target/50;
+  const t=setInterval(()=>{cur=Math.min(cur+inc,target);el.textContent=Math.round(cur)+(el.textContent.includes('+') ? '+' : '');if(cur>=target)clearInterval(t);},30);
+}
+const heroObs=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting)document.querySelectorAll('[data-target]').forEach(animateNum);
+},{threshold:.5});
+const heroStats=document.querySelector('.hero-stats');
+if(heroStats)heroObs.observe(heroStats);
 
-  document.querySelectorAll('#maTabs .ctab').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      document.querySelectorAll('#maTabs .ctab').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      initChart(btn.dataset.tab);
-    });
+// Fade-in on scroll
+const fadeObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});
+},{threshold:.08});
+document.querySelectorAll('.fi').forEach(el=>fadeObs.observe(el));
+
+// Quiz
+const QS=[
+  {q:"What does a higher high (HH) followed by a higher low (HL) indicate?",opts:["A downtrend","Sideways market","An uptrend","A reversal pattern"],ans:2,ex:"Higher highs and higher lows define an uptrend — buyers are in control and making consistent progress to the upside."},
+  {q:"Account: $10,000. Risk: 1%. Entry: $50. Stop: $48. How many shares?",opts:["50 shares","100 shares","200 shares","500 shares"],ans:0,ex:"1% of $10,000 = $100 risk. Stop distance = $2. Shares = $100 ÷ $2 = 50 shares."},
+  {q:"RSI reading of 28 on a daily chart typically suggests the asset is:",opts:["Overbought — consider shorting","Oversold — look for reversal signals","In a strong uptrend","At fair value"],ans:1,ex:"RSI below 30 = oversold conditions. Look for bullish divergence or reversal candles to confirm a potential bounce."},
+  {q:"What is the primary purpose of the ATR indicator?",opts:["Identify trend direction","Measure momentum","Set dynamic stops based on volatility","Find divergences"],ans:2,ex:"ATR measures volatility. Multiplied by 1.5–2.5× it gives stop distances that adapt to current market conditions."},
+  {q:"VWAP is most useful for which type of trader?",opts:["Long-term position traders","Swing traders holding weeks","Day traders and intraday traders","Crypto investors only"],ans:2,ex:"VWAP resets each day — it's the institutional intraday benchmark. Most relevant for day traders judging intraday bias."},
+  {q:"A Head & Shoulders pattern signals:",opts:["Bullish continuation","Bearish reversal","Breakout to the upside","Neutral consolidation"],ans:1,ex:"Head & Shoulders is a bearish reversal pattern. Neckline break = confirmed reversal. Measure the head for price target."},
+  {q:"Win rate: 45%. Average win: 2× average loss. Your system's expectancy is:",opts:["Negative — stop trading it","Breakeven","Positive — this is a valid edge","Impossible to determine"],ans:2,ex:"Expectancy = (0.45×2) − (0.55×1) = 0.90 − 0.55 = +0.35R. Positive over many trades = real edge."},
+  {q:"'Thinking in probabilities' in trading psychology means:",opts:["Using only probabilistic indicators","Any single trade can lose while the edge plays out over many trades","Predicting direction with statistics","Trading only high-probability setups"],ans:1,ex:"Mark Douglas: even a 70% system loses 3 in 10. You cannot know which trades will win. Execute consistently and let statistics work."},
+  {q:"Bollinger Band 'squeeze' signals:",opts:["A trend is ending","Volatility is contracting — big move incoming","The asset is overbought","Price at fair value"],ans:1,ex:"When bands tighten, volatility is contracting. This often precedes a significant move — though direction is not predetermined."},
+  {q:"A 50% drawdown requires what % gain to return to breakeven?",opts:["50%","75%","100%","150%"],ans:2,ex:"$10,000 drops 50% = $5,000. Need 100% gain on $5,000 to return to $10,000. This is why capital preservation comes first."}
+];
+let curQ=0,answered=false;
+
+function loadQ(){
+  const q=QS[curQ];
+  document.getElementById('quizQ').textContent=`Q${curQ+1}. ${q.q}`;
+  document.getElementById('quizProg').textContent=`${curQ+1} / ${QS.length}`;
+  document.getElementById('quizNext').style.display='none';
+  const feed=document.getElementById('quizFeed');
+  feed.className='qfeed';feed.style.display='none';
+  answered=false;
+  const opts=document.getElementById('quizOpts');
+  opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='qopt';btn.textContent=o;
+    btn.onclick=()=>selectA(i);
+    opts.appendChild(btn);
   });
+}
 
-  function calcRisk(){
-    const acc=+document.getElementById('accSize').value||25000;
-    const pct=+document.getElementById('riskPct').value||1;
-    const entry=+document.getElementById('entryPrice').value||0;
-    const stop=+document.getElementById('stopPrice').value||0;
-    const dollarRisk=acc*pct/100;
-    const stopDist=Math.abs(entry-stop);
-    const shares=stopDist>0?Math.floor(dollarRisk/stopDist):0;
-    const actual=shares*stopDist;
-    document.getElementById('sharesOut').textContent=shares.toLocaleString();
-    document.getElementById('dollarRiskOut').textContent='$'+actual.toFixed(0);
-  }
-  document.querySelectorAll('#calcBody input').forEach(i=>i.addEventListener('input',calcRisk));
-  calcRisk();
+function selectA(idx){
+  if(answered)return;
+  answered=true;
+  const q=QS[curQ];
+  const opts=document.querySelectorAll('.qopt');
+  const feed=document.getElementById('quizFeed');
+  opts[q.ans].classList.add('ok');
+  if(idx!==q.ans)opts[idx].classList.add('no');
+  feed.textContent=(idx===q.ans?'✓ Correct! ':'✗ Incorrect. ')+q.ex;
+  feed.className='qfeed show '+(idx===q.ans?'ok':'no');
+  feed.style.display='block';
+  document.getElementById('quizNext').style.display='inline-block';
+}
 
-  // Module cards — coming soon toast
-  function showToast(msg){
-    const t=document.createElement('div');
-    t.textContent=msg;
-    t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0f1b33;border:1px solid rgba(110,231,255,.35);color:#6ee7ff;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;pointer-events:none;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.4);transition:opacity .3s;';
-    document.body.appendChild(t);
-    setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},3000);
+function nextQ(){
+  curQ++;
+  if(curQ>=QS.length){
+    document.getElementById('quizContainer').innerHTML=`
+      <div style="text-align:center;padding:2rem">
+        <div style="font-family:var(--head);font-size:1.8rem;color:var(--cyan);text-shadow:0 0 20px rgba(0,200,255,0.5);margin-bottom:1rem">DEBRIEF COMPLETE</div>
+        <p style="color:var(--muted);margin-bottom:2rem">All ${QS.length} questions answered. Review weak areas in the modules above.</p>
+        <button class="btn btn-primary" onclick="curQ=0;rebuildQuiz()" style="clip-path:none">RESTART MISSION</button>
+      </div>`;
+    return;
   }
-  document.querySelectorAll('.mod-card').forEach(card=>{
-    card.style.cursor='pointer';
-    card.addEventListener('click',()=>showToast('Module content coming soon — check back after launch!'));
-  });
+  loadQ();
+}
 
-  let answered=false;
-  function checkAnswer(btn,correct){
-    if(answered)return;
-    answered=true;
-    const fb=document.getElementById('qFeedback');
-    if(correct){
-      btn.classList.add('correct');
-      fb.textContent='✓ Correct! Dollar risk = $30,000 × 1% = $300. Stop distance = $3. Shares = $300 ÷ $3 = 100.';
-      fb.className='quiz-feedback show ok';
-    } else {
-      btn.classList.add('wrong');
-      document.querySelectorAll('.quiz-opt')[1].classList.add('correct');
-      fb.textContent='✗ The correct answer is 100 shares. $300 risk ÷ $3 stop distance = 100.';
-      fb.className='quiz-feedback show no';
-    }
-  }
+function rebuildQuiz(){
+  document.getElementById('quizContainer').innerHTML=`
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="quiz-opts" id="quizOpts"></div>
+    <div class="qfeed" id="quizFeed"></div>
+    <div class="quiz-nav">
+      <span class="quiz-prog" id="quizProg"></span>
+      <button class="btn btn-primary" id="quizNext" onclick="nextQ()" style="display:none;clip-path:none;padding:10px 24px">NEXT →</button>
+    </div>`;
+  loadQ();
+}
+
+loadQ();
 </script>
 </body>
 </html>
