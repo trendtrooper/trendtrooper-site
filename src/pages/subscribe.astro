@@ -1,0 +1,251 @@
+---
+// TrendTrooper — Members Only / Subscribe page
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Members Only — TrendTrooper</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#020510;
+  --cyan:#00cfff;
+  --cyan-dim:rgba(0,200,255,0.08);
+  --cyan-glow:rgba(0,200,255,0.25);
+  --green:#00ff88;
+  --purple:#7040ff;
+  --purple-dim:rgba(112,64,255,0.15);
+  --red:#ff4060;
+  --yellow:#ffd060;
+  --text:#e8eeff;
+  --muted:rgba(220,235,255,0.95);
+  --muted2:rgba(180,210,255,0.6);
+  --border:rgba(0,200,255,0.1);
+  --border2:rgba(0,200,255,0.2);
+}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Rajdhani',sans-serif;
+  line-height:1.6;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  z-index:0;pointer-events:none;
+}
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 0%,rgba(112,64,255,0.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 100%,rgba(0,200,255,0.06) 0%,transparent 50%);
+  z-index:0;pointer-events:none;
+}
+.card{
+  position:relative;z-index:1;
+  background:rgba(4,8,30,0.92);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:56px 48px;
+  max-width:520px;
+  width:90%;
+  text-align:center;
+  box-shadow:0 0 60px rgba(0,200,255,0.08),0 0 0 1px rgba(0,200,255,0.05);
+}
+.lock-icon{
+  font-size:3rem;
+  margin-bottom:16px;
+  display:block;
+  filter:drop-shadow(0 0 12px rgba(0,200,255,0.5));
+}
+.label{
+  font-family:'Orbitron',sans-serif;
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  color:var(--cyan);
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+h1{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.8rem;
+  font-weight:700;
+  background:linear-gradient(135deg,#fff 0%,var(--cyan) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:16px;
+}
+p{
+  color:var(--muted2);
+  font-size:1.05rem;
+  margin-bottom:32px;
+  line-height:1.7;
+}
+.plans{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-bottom:32px;
+}
+.plan{
+  background:var(--cyan-dim);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:18px 14px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.plan:hover,.plan.selected{
+  border-color:var(--cyan);
+  background:rgba(0,200,255,0.12);
+  box-shadow:0 0 20px rgba(0,200,255,0.15);
+}
+.plan.featured{
+  border-color:var(--cyan);
+  background:rgba(0,200,255,0.1);
+  position:relative;
+}
+.plan-badge{
+  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  background:var(--cyan);color:#020510;
+  font-family:'Orbitron',sans-serif;font-size:0.55rem;font-weight:700;
+  letter-spacing:0.1em;padding:3px 10px;border-radius:20px;white-space:nowrap;
+}
+.plan-name{
+  font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:600;
+  color:var(--cyan);letter-spacing:0.1em;margin-bottom:6px;
+}
+.plan-price{
+  font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:#fff;
+}
+.plan-price span{font-size:0.7rem;color:var(--muted2);}
+.plan-desc{font-size:0.8rem;color:var(--muted2);margin-top:4px;}
+.btn{
+  display:block;width:100%;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  color:#020510;font-family:'Orbitron',sans-serif;font-size:0.8rem;
+  font-weight:700;letter-spacing:0.1em;
+  padding:14px 24px;border-radius:8px;border:none;cursor:pointer;
+  text-decoration:none;transition:all 0.2s;
+  box-shadow:0 0 30px rgba(0,200,255,0.3);
+  margin-bottom:16px;
+}
+.btn:hover{box-shadow:0 0 40px rgba(0,200,255,0.5);transform:translateY(-1px);}
+.divider{
+  display:flex;align-items:center;gap:12px;
+  color:var(--muted2);font-size:0.85rem;margin-bottom:16px;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.token-input{
+  display:flex;gap:8px;margin-bottom:24px;
+}
+.token-input input{
+  flex:1;background:rgba(0,200,255,0.05);border:1px solid var(--border2);
+  color:var(--text);font-family:'Rajdhani',sans-serif;font-size:1rem;
+  padding:10px 14px;border-radius:8px;outline:none;
+}
+.token-input input:focus{border-color:var(--cyan);}
+.token-input button{
+  background:var(--cyan-dim);border:1px solid var(--border2);
+  color:var(--cyan);font-family:'Orbitron',sans-serif;font-size:0.65rem;
+  font-weight:600;letter-spacing:0.08em;padding:10px 16px;border-radius:8px;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+}
+.token-input button:hover{background:rgba(0,200,255,0.15);border-color:var(--cyan);}
+.back{
+  color:var(--muted2);font-size:0.85rem;text-decoration:none;
+  transition:color 0.2s;
+}
+.back:hover{color:var(--cyan);}
+.error{color:var(--red);font-size:0.85rem;margin-top:8px;display:none;}
+</style>
+</head>
+<body>
+<div class="card">
+  <span class="lock-icon">⚡</span>
+  <div class="label">Members Only</div>
+  <h1>Unlock TrendTrooper</h1>
+  <p>This page is available to subscribers. Choose a plan to get full access to signals, charts, screener, and the trading dashboard.</p>
+
+  <div class="plans">
+    <div class="plan featured" id="planPro" onclick="selectPlan('pro')">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$49<span>/mo</span></div>
+      <div class="plan-desc">Signals + dashboard</div>
+    </div>
+    <div class="plan" id="planAuto" onclick="selectPlan('auto')">
+      <div class="plan-name">Automated</div>
+      <div class="plan-price">$99<span>/mo</span></div>
+      <div class="plan-desc">Full IBKR execution</div>
+    </div>
+  </div>
+
+  <a href="#" class="btn" id="subBtn" onclick="checkout();return false;">Subscribe Now</a>
+
+  <div class="divider">or enter access token</div>
+
+  <div class="token-input">
+    <input type="text" id="tokenField" placeholder="Paste your access token..." />
+    <button onclick="redeemToken()">Unlock</button>
+  </div>
+  <div class="error" id="tokenError">Invalid token. Please check and try again.</div>
+
+  <a href="/" class="back">← Back to TrendTrooper</a>
+</div>
+
+<script>
+  let selectedPlan = 'pro';
+
+  function selectPlan(plan) {
+    selectedPlan = plan;
+    document.getElementById('planPro').classList.toggle('selected', plan === 'pro');
+    document.getElementById('planAuto').classList.toggle('selected', plan === 'auto');
+  }
+
+  function checkout() {
+    // Stripe checkout URLs will be wired in here once Stripe is set up
+    alert('Stripe checkout coming soon! Use your access token for now.');
+  }
+
+  function redeemToken() {
+    const token = document.getElementById('tokenField').value.trim();
+    const err = document.getElementById('tokenError');
+    if (!token) return;
+
+    // Dev token shortcut
+    if (token === 'tt-ironclad-2026') {
+      localStorage.setItem('tt_dev_access', token);
+      redirect();
+      return;
+    }
+
+    // TODO: validate against server when Stripe is integrated
+    // For now, reject unknown tokens
+    err.style.display = 'block';
+  }
+
+  function redirect() {
+    const dest = sessionStorage.getItem('tt_redirect') || '/dashboard';
+    sessionStorage.removeItem('tt_redirect');
+    window.location.href = dest;
+  }
+
+  selectPlan('pro');
+</script>
+</body>
+</html>

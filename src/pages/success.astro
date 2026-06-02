@@ -1,0 +1,176 @@
+---
+// TrendTrooper — Subscription Success page
+// Stripe redirects here after successful payment
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to TrendTrooper Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#020510;
+  --cyan:#00cfff;
+  --cyan-dim:rgba(0,200,255,0.08);
+  --cyan-glow:rgba(0,200,255,0.25);
+  --green:#00ff88;
+  --green-dim:rgba(0,255,136,0.08);
+  --purple:#7040ff;
+  --text:#e8eeff;
+  --muted:rgba(220,235,255,0.95);
+  --muted2:rgba(180,210,255,0.6);
+  --border:rgba(0,200,255,0.1);
+  --border2:rgba(0,200,255,0.2);
+}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Rajdhani',sans-serif;
+  line-height:1.6;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  z-index:0;pointer-events:none;
+}
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 30% 0%,rgba(0,255,136,0.06) 0%,transparent 50%),
+    radial-gradient(ellipse at 70% 100%,rgba(0,200,255,0.06) 0%,transparent 50%);
+  z-index:0;pointer-events:none;
+}
+.card{
+  position:relative;z-index:1;
+  background:rgba(4,8,30,0.92);
+  border:1px solid rgba(0,255,136,0.3);
+  border-radius:16px;
+  padding:56px 48px;
+  max-width:560px;
+  width:90%;
+  text-align:center;
+  box-shadow:0 0 60px rgba(0,255,136,0.08),0 0 0 1px rgba(0,255,136,0.05);
+}
+.success-icon{
+  font-size:3.5rem;margin-bottom:16px;display:block;
+  filter:drop-shadow(0 0 16px rgba(0,255,136,0.6));
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 16px rgba(0,255,136,0.6));}50%{filter:drop-shadow(0 0 30px rgba(0,255,136,0.9));}}
+.label{
+  font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:0.2em;
+  color:var(--green);text-transform:uppercase;margin-bottom:12px;
+}
+h1{
+  font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;
+  background:linear-gradient(135deg,#fff 0%,var(--green) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:16px;
+}
+p{color:var(--muted2);font-size:1.05rem;margin-bottom:32px;line-height:1.7;}
+.features{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px;text-align:left;
+}
+.feat{
+  background:var(--green-dim);border:1px solid rgba(0,255,136,0.15);
+  border-radius:8px;padding:12px 14px;font-size:0.9rem;
+  display:flex;align-items:center;gap:8px;color:var(--muted);
+}
+.feat::before{content:'✓';color:var(--green);font-weight:700;font-size:1rem;}
+.links{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.btn{
+  display:block;width:100%;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  color:#020510;font-family:'Orbitron',sans-serif;font-size:0.8rem;
+  font-weight:700;letter-spacing:0.1em;
+  padding:14px 24px;border-radius:8px;border:none;cursor:pointer;
+  text-decoration:none;transition:all 0.2s;
+  box-shadow:0 0 30px rgba(0,255,136,0.25);
+}
+.btn:hover{box-shadow:0 0 40px rgba(0,255,136,0.4);transform:translateY(-1px);}
+.btn-outline{
+  display:block;width:100%;
+  background:transparent;border:1px solid var(--border2);
+  color:var(--muted);font-family:'Orbitron',sans-serif;font-size:0.75rem;
+  font-weight:600;letter-spacing:0.08em;
+  padding:12px 24px;border-radius:8px;cursor:pointer;
+  text-decoration:none;transition:all 0.2s;
+}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan);}
+.token-box{
+  background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);
+  border-radius:8px;padding:14px 16px;margin-bottom:28px;
+}
+.token-label{font-size:0.75rem;color:var(--muted2);margin-bottom:6px;}
+.token-val{
+  font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--green);
+  letter-spacing:0.05em;word-break:break-all;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <span class="success-icon">⚡</span>
+  <div class="label">Access Granted</div>
+  <h1>Welcome to TrendTrooper</h1>
+  <p>Your subscription is active. You now have full access to real-time signals, the trading dashboard, screener, and more.</p>
+
+  <div class="features">
+    <div class="feat">Real-time signals</div>
+    <div class="feat">Bot dashboard</div>
+    <div class="feat">Stock screener</div>
+    <div class="feat">Live charts</div>
+    <div class="feat">Academy</div>
+    <div class="feat">Strategy tools</div>
+  </div>
+
+  <div class="token-box" id="tokenBox" style="display:none;">
+    <div class="token-label">Your access token — save this somewhere safe</div>
+    <div class="token-val" id="tokenDisplay"></div>
+  </div>
+
+  <div class="links">
+    <a href="/dashboard" class="btn">Go to Dashboard →</a>
+    <a href="/screener" class="btn-outline">Open Screener</a>
+    <a href="/academy" class="btn-outline">Browse Academy</a>
+  </div>
+</div>
+
+<script>
+  // Read session token from URL (Stripe passes ?session_id=xxx)
+  // Once Stripe is wired up, we'll exchange session_id for a signed JWT here
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+  const token = params.get('token');
+
+  if (token) {
+    localStorage.setItem('tt_sub_token', token);
+    document.getElementById('tokenDisplay').textContent = token;
+    document.getElementById('tokenBox').style.display = 'block';
+  }
+
+  // Dev token passthrough
+  if (params.get('dev') === 'tt-ironclad-2026') {
+    localStorage.setItem('tt_dev_access', 'tt-ironclad-2026');
+  }
+
+  // TODO: when Stripe is live, POST session_id to /api/verify-session
+  // to get back a signed JWT, then store in localStorage as tt_sub_token
+</script>
+</body>
+</html>

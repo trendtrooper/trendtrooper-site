@@ -1275,7 +1275,7 @@ function rebuildQuiz(){
 loadQ();
 </script>
 <script>
-  (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){window.location.replace('/');}})();
+  (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
 </script>
 </body>
 </html>
