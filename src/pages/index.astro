@@ -1094,6 +1094,7 @@ footer{
           <li>Priority support</li>
         </ul>
         <a href="#" class="plan-btn" onclick="openWaitlist();return false;">Join Waitlist</a>
+        <p style="margin-top:12px;font-size:0.78rem;color:#f59e0b;font-weight:600;letter-spacing:0.05em;">🚧 Under Construction</p>
       </div>
     </div>
   </div>
@@ -1321,5 +1322,14 @@ if(cyEl)cyEl.textContent=new Date().getFullYear();
   </div>
 </div>
 
+<script>
+  // Dev access token — visit ?dev=tt-ironclad-2026 to unlock all pages
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('dev') === 'tt-ironclad-2026') {
+    localStorage.setItem('tt_dev_access', 'tt-ironclad-2026');
+    window.history.replaceState({}, '', window.location.pathname);
+    console.log('%c[TT] Dev access granted', 'color:#22d3ee;font-weight:bold');
+  }
+</script>
 </body>
 </html>
