@@ -217,9 +217,27 @@ p{
     document.getElementById('planAuto').classList.toggle('selected', plan === 'auto');
   }
 
-  function checkout() {
-    // Stripe checkout URLs will be wired in here once Stripe is set up
-    alert('Stripe checkout coming soon! Use your access token for now.');
+  async function checkout() {
+    const btn = document.getElementById('subBtn');
+    btn.textContent = 'Redirecting...';
+    btn.style.opacity = '0.7';
+    try {
+      const res = await fetch('https://bot.trendtrooper.com/create-checkout', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({plan: selectedPlan})
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        btn.textContent = 'Error — try again';
+        btn.style.opacity = '1';
+      }
+    } catch(e) {
+      btn.textContent = 'Error — try again';
+      btn.style.opacity = '1';
+    }
   }
 
   function redeemToken() {

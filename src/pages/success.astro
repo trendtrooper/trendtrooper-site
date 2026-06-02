@@ -152,25 +152,25 @@ p{color:var(--muted2);font-size:1.05rem;margin-bottom:32px;line-height:1.7;}
 </div>
 
 <script>
-  // Read session token from URL (Stripe passes ?session_id=xxx)
-  // Once Stripe is wired up, we'll exchange session_id for a signed JWT here
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get('session_id');
-  const token = params.get('token');
 
-  if (token) {
-    localStorage.setItem('tt_sub_token', token);
-    document.getElementById('tokenDisplay').textContent = token;
-    document.getElementById('tokenBox').style.display = 'block';
-  }
-
-  // Dev token passthrough
   if (params.get('dev') === 'tt-ironclad-2026') {
     localStorage.setItem('tt_dev_access', 'tt-ironclad-2026');
   }
 
-  // TODO: when Stripe is live, POST session_id to /api/verify-session
-  // to get back a signed JWT, then store in localStorage as tt_sub_token
+  if (sessionId) {
+    fetch('https://bot.trendtrooper.com/get-token?session_id=' + sessionId)
+      .then(r => r.json())
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem('tt_sub_token', data.token);
+          document.getElementById('tokenDisplay').textContent = data.token;
+          document.getElementById('tokenBox').style.display = 'block';
+        }
+      })
+      .catch(() => {});
+  }
 </script>
 </body>
 </html>
