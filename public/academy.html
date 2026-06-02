@@ -215,6 +215,31 @@
       .navlinks{display:none;}.hamburger{display:flex;}
       .pat-grid{grid-template-columns:repeat(2,1fr);}
     }
+    /* LESSON EXPAND */
+    .lesson{display:none;margin-top:18px;padding-top:18px;border-top:1px solid var(--border);}
+    .lesson.open{display:block;}
+    .lesson-toggle{font-family:var(--mono);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 14px;cursor:pointer;transition:.2s;margin-top:14px;width:100%;}
+    .lesson-toggle:hover{border-color:var(--cyan);color:var(--cyan);}
+    .lesson-toggle.open{border-color:var(--cyan);color:var(--cyan);}
+    .lesson h4{font-family:var(--head);font-size:0.8rem;font-weight:700;color:var(--cyan);margin:16px 0 8px;letter-spacing:1px;}
+    .lesson h4:first-child{margin-top:0;}
+    .lesson p{font-size:0.88rem;color:var(--text);line-height:1.7;margin-bottom:10px;}
+    .lesson .callout{background:rgba(0,200,255,0.06);border-left:3px solid var(--cyan);padding:12px 16px;margin:14px 0;font-size:0.85rem;color:var(--text);line-height:1.6;}
+    .lesson .warn{background:rgba(255,208,96,0.06);border-left:3px solid var(--yellow);padding:12px 16px;margin:14px 0;font-size:0.85rem;color:var(--text);line-height:1.6;}
+    .lesson .tip{background:rgba(0,255,136,0.05);border-left:3px solid var(--green);padding:12px 16px;margin:14px 0;font-size:0.85rem;color:var(--text);line-height:1.6;}
+    .lesson ul{list-style:none;margin:10px 0;}
+    .lesson ul li{font-size:0.85rem;color:var(--text);padding:4px 0 4px 18px;position:relative;line-height:1.5;}
+    .lesson ul li::before{content:'▸';position:absolute;left:0;color:var(--cyan);font-size:0.65rem;}
+    /* INSIGHT SECTION */
+    .insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;}
+    .insight{background:var(--card);border:1px solid var(--border);padding:22px;transition:.3s;position:relative;}
+    .insight:hover{border-color:var(--border2);transform:translateY(-2px);}
+    .insight-quote{font-size:1.1rem;color:var(--cyan);font-weight:700;line-height:1.4;margin-bottom:10px;}
+    .insight-author{font-family:var(--mono);font-size:0.6rem;color:var(--muted);letter-spacing:2px;}
+    /* PAT DETAILS */
+    .pat-detail{font-family:var(--mono);font-size:0.65rem;color:var(--muted);margin-top:10px;text-align:left;line-height:1.7;border-top:1px solid var(--border);padding-top:10px;}
+    .pat-detail span{color:var(--cyan);}
+    @media(max-width:900px){.insight-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
@@ -291,13 +316,138 @@
     <div class="sec-head fi"><span class="sec-tag">// 02 / core curriculum</span><h2 class="sec-title">TRAINING <span class="p">MODULES</span></h2><p class="sec-desc">Seven battle-tested modules. Built for traders who want systematic edge — not hot tips.</p></div>
     <div class="terminal fi"><div class="term-body"><div><span class="tp">$ </span><span class="tc">load --curriculum trendtrooper --modules all</span></div><div class="to">Loading 7 modules... [████████████████████] 100%</div><div class="to">Status: READY | Access: FREE FOREVER | Range: BEGINNER → ADVANCED</div></div></div>
     <div class="mods-grid">
-      <div class="mod beg fi"><div class="mod-top"><div class="mod-n">01</div><div><span class="mod-badge">Beginner</span><h3>Market Structure Basics</h3></div></div><p>Understand how price actually moves — order flow, auction mechanics, and why support/resistance works.</p><ul class="mod-topics"><li>How price discovers value (auction theory)</li><li>Bulls vs bears: order flow dynamics</li><li>Support, resistance &amp; key levels</li><li>Trend structure: HH, HL, LH, LL</li><li>Liquidity zones &amp; stop hunts</li><li>Market sessions &amp; volatility windows</li></ul></div>
-      <div class="mod beg fi"><div class="mod-top"><div class="mod-n">02</div><div><span class="mod-badge">Beginner</span><h3>Technical Analysis</h3></div></div><p>Learn to read price through charts, candlesticks, and patterns — the universal language of every market.</p><ul class="mod-topics"><li>Candlestick anatomy &amp; reading</li><li>Key reversal candles: doji, hammer, engulfing</li><li>Chart types: line, bar, candle, Heikin-Ashi</li><li>Trendlines, channels &amp; wedges</li><li>Volume analysis &amp; confirmation</li><li>Breakouts vs fakeouts</li></ul></div>
-      <div class="mod int fi"><div class="mod-top"><div class="mod-n">03</div><div><span class="mod-badge">Intermediate</span><h3>Risk &amp; Money Management</h3></div></div><p>The most important skill a trader can master. Most blow accounts not from bad entries — but from ignoring this.</p><ul class="mod-topics"><li>The 1–2% rule &amp; why it works</li><li>Position sizing formulas</li><li>Stop-loss placement logic</li><li>Reward-to-risk ratios (&gt;1:2)</li><li>Drawdown recovery math</li><li>Expectancy &amp; win-rate balance</li></ul></div>
-      <div class="mod int fi"><div class="mod-top"><div class="mod-n">04</div><div><span class="mod-badge">Intermediate</span><h3>Strategy Development</h3></div></div><p>Build a real, repeatable edge. Combine indicators, define setups, and backtest before risking capital.</p><ul class="mod-topics"><li>Defining a trading setup precisely</li><li>Entry triggers &amp; confirmation</li><li>Backtesting methodology</li><li>TradingView strategy testing</li><li>Building a rules-based system</li><li>Optimizing without overfitting</li></ul></div>
-      <div class="mod int fi"><div class="mod-top"><div class="mod-n">05</div><div><span class="mod-badge">Intermediate</span><h3>Trader Psychology</h3></div></div><p>Your greatest enemy sits between your ears. Fear, greed, and FOMO destroy more traders than markets ever do.</p><ul class="mod-topics"><li>Thinking in probabilities (Mark Douglas)</li><li>The psychology of losses</li><li>Revenge trading &amp; overtrading</li><li>Process over outcome focus</li><li>Pre-market routine &amp; mental state</li><li>Journaling for self-improvement</li></ul></div>
-      <div class="mod adv fi"><div class="mod-top"><div class="mod-n">06</div><div><span class="mod-badge">Advanced</span><h3>Automation &amp; Signals</h3></div></div><p>Move beyond manual trading. Automate alerts, connect webhooks, build systematic signal pipelines.</p><ul class="mod-topics"><li>TradingView Pine Script basics</li><li>Setting up alert webhooks</li><li>Connecting to broker APIs</li><li>Building automated alert systems</li><li>3Commas, Alertatron &amp; tools</li><li>System monitoring &amp; failsafes</li></ul></div>
-      <div class="mod beg mod-wide fi"><div class="mod-top"><div class="mod-n">07</div><div><span class="mod-badge" style="background:rgba(0,200,255,0.08);color:var(--cyan);border:1px solid rgba(0,200,255,0.25)">All Levels</span><h3>Tips from Systematic Traders</h3></div></div><p>Lessons from real systematic traders — distilled from decades of losses, wins, and hard-won clarity. Trade the system, not the emotion. Simple beats complex. Consistency beats brilliance.</p></div>
+      <div class="mod beg fi"><div class="mod-top"><div class="mod-n">01</div><div><span class="mod-badge">Beginner</span><h3>Market Structure Basics</h3></div></div><p>Understand how price actually moves — order flow, auction mechanics, and why support/resistance works.</p><ul class="mod-topics"><li>How price discovers value (auction theory)</li><li>Bulls vs bears: order flow dynamics</li><li>Support, resistance &amp; key levels</li><li>Trend structure: HH, HL, LH, LL</li><li>Liquidity zones &amp; stop hunts</li><li>Market sessions &amp; volatility windows</li></ul>
+        <button class="lesson-toggle" onclick="toggleLesson(this)">▸ READ LESSON</button>
+        <div class="lesson">
+          <h4>Price Is a Conversation, Not a Number</h4>
+          <p>Every price on a chart represents the last agreed value between a buyer and a seller. That's it. Not fair value, not intrinsic worth — just the last deal that got done. Once you understand that, you stop asking "where should this be?" and start asking "where are buyers and sellers fighting right now?" That question is the foundation of everything.</p>
+          <h4>The Four Market Phases</h4>
+          <p>Price doesn't move randomly — it cycles through four phases that repeat on every timeframe from a 1-minute chart to a monthly. <strong>Accumulation</strong> is the quiet period where smart money is building positions while retail traders are bored or scared. You'll see low volatility, sideways price, shrinking volume. <strong>Markup</strong> is the trend phase — higher highs, higher lows, institutional buying pressure is consistent. This is where trends are born. <strong>Distribution</strong> is the top — price stalls, volume spikes, big money is selling into retail buyers who just found out about the move. <strong>Markdown</strong> is the decline. Lower highs, lower lows, selling begets more selling.</p>
+          <div class="callout">The single most valuable skill you can develop as a trader is identifying which phase you're in before you place a trade. Trading in the wrong phase is the #1 reason setups fail.</div>
+          <h4>Higher Highs, Higher Lows — The Only Trend Definition You Need</h4>
+          <p>Forget complex indicators for trend identification. An uptrend is simply a series of higher highs AND higher lows. The moment price fails to make a new high and then breaks below the previous low — that's a structural shift. The trend hasn't just paused. It may be reversing. This is where most beginners get destroyed: they keep buying a broken uptrend because they're anchored to where price "should be."</p>
+          <h4>Why Support Becomes Resistance (and Vice Versa)</h4>
+          <p>When price breaks below a support level, everyone who bought there is now underwater. They're not thinking about gains anymore — they're thinking about getting back to break-even. The moment price returns to that old support? They sell. That's why it becomes resistance. The psychology of trapped traders is what makes S/R flip so reliably.</p>
+          <div class="tip">Pro move: before every trade, draw your key S/R levels on the daily or weekly chart first. Then zoom into your entry timeframe. Never trade against a major level on the higher timeframe.</div>
+          <h4>Liquidity: Where the Real Action Happens</h4>
+          <p>Institutional traders can't just click "buy 50,000 shares." They need liquidity — other traders willing to sell to them. The best source of liquidity? Stop losses. This is why price so often spikes just below a major support level before reversing hard. It's not random. It's larger players hunting the stops that retail traders placed right below the obvious level. Once the stops are cleared, there's no more selling pressure and price launches. Knowing this stops you from placing stops at the "obvious" spot.</p>
+        </div>
+      </div>
+      <div class="mod beg fi"><div class="mod-top"><div class="mod-n">02</div><div><span class="mod-badge">Beginner</span><h3>Technical Analysis</h3></div></div><p>Learn to read price through charts, candlesticks, and patterns — the universal language of every market.</p><ul class="mod-topics"><li>Candlestick anatomy &amp; reading</li><li>Key reversal candles: doji, hammer, engulfing</li><li>Chart types: line, bar, candle, Heikin-Ashi</li><li>Trendlines, channels &amp; wedges</li><li>Volume analysis &amp; confirmation</li><li>Breakouts vs fakeouts</li></ul>
+        <button class="lesson-toggle" onclick="toggleLesson(this)">▸ READ LESSON</button>
+        <div class="lesson">
+          <h4>A Candlestick Is a 30-Second War Documentary</h4>
+          <p>Every candlestick tells you exactly what happened between buyers and sellers during that time period. The open, high, low, and close aren't just numbers — they're the story of who won. A long lower wick means sellers pushed price down hard but buyers fought back and reclaimed most of the ground. A small body with long wicks on both sides (doji) means neither side won — indecision. A massive green candle with no wicks means buyers dominated from open to close without a single moment of hesitation.</p>
+          <h4>The 5 Candlestick Signals That Actually Matter</h4>
+          <ul>
+            <li><strong>Bullish Engulfing</strong> — a large green candle that completely swallows the previous red candle. Buyers overpowered sellers convincingly. Strong reversal signal at support.</li>
+            <li><strong>Hammer</strong> — small body at the top, long lower wick. Sellers tried to push price down, buyers rejected it. Most powerful when it occurs after a downtrend at a key level.</li>
+            <li><strong>Shooting Star</strong> — the opposite. Small body at the bottom, long upper wick. Buyers tried to rally, sellers crushed it. Bearish reversal signal at resistance.</li>
+            <li><strong>Doji</strong> — open and close nearly the same. Pure indecision. On its own it means little — in context at a key level after a sustained trend, it signals exhaustion.</li>
+            <li><strong>Inside Bar</strong> — the entire candle fits within the previous candle's range. Consolidation. A breakout of an inside bar often starts the next meaningful move.</li>
+          </ul>
+          <div class="warn">One candle is never enough. Always look for confirmation — a second candle closing in the direction you expect, ideally on higher volume. Single-candle signals get faked out constantly.</div>
+          <h4>Volume: The Truth Serum of Price Action</h4>
+          <p>Price can lie. Volume doesn't. A breakout above resistance on 3× average volume is a completely different event than the same breakout on 0.5× average volume. The first one has conviction behind it — real money is moving. The second one is likely a fakeout waiting to happen. Get into the habit of checking volume on every significant price move before trusting it.</p>
+          <div class="callout">High volume on up days + low volume on down days = healthy uptrend with institutional backing. Flip that pattern and you're watching distribution — smart money selling into retail buyers.</div>
+          <h4>Why Most People Read Charts Backwards</h4>
+          <p>Most beginners look at a chart from left to right and try to predict what comes next. Professionals look at the same chart and ask: "What has price already told me?" The story is already written on the left side of the chart — the repeating patterns of support, resistance, trend, and volume. Your job isn't to predict. It's to identify high-probability situations where the next move has more evidence behind it than against it.</p>
+        </div>
+      </div>
+      <div class="mod int fi"><div class="mod-top"><div class="mod-n">03</div><div><span class="mod-badge">Intermediate</span><h3>Risk &amp; Money Management</h3></div></div><p>The most important skill a trader can master. Most blow accounts not from bad entries — but from ignoring this.</p><ul class="mod-topics"><li>The 1–2% rule &amp; why it works</li><li>Position sizing formulas</li><li>Stop-loss placement logic</li><li>Reward-to-risk ratios (&gt;1:2)</li><li>Drawdown recovery math</li><li>Expectancy &amp; win-rate balance</li></ul>
+        <button class="lesson-toggle" onclick="toggleLesson(this)">▸ READ LESSON</button>
+        <div class="lesson">
+          <h4>You Can Be Wrong Half the Time and Still Win</h4>
+          <p>Here's the math nobody shows beginners: if you win 45% of your trades but your average winner is 2.5× your average loser, you are profitable. Flip it — win 70% of trades but your losses are 3× your wins, and you're bleeding out slowly. The ratio between what you make when you're right and what you lose when you're wrong matters more than how often you're right. This is why professional traders obsess over risk management more than entries.</p>
+          <div class="callout">Expectancy formula: (Win Rate × Avg Win) − (Loss Rate × Avg Loss) = $ per trade. A positive number means your system makes money over time. This is the only metric that matters long-term.</div>
+          <h4>The 1-2% Rule: Survival Math</h4>
+          <p>Risk no more than 1-2% of your account on any single trade. On a $10,000 account, that's $100-$200 per trade. Sounds small. But here's why it's genius: even if you hit 10 consecutive losing trades — an absolutely brutal streak — you've only lost 10-20% of your account. You're still in the game. Compare that to risking 10% per trade: 10 losses and you're wiped out. The goal isn't to get rich on one trade. It's to stay alive long enough for your edge to play out over hundreds of trades.</p>
+          <h4>Position Sizing: The Formula</h4>
+          <p>This formula is non-negotiable. Write it down: <strong>Shares = Account Risk ÷ Stop Distance</strong>. If your account is $25,000 and you risk 1% ($250), and your entry is $50 with a stop at $47 (distance = $3), you buy 83 shares. That's it. No guessing. No "I feel good about this one, I'll buy more." The formula decides, not your emotions.</p>
+          <div class="warn">The most dangerous words in trading: "Just this once I'll risk a little more." That's how accounts die — not in one catastrophic moment, but in a series of small rule-breaks that compound into a blow-up.</div>
+          <h4>Drawdown Recovery: The Painful Math</h4>
+          <p>A 20% drawdown requires a 25% gain to get back to break-even. A 40% drawdown? You need 67%. Lose 50% and you need to double your account just to get back to where you started. This is why protecting capital during losing streaks is the single highest-priority task in trading. The best traders in the world don't win more — they lose less when they're wrong. Smaller losses mean faster recoveries and more capital to deploy when high-probability setups appear.</p>
+        </div>
+      </div>
+      <div class="mod int fi"><div class="mod-top"><div class="mod-n">04</div><div><span class="mod-badge">Intermediate</span><h3>Strategy Development</h3></div></div><p>Build a real, repeatable edge. Combine indicators, define setups, and backtest before risking capital.</p><ul class="mod-topics"><li>Defining a trading setup precisely</li><li>Entry triggers &amp; confirmation</li><li>Backtesting methodology</li><li>TradingView strategy testing</li><li>Building a rules-based system</li><li>Optimizing without overfitting</li></ul>
+        <button class="lesson-toggle" onclick="toggleLesson(this)">▸ READ LESSON</button>
+        <div class="lesson">
+          <h4>An Edge Is a Fact, Not a Feeling</h4>
+          <p>Most people build trading "strategies" that are really just vibes with indicators on top. A real edge is a statistically verifiable setup that produces a positive expectancy over hundreds of trades. It has exact entry rules. Exact stop placement logic. Exact profit targets. If you can't write your strategy down in one paragraph with no ambiguity, you don't have a strategy — you have a habit of guessing with charts open.</p>
+          <h4>The Three-Filter System</h4>
+          <p>Every solid strategy has three layers working together. <strong>Filter 1: Trend Context.</strong> What is price doing on the higher timeframe? Only trade in the direction of the dominant trend. Don't try to pick tops and bottoms until you've been trading for years. <strong>Filter 2: Setup Condition.</strong> A specific price pattern, indicator reading, or price action signal that tells you a trade opportunity exists. <strong>Filter 3: Entry Trigger.</strong> The exact moment you enter — a candle close, a break of a level, a specific indicator crossover. Without all three, you don't have a trade.</p>
+          <div class="callout">Simple strategies with clear rules beat complex systems every time. The complexity of a strategy is inversely correlated with your ability to execute it consistently under pressure.</div>
+          <h4>Backtesting: How to Do It Without Fooling Yourself</h4>
+          <p>Backtesting is powerful and dangerous at the same time. Done right, it gives you statistical confidence in your edge. Done wrong, it gives you false confidence in a system that only worked because you fitted it to past data. The rules: test on at least 3 years of data across different market conditions. Include realistic slippage and commissions. Never optimize parameters until after you've found a strategy that works on out-of-sample data. A strategy that works perfectly on 2020 data and falls apart on 2022 data has no real edge.</p>
+          <h4>Forward Testing Before Real Money</h4>
+          <p>After backtesting, paper trade your strategy in real time for at least 30 trades before putting real capital at risk. Your backtest might show 65% win rate, but that number means nothing if you can't actually see the setups in real time and execute without hesitation. Forward testing also reveals flaws in your rules — ambiguous entry conditions that seemed clear on a historical chart but are confusing when you're watching price move live.</p>
+          <div class="tip">Keep a strategy journal separate from your trade journal. Every time you modify a rule, write down why. Most traders who keep changing their system aren't improving it — they're just chasing their last losing trade.</div>
+        </div>
+      </div>
+      <div class="mod int fi"><div class="mod-top"><div class="mod-n">05</div><div><span class="mod-badge">Intermediate</span><h3>Trader Psychology</h3></div></div><p>Your greatest enemy sits between your ears. Fear, greed, and FOMO destroy more traders than markets ever do.</p><ul class="mod-topics"><li>Thinking in probabilities (Mark Douglas)</li><li>The psychology of losses</li><li>Revenge trading &amp; overtrading</li><li>Process over outcome focus</li><li>Pre-market routine &amp; mental state</li><li>Journaling for self-improvement</li></ul>
+        <button class="lesson-toggle" onclick="toggleLesson(this)">▸ READ LESSON</button>
+        <div class="lesson">
+          <h4>Your Brain Is Literally Wired to Lose Money</h4>
+          <p>Loss aversion is hardwired into human psychology. Studies show that the pain of a $100 loss feels roughly twice as intense as the pleasure of a $100 gain. In practice, this means traders hold losing trades too long (hoping to avoid the pain of locking in a loss) and cut winning trades too early (grabbing the pleasure of a small gain before it disappears). Both behaviors directly sabotage profitability — and they happen automatically unless you build systems to override them.</p>
+          <h4>The 6 Biases Destroying Your P&amp;L</h4>
+          <ul>
+            <li><strong>Confirmation bias</strong> — you see what you want to see. Once you've decided a stock is going up, you discount every bearish signal.</li>
+            <li><strong>Recency bias</strong> — your last trade influences your next one too much. A big winner makes you overconfident. A big loss makes you hesitate on valid setups.</li>
+            <li><strong>FOMO</strong> — you chase moves that already happened because you're afraid of missing out. Entries based on FOMO are almost always too late and too emotional.</li>
+            <li><strong>Sunk cost fallacy</strong> — "I can't sell now, I'm already down 15%." The market doesn't care what you paid. Your entry price is irrelevant to where price is going next.</li>
+            <li><strong>Overconfidence</strong> — a winning streak convinces you that you've "figured it out." Then the market humbles you. Stay consistent regardless of recent results.</li>
+            <li><strong>Anchoring</strong> — fixating on a specific price because it was meaningful in the past. "It was $200 before, it'll get back there." Price doesn't owe you anything.</li>
+          </ul>
+          <div class="callout">The solution to every one of these biases is the same: rules-based trading with pre-defined entries, stops, and targets. When your decisions are made before you enter a trade, your emotions have nothing to grab onto.</div>
+          <h4>The Trading Journal That Actually Works</h4>
+          <p>Most trading journals track wins and losses. The good ones track decisions. After every trade, write down: what was the setup, why did you take it, did you follow your rules exactly, and what was the emotional state when you entered? After 30 trades, patterns emerge. You'll discover that your worst trades cluster around specific emotional states — boredom, overconfidence after a win, revenge after a loss. Once you see the pattern, you can interrupt it.</p>
+          <h4>The 24-Hour Rule</h4>
+          <p>After any significant loss — whether it's one bad trade or a bad week — do not trade for 24 hours. Not because the market is dangerous. Because you are. The emotional response to a loss activates the same brain regions as physical pain, and decisions made in that state are systematically worse. The 24-hour rule isn't weakness. It's professional discipline. The best traders treat it like a mandatory stop-loss on their psychology.</p>
+          <div class="tip">Before every trading session, write down three things: your max loss for the day, the specific setups you're looking for, and your emotional state right now. If you can't clearly articulate all three, don't trade that day.</div>
+        </div>
+      </div>
+      <div class="mod adv fi"><div class="mod-top"><div class="mod-n">06</div><div><span class="mod-badge">Advanced</span><h3>Automation &amp; Signals</h3></div></div><p>Move beyond manual trading. Automate alerts, connect webhooks, build systematic signal pipelines.</p><ul class="mod-topics"><li>TradingView Pine Script basics</li><li>Setting up alert webhooks</li><li>Connecting to broker APIs</li><li>Building automated alert systems</li><li>3Commas, Alertatron &amp; tools</li><li>System monitoring &amp; failsafes</li></ul>
+        <button class="lesson-toggle" onclick="toggleLesson(this)">▸ READ LESSON</button>
+        <div class="lesson">
+          <h4>Why Automation Changes Everything</h4>
+          <p>The moment your trading system is fully automated, something significant shifts: your emotions are no longer part of the execution process. The system sees the setup, fires the signal, places the order, sets the stop and target — all without asking you if you feel good about it today. That's not laziness. That's the highest form of trading discipline. You spent weeks building and testing rules you trust. Now you let them run.</p>
+          <h4>Pine Script: Your First Alert in 10 Minutes</h4>
+          <p>TradingView's Pine Script is the language that powers automated alerts. You don't need to be a developer. A basic alert script is just a few lines. Here's the logic in plain English: "When the 9 EMA crosses above the 21 EMA on the 15-minute chart, and RSI is above 50, trigger an alert." That's it. Pine Script just puts that logic into code. The TradingView documentation and community have thousands of examples — copy, modify, understand. You'll be writing your own alerts within a week.</p>
+          <div class="callout">TrendTrooper's entire signal pipeline runs on TradingView alerts firing JSON payloads to a webhook server. The server validates the signal, checks risk parameters, and sends the order to the broker. The whole process takes under 2 seconds.</div>
+          <h4>Webhooks Demystified</h4>
+          <p>A webhook is just a URL that receives data. When TradingView fires an alert, it sends a POST request to your webhook URL with a JSON payload containing trade details. Your server receives that payload, processes it, and executes the trade. The TrendTrooper bot is a webhook server. Every time it receives a valid signal with the right secret key, it executes the trade against your connected broker account. The webhook is the bridge between your strategy on TradingView and live execution.</p>
+          <h4>The Pre-Launch Checklist</h4>
+          <ul>
+            <li>Paper trade the automated system for at least 2 weeks before going live</li>
+            <li>Test your webhook with small, manual POST requests using a tool like Postman</li>
+            <li>Build in a max daily loss kill-switch that halts the bot if losses exceed a threshold</li>
+            <li>Set up monitoring alerts — if the server goes down, you need to know immediately</li>
+            <li>Never automate a strategy you haven't manually traded successfully first</li>
+          </ul>
+          <div class="warn">Automation amplifies both good and bad strategies. A profitable manual strategy becomes more consistent when automated. A losing strategy becomes a faster way to lose money. Test everything before trusting it with real capital.</div>
+        </div>
+      </div>
+      <div class="mod beg mod-wide fi"><div class="mod-top"><div class="mod-n">07</div><div><span class="mod-badge" style="background:rgba(0,200,255,0.08);color:var(--cyan);border:1px solid rgba(0,200,255,0.25)">All Levels</span><h3>Tips from Systematic Traders</h3></div></div><p>Lessons from real systematic traders — distilled from decades of losses, wins, and hard-won clarity. Trade the system, not the emotion. Simple beats complex. Consistency beats brilliance.</p>
+        <button class="lesson-toggle" onclick="toggleLesson(this)">▸ READ LESSON</button>
+        <div class="lesson">
+          <h4>The Things Nobody Puts in a Course</h4>
+          <p>These lessons won't make you rich this week. They're the compounding habits that keep traders alive for a decade when most wash out in the first year. They come from people who've blown accounts, rebuilt, found their edge, and then actually kept it — which is harder than finding it in the first place.</p>
+          <h4>10 Truths From Traders With Track Records</h4>
+          <ul>
+            <li><strong>Your entry is less important than you think.</strong> Professional traders know that a mediocre entry with a great exit plan beats a great entry with no plan every single time.</li>
+            <li><strong>Boredom kills accounts.</strong> The urge to trade when there's no setup is responsible for more losses than bad market conditions. If you're not bored sometimes, you're overtrading.</li>
+            <li><strong>The size of your winners matters more than how many there are.</strong> Ed Seykota made the bulk of his returns on a handful of massive trend trades over decades. The rest were just staying alive.</li>
+            <li><strong>Your system will stop working temporarily.</strong> Every edge goes through drawdown periods. The traders who survive are the ones who don't abandon their system during the hard months — they analyze it objectively and keep executing.</li>
+            <li><strong>Speed is overrated.</strong> You don't need to be first. You need to be right about direction, right about size, and right about risk. The difference between entering 30 seconds before or after the setup triggers is almost always irrelevant to the outcome.</li>
+            <li><strong>Track records are built in the flat periods.</strong> Big wins feel great but they're not what defines a trader. The ability to stay consistent and protect capital during sideways markets is what separates professionals from retail traders.</li>
+            <li><strong>Complexity is the enemy of execution.</strong> The more conditions a trade requires to trigger, the harder it is to see clearly under pressure. The best setups are obvious. If you're squinting at the chart trying to convince yourself it qualifies, it doesn't.</li>
+            <li><strong>Your position size reveals your actual confidence.</strong> If you say you have conviction on a trade but you're sizing tiny, you're lying to yourself. Size up on your genuinely high-conviction setups — and size down (or sit out) when you're not sure.</li>
+            <li><strong>Recovery is a skill.</strong> How you trade the week after a 10% drawdown is more defining than how you traded on your best week. Controlled, disciplined, smaller size — not revenge trading trying to win it back in a day.</li>
+            <li><strong>The market will be there tomorrow.</strong> This trade isn't the last opportunity you'll ever get. Acting like it is leads to forcing setups, ignoring risk, and making desperate decisions. There is always another trade.</li>
+          </ul>
+          <div class="callout">The best traders aren't the smartest people in the room. They're the most disciplined. Consistently doing the boring, right thing beats brilliant, erratic trading every single time over a long enough horizon.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -307,15 +457,60 @@
   <div class="container">
     <div class="sec-head fi"><span class="sec-tag">// 03 / technical tools</span><h2 class="sec-title">KEY <span class="c">INDICATORS</span></h2><p class="sec-desc">Master these before adding more. Signal stacking without understanding is noise, not edge.</p></div>
     <div class="ind-grid">
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">EMA</div><div class="ind-type">Trend</div></div><p class="ind-desc">Exponential Moving Average — weights recent price heavier. Reacts faster than SMA. Backbone of most trend-following systems.</p><div class="ind-set">Settings: 9 / 20 / 50 / 200 | Use: Trend direction, dynamic S&amp;R, crossovers</div></div>
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">RSI</div><div class="ind-type">Oscillator</div></div><p class="ind-desc">Relative Strength Index 0–100. Best used for divergence signals — not just overbought/oversold readings alone.</p><div class="ind-set">Period: 14 | OB: &gt;70 | OS: &lt;30 | Divergence is the real signal</div></div>
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">VWAP</div><div class="ind-type">Intraday</div></div><p class="ind-desc">Volume Weighted Average Price — the institutional benchmark. Above VWAP = bullish intraday bias. Resets daily.</p><div class="ind-set">Resets daily | Intraday bias, institutional entries, mean reversion</div></div>
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">ATR</div><div class="ind-type">Volatility</div></div><p class="ind-desc">Average True Range measures volatility — not direction. Sets stops that adapt to current conditions, not fixed amounts.</p><div class="ind-set">Period: 14 | Stop: 1.5–2.5× ATR | Adapts to volatility regime</div></div>
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">MACD</div><div class="ind-type">Momentum</div></div><p class="ind-desc">Measures momentum via EMA relationships. Histogram shows acceleration — the leading signal within MACD most ignore.</p><div class="ind-set">12/26/9 default | Histogram flip + crossover | Look for divergence</div></div>
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">BB</div><div class="ind-type">Volatility</div></div><p class="ind-desc">Bollinger Bands: 20 SMA ± 2 standard deviations. Squeeze = low volatility → big move incoming.</p><div class="ind-set">20 SMA ± 2 StdDev | Squeeze = bands converging | Walk bands in trends</div></div>
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">FIBO</div><div class="ind-type">Price Tool</div></div><p class="ind-desc">Fibonacci retracement levels mark potential S/R within pullbacks. The 0.618 golden ratio is the most respected level.</p><div class="ind-set">Key: 0.236 / 0.382 / 0.5 / 0.618 / 0.786 | Draw swing high to low</div></div>
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">STOCH</div><div class="ind-type">Oscillator</div></div><p class="ind-desc">Stochastic oscillator compares close to range. Best in ranging markets. Avoid using in strong trends.</p><div class="ind-set">14,3,3 default | OB: &gt;80 | OS: &lt;20 | Crossovers near extremes</div></div>
-      <div class="ind fi"><div class="ind-top"><div class="ind-name">ICHIMOKU</div><div class="ind-type">Multi-Signal</div></div><p class="ind-desc">All-in-one Japanese system: trend, momentum, S/R. The cloud (Kumo) projects future support/resistance levels.</p><div class="ind-set">Tenkan, Kijun, Senkou A&amp;B, Chikou | Cloud color = trend bias</div></div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">EMA</div><div class="ind-type">Trend</div></div>
+        <p class="ind-desc">Exponential Moving Average weights recent candles more heavily than older ones, making it faster to respond to price changes than the Simple MA. It's the backbone of most trend-following systems and works beautifully as a dynamic support/resistance level in trending markets.</p>
+        <div class="ind-set">Settings: 9 / 20 / 50 / 200 | Crossovers signal trend shifts | 200 EMA = institutional benchmark</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> In trending markets, buy pullbacks to the 20 EMA. The 9/21 crossover is a clean short-term momentum signal. <strong style="color:var(--red)">Avoid:</strong> Using EMAs alone in choppy, sideways markets — you'll get whipsawed constantly.</div>
+      </div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">RSI</div><div class="ind-type">Oscillator</div></div>
+        <p class="ind-desc">Relative Strength Index measures the speed and magnitude of price changes on a 0-100 scale. Most traders use it for overbought/oversold signals — but the real money is in divergence: when RSI makes a lower high while price makes a higher high, a reversal is likely brewing.</p>
+        <div class="ind-set">Period: 14 | OB: &gt;70 | OS: &lt;30 | Bullish divergence = price falls, RSI rises</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> Divergence signals at key S/R levels. RSI above 50 = bullish momentum bias. <strong style="color:var(--red)">Avoid:</strong> Shorting just because RSI hits 70 in a strong uptrend. It can stay overbought for weeks.</div>
+      </div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">VWAP</div><div class="ind-type">Intraday</div></div>
+        <p class="ind-desc">Volume Weighted Average Price is the single most important intraday level because it's the benchmark institutions use to evaluate their own fills. A fund that buys above VWAP underperformed. Below? They got a good deal. This creates consistent buying pressure near VWAP on pullbacks in uptrending days.</p>
+        <div class="ind-set">Resets at market open | Above = bullish bias | Below = bearish bias | Reversion target on mean-reversion plays</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> Intraday bias filter and mean-reversion entries. Strong stocks hold above VWAP all day. <strong style="color:var(--red)">Avoid:</strong> VWAP is useless on daily or weekly charts. It's purely an intraday tool.</div>
+      </div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">ATR</div><div class="ind-type">Volatility</div></div>
+        <p class="ind-desc">Average True Range is the most practical risk management tool in a trader's arsenal. It tells you how much an asset typically moves in a given period — not which direction, just how far. This lets you set stop losses that reflect actual market conditions rather than arbitrary dollar amounts that get triggered by normal noise.</p>
+        <div class="ind-set">Period: 14 | Stop = Entry − (ATR × 1.5) for longs | Wide ATR = wider stops, smaller size</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> Dynamic stop placement and position sizing. Low ATR + Bollinger squeeze = explosive move setup. <strong style="color:var(--red)">Avoid:</strong> Fixed dollar stops in volatile markets — ATR-based stops are always superior.</div>
+      </div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">MACD</div><div class="ind-type">Momentum</div></div>
+        <p class="ind-desc">Moving Average Convergence Divergence shows the relationship between two EMAs (typically 12 and 26). The signal line (9 EMA of MACD) generates crossover signals. But most traders ignore the histogram — the difference between MACD and signal line — which actually leads the crossover and shows momentum shifting before the lines cross.</p>
+        <div class="ind-set">12/26/9 default | Histogram shrinking = momentum fading | Divergence = early reversal warning</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> Momentum confirmation on trending setups. Histogram divergence for counter-trend entries. <strong style="color:var(--red)">Avoid:</strong> Using MACD crossovers as standalone entry signals — they lag significantly in fast-moving markets.</div>
+      </div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">BB</div><div class="ind-type">Volatility</div></div>
+        <p class="ind-desc">Bollinger Bands place two bands at ±2 standard deviations around a 20-period SMA. Statistically, price should stay within the bands 95% of the time. The squeeze — when the bands contract to their tightest point in months — signals a period of low volatility that almost always precedes a significant directional move. Direction is not predicted, but the explosion is.</p>
+        <div class="ind-set">20 SMA ± 2 StdDev | Squeeze = coiling energy | Band walk = strong trend | Touch outer band ≠ reversal</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> Volatility compression setups and trend strength confirmation. Price "walking" the upper band = strong uptrend. <strong style="color:var(--red)">Avoid:</strong> Fading every touch of the outer bands. In strong trends, price can hug the band for extended periods.</div>
+      </div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">FIBO</div><div class="ind-type">Price Tool</div></div>
+        <p class="ind-desc">Fibonacci retracement levels work because enough traders watch them that they become self-fulfilling. Draw from a significant swing low to swing high (or vice versa) and the 38.2%, 50%, and 61.8% levels mark where pullbacks commonly find support in uptrends. The 61.8% (the golden ratio) is the most respected — a bounce from there in an uptrend is a high-conviction long entry.</p>
+        <div class="ind-set">Key levels: 38.2% / 50% / 61.8% / 78.6% | Combine with S/R and candlestick signals for best results</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> Pullback entries in established trends. Confluence of Fib level + S/R + reversal candle = high-probability setup. <strong style="color:var(--red)">Avoid:</strong> Drawing Fibs from minor swings — only use significant structural highs and lows.</div>
+      </div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">STOCH</div><div class="ind-type">Oscillator</div></div>
+        <p class="ind-desc">The Stochastic oscillator compares the closing price to its range over a given period, producing a 0-100 oscillator. It identifies when price is closing near the top or bottom of recent ranges. Most useful in ranging, sideways markets where price bounces between defined levels. In strong trends, stochastic can remain overbought or oversold for extended periods without a meaningful reversal.</p>
+        <div class="ind-set">14,3,3 standard | %K crossing %D = signal | Above 80 = overbought, below 20 = oversold | Works best in ranges</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> Range-bound markets. Stoch crossing up from below 20 at a key support level = solid buy signal. <strong style="color:var(--red)">Avoid:</strong> Using it as a reversal signal in strongly trending markets. You'll get chopped up.</div>
+      </div>
+      <div class="ind fi">
+        <div class="ind-top"><div class="ind-name">ICHIMOKU</div><div class="ind-type">Multi-Signal</div></div>
+        <p class="ind-desc">The Ichimoku Cloud is an all-in-one system developed in Japan before computers — by hand, every day, for decades before publication. It shows trend direction, momentum, and support/resistance levels simultaneously. Price above a green cloud = bullish. Below a red cloud = bearish. The cloud itself acts as dynamic support/resistance and its thickness indicates the strength of that level.</p>
+        <div class="ind-set">Tenkan (9) + Kijun (26) cross = signal | Thick cloud = strong S/R | Chikou span confirmation adds confluence</div>
+        <div style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6"><strong style="color:var(--green)">Best use:</strong> Trend identification and dynamic S/R on swing trading timeframes. "Price above cloud, cloud is green" = high-conviction bullish environment. <strong style="color:var(--red)">Avoid:</strong> Using Ichimoku on timeframes under 1 hour — it loses its effectiveness on noisy lower timeframes.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -325,14 +520,14 @@
   <div class="container">
     <div class="sec-head fi"><span class="sec-tag">// 04 / chart patterns</span><h2 class="sec-title">PATTERN <span class="y">RECOGNITION</span></h2><p class="sec-desc">Patterns repeat because human psychology repeats. Learn the setups professionals watch every day.</p></div>
     <div class="pat-grid">
-      <div class="pat bull fi"><div class="pat-sig">▲ Bullish</div><div class="pat-chart"><div class="ck" style="height:28px;background:var(--green)"></div><div class="ck" style="height:22px;background:var(--green)"></div><div class="ck" style="height:18px;background:var(--red)"></div><div class="ck" style="height:20px;background:var(--green)"></div><div class="ck" style="height:42px;background:var(--green)"></div><div class="ck" style="height:58px;background:var(--green)"></div></div><div class="pat-name">Horizontal Breakout</div><p>Price consolidates below resistance then closes above on volume. High-probability continuation signal.</p></div>
-      <div class="pat bull fi"><div class="pat-sig">▲ Bullish</div><div class="pat-chart"><div class="ck" style="height:16px;background:var(--green)"></div><div class="ck" style="height:26px;background:var(--green)"></div><div class="ck" style="height:36px;background:var(--green)"></div><div class="ck" style="height:46px;background:var(--green)"></div><div class="ck" style="height:56px;background:var(--green)"></div><div class="ck" style="height:66px;background:var(--green)"></div></div><div class="pat-name">Rising Channel</div><p>Higher highs &amp; higher lows within parallel trendlines. Buy the floor, target the ceiling.</p></div>
-      <div class="pat cont fi"><div class="pat-sig">◆ Continuation</div><div class="pat-chart" style="align-items:center"><div class="ck" style="height:60px;background:var(--green)"></div><div class="ck" style="height:38px;background:var(--red)"></div><div class="ck" style="height:28px;background:var(--red)"></div><div class="ck" style="height:32px;background:var(--green)"></div><div class="ck" style="height:55px;background:var(--green)"></div><div class="ck" style="height:70px;background:var(--green)"></div></div><div class="pat-name">Bull Flag</div><p>Strong move (flagpole), tight pullback (flag). Volume dries on flag, surges on breakout.</p></div>
-      <div class="pat bull fi"><div class="pat-sig">▲ Bullish</div><div class="pat-chart" style="align-items:center"><div class="ck" style="height:50px;background:var(--red)"></div><div class="ck" style="height:16px;background:var(--green)"></div><div class="ck" style="height:14px;background:var(--green)"></div><div class="ck" style="height:20px;background:var(--green)"></div><div class="ck" style="height:44px;background:var(--green)"></div><div class="ck" style="height:60px;background:var(--green)"></div></div><div class="pat-name">Double Bottom (W)</div><p>Two equal lows form a W. Neckline break confirms reversal. High-probability bullish signal.</p></div>
-      <div class="pat bear fi"><div class="pat-sig">▼ Bearish</div><div class="pat-chart" style="align-items:flex-start;padding-top:8px"><div class="ck" style="height:55px;background:var(--red)"></div><div class="ck" style="height:36px;background:var(--green)"></div><div class="ck" style="height:54px;background:var(--red)"></div><div class="ck" style="height:36px;background:var(--green)"></div><div class="ck" style="height:53px;background:var(--red)"></div><div class="ck" style="height:20px;background:var(--red)"></div></div><div class="pat-name">Triple Top</div><p>Three failed attempts at resistance. Break below support = confirmed bearish reversal.</p></div>
-      <div class="pat bear fi"><div class="pat-sig">▼ Bearish</div><div class="pat-chart" style="align-items:flex-start;padding-top:8px"><div class="ck" style="height:42px;background:var(--red)"></div><div class="ck" style="height:26px;background:var(--green)"></div><div class="ck" style="height:62px;background:var(--red)"></div><div class="ck" style="height:28px;background:var(--green)"></div><div class="ck" style="height:40px;background:var(--red)"></div><div class="ck" style="height:14px;background:var(--red)"></div></div><div class="pat-name">Head &amp; Shoulders</div><p>Classic topping formation. Neckline break = confirmed reversal. Measure head for price target.</p></div>
-      <div class="pat bull fi"><div class="pat-sig">▲ Bullish</div><div class="pat-chart" style="align-items:center"><div class="ck" style="height:48px;background:var(--red)"></div><div class="ck" style="height:28px;background:var(--red)"></div><div class="ck" style="height:12px;background:var(--green)"></div><div class="ck" style="height:50px;background:var(--red)"></div><div class="ck" style="height:10px;background:var(--green)"></div><div class="ck" style="height:60px;background:var(--green)"></div></div><div class="pat-name">Inv. Head &amp; Shoulders</div><p>Neckline break = confirmed reversal. One of the most reliable patterns in all of TA.</p></div>
-      <div class="pat cont fi"><div class="pat-sig">◆ Continuation</div><div class="pat-chart" style="align-items:center"><div class="ck" style="height:60px;background:var(--green)"></div><div class="ck" style="height:46px;background:var(--red)"></div><div class="ck" style="height:44px;background:var(--red)"></div><div class="ck" style="height:46px;background:var(--green)"></div><div class="ck" style="height:44px;background:var(--red)"></div><div class="ck" style="height:68px;background:var(--green)"></div></div><div class="pat-name">Ascending Triangle</div><p>Flat resistance, higher lows. Buyers getting aggressive. Breakout above ceiling = strong continuation.</p></div>
+      <div class="pat bull fi"><div class="pat-sig">▲ Bullish</div><div class="pat-chart"><div class="ck" style="height:28px;background:var(--green)"></div><div class="ck" style="height:22px;background:var(--green)"></div><div class="ck" style="height:18px;background:var(--red)"></div><div class="ck" style="height:20px;background:var(--green)"></div><div class="ck" style="height:42px;background:var(--green)"></div><div class="ck" style="height:58px;background:var(--green)"></div></div><div class="pat-name">Horizontal Breakout</div><p>Price consolidates below resistance then closes above on volume. High-probability continuation signal.</p><div class="pat-detail"><span>ENTRY:</span> First close above resistance level<br><span>STOP:</span> Below the consolidation base<br><span>TARGET:</span> Measure the base height, project upward<br><span>CONFIRM:</span> Volume should spike on breakout candle</div></div>
+      <div class="pat bull fi"><div class="pat-sig">▲ Bullish</div><div class="pat-chart"><div class="ck" style="height:16px;background:var(--green)"></div><div class="ck" style="height:26px;background:var(--green)"></div><div class="ck" style="height:36px;background:var(--green)"></div><div class="ck" style="height:46px;background:var(--green)"></div><div class="ck" style="height:56px;background:var(--green)"></div><div class="ck" style="height:66px;background:var(--green)"></div></div><div class="pat-name">Rising Channel</div><p>Higher highs &amp; higher lows within parallel trendlines. Buy the floor, target the ceiling.</p><div class="pat-detail"><span>ENTRY:</span> Bounce off the lower channel line<br><span>STOP:</span> Slightly below the lower trendline<br><span>TARGET:</span> Upper channel line<br><span>CONFIRM:</span> Candle reversal signal at lower line</div></div>
+      <div class="pat cont fi"><div class="pat-sig">◆ Continuation</div><div class="pat-chart" style="align-items:center"><div class="ck" style="height:60px;background:var(--green)"></div><div class="ck" style="height:38px;background:var(--red)"></div><div class="ck" style="height:28px;background:var(--red)"></div><div class="ck" style="height:32px;background:var(--green)"></div><div class="ck" style="height:55px;background:var(--green)"></div><div class="ck" style="height:70px;background:var(--green)"></div></div><div class="pat-name">Bull Flag</div><p>Strong move (flagpole), tight pullback (flag). Volume dries on flag, surges on breakout.</p><div class="pat-detail"><span>ENTRY:</span> Break above the flag's upper trendline<br><span>STOP:</span> Below the flag's lowest point<br><span>TARGET:</span> Add flagpole length to breakout point<br><span>CONFIRM:</span> Volume contracts during flag, expands on break</div></div>
+      <div class="pat bull fi"><div class="pat-sig">▲ Bullish</div><div class="pat-chart" style="align-items:center"><div class="ck" style="height:50px;background:var(--red)"></div><div class="ck" style="height:16px;background:var(--green)"></div><div class="ck" style="height:14px;background:var(--green)"></div><div class="ck" style="height:20px;background:var(--green)"></div><div class="ck" style="height:44px;background:var(--green)"></div><div class="ck" style="height:60px;background:var(--green)"></div></div><div class="pat-name">Double Bottom (W)</div><p>Two equal lows form a W. Neckline break confirms reversal. High-probability bullish signal.</p><div class="pat-detail"><span>ENTRY:</span> Close above the neckline (middle peak)<br><span>STOP:</span> Below the second bottom<br><span>TARGET:</span> Neckline + distance from bottom to neckline<br><span>CONFIRM:</span> Second bottom should have lower volume</div></div>
+      <div class="pat bear fi"><div class="pat-sig">▼ Bearish</div><div class="pat-chart" style="align-items:flex-start;padding-top:8px"><div class="ck" style="height:55px;background:var(--red)"></div><div class="ck" style="height:36px;background:var(--green)"></div><div class="ck" style="height:54px;background:var(--red)"></div><div class="ck" style="height:36px;background:var(--green)"></div><div class="ck" style="height:53px;background:var(--red)"></div><div class="ck" style="height:20px;background:var(--red)"></div></div><div class="pat-name">Triple Top</div><p>Three failed attempts at resistance. Break below support = confirmed bearish reversal.</p><div class="pat-detail"><span>ENTRY:</span> Close below the support connecting the lows<br><span>STOP:</span> Above the third top<br><span>TARGET:</span> Measure top-to-support, project below<br><span>CONFIRM:</span> Each top should have declining volume</div></div>
+      <div class="pat bear fi"><div class="pat-sig">▼ Bearish</div><div class="pat-chart" style="align-items:flex-start;padding-top:8px"><div class="ck" style="height:42px;background:var(--red)"></div><div class="ck" style="height:26px;background:var(--green)"></div><div class="ck" style="height:62px;background:var(--red)"></div><div class="ck" style="height:28px;background:var(--green)"></div><div class="ck" style="height:40px;background:var(--red)"></div><div class="ck" style="height:14px;background:var(--red)"></div></div><div class="pat-name">Head &amp; Shoulders</div><p>Classic topping formation. Neckline break = confirmed reversal. Measure head for price target.</p><div class="pat-detail"><span>ENTRY:</span> Close below the neckline<br><span>STOP:</span> Above the right shoulder<br><span>TARGET:</span> Neckline − height of the head<br><span>CONFIRM:</span> Right shoulder volume should be lower than left</div></div>
+      <div class="pat bull fi"><div class="pat-sig">▲ Bullish</div><div class="pat-chart" style="align-items:center"><div class="ck" style="height:48px;background:var(--red)"></div><div class="ck" style="height:28px;background:var(--red)"></div><div class="ck" style="height:12px;background:var(--green)"></div><div class="ck" style="height:50px;background:var(--red)"></div><div class="ck" style="height:10px;background:var(--green)"></div><div class="ck" style="height:60px;background:var(--green)"></div></div><div class="pat-name">Inv. Head &amp; Shoulders</div><p>Neckline break = confirmed reversal. One of the most reliable patterns in all of TA.</p><div class="pat-detail"><span>ENTRY:</span> Close above the neckline<br><span>STOP:</span> Below the right shoulder<br><span>TARGET:</span> Neckline + depth of the head<br><span>CONFIRM:</span> Head should form on highest volume</div></div>
+      <div class="pat cont fi"><div class="pat-sig">◆ Continuation</div><div class="pat-chart" style="align-items:center"><div class="ck" style="height:60px;background:var(--green)"></div><div class="ck" style="height:46px;background:var(--red)"></div><div class="ck" style="height:44px;background:var(--red)"></div><div class="ck" style="height:46px;background:var(--green)"></div><div class="ck" style="height:44px;background:var(--red)"></div><div class="ck" style="height:68px;background:var(--green)"></div></div><div class="pat-name">Ascending Triangle</div><p>Flat resistance, higher lows. Buyers getting aggressive. Breakout above ceiling = strong continuation.</p><div class="pat-detail"><span>ENTRY:</span> Close above the flat resistance line<br><span>STOP:</span> Below the most recent higher low<br><span>TARGET:</span> Triangle height added to breakout point<br><span>CONFIRM:</span> Volume should expand on the breakout candle</div></div>
     </div>
   </div>
 </section>
@@ -391,9 +586,52 @@
 </section>
 <div class="cyber-line"></div>
 
+<section class="alt">
+  <div class="container">
+    <div class="sec-head fi">
+      <span class="sec-tag">// 06 / pro insights</span>
+      <h2 class="sec-title">WORDS FROM THE <span class="y">LEGENDS</span></h2>
+      <p class="sec-desc">These traders didn't win by being the smartest. They won by lasting the longest.</p>
+    </div>
+    <div class="insight-grid">
+      <div class="insight fi">
+        <div class="insight-quote">"The market is not your enemy. Your own emotions are your enemy."</div>
+        <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:10px">Every bad trade has a feeling attached to it — FOMO, revenge, boredom, overconfidence. The trade setups are just the trigger. The real battle is always internal. The traders who win long-term are the ones who built systems specifically to remove their own judgment from the execution process.</div>
+        <div class="insight-author">// MARK DOUGLAS — TRADING IN THE ZONE</div>
+      </div>
+      <div class="insight fi">
+        <div class="insight-quote">"Cut your losses short and let your winners run."</div>
+        <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:10px">Simple to say. Brutally hard to execute. Human psychology wants the opposite — take profits quickly to lock in the good feeling, and hold losses hoping they'll recover. Reversing this instinct is the single biggest mechanical change a trader can make. It requires pre-defined exits before the trade starts, not decisions made while watching a P&amp;L move.</div>
+        <div class="insight-author">// JESSE LIVERMORE — REMINISCENCES OF A STOCK OPERATOR</div>
+      </div>
+      <div class="insight fi">
+        <div class="insight-quote">"The elements of good trading are: cutting losses, cutting losses, and cutting losses."</div>
+        <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:10px">Ed Seykota turned $5,000 into $15 million over 12 years. When asked his secret, he kept returning to the same point: protecting capital is the priority above all else. Entries can be mediocre. Exits can be imperfect. But if you never let a loss get catastrophic, you remain in the game long enough for your edge to compound.</div>
+        <div class="insight-author">// ED SEYKOTA — MARKET WIZARDS</div>
+      </div>
+      <div class="insight fi">
+        <div class="insight-quote">"I'm always thinking about losing money as opposed to making money."</div>
+        <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:10px">Paul Tudor Jones made billions not by being aggressive, but by being paranoid about risk. His risk-first mentality meant that when his thesis was wrong, the damage was contained. When it was right, he could ride winners because his downside was already capped. Most retail traders think about how much they could make. Professionals think about how much they could lose.</div>
+        <div class="insight-author">// PAUL TUDOR JONES — MARKET WIZARDS</div>
+      </div>
+      <div class="insight fi">
+        <div class="insight-quote">"It's not whether you're right or wrong that matters, but how much money you make when you're right and how much you lose when you're wrong."</div>
+        <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:10px">George Soros understood something most traders miss: accuracy is overrated. He was wrong constantly. What made him legendary was asymmetry — small, controlled losses when wrong and massive, uncapped positions when right. Win rate is a vanity metric. Expectancy is what matters.</div>
+        <div class="insight-author">// GEORGE SOROS</div>
+      </div>
+      <div class="insight fi">
+        <div class="insight-quote">"Trade what you see, not what you think."</div>
+        <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:10px">The chart is reality. Your opinion about where something "should" be is not. The moment you start arguing with price — holding a losing position because "fundamentally it should be higher" — you've stopped trading and started hoping. Price is the ultimate arbiter. When you're wrong, get out. When you're right, let it run. The chart tells you which is which.</div>
+        <div class="insight-author">// GENERAL TRADING WISDOM</div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="cyber-line"></div>
+
 <section id="calculator">
   <div class="container">
-    <div class="sec-head fi" style="text-align:center"><span class="sec-tag">// 06 / risk tool</span><h2 class="sec-title">POSITION SIZE <span class="c">CALCULATOR</span></h2><p class="sec-desc" style="margin:0 auto">Never guess your position size. Risk exactly what you decide — nothing more.</p></div>
+    <div class="sec-head fi" style="text-align:center"><span class="sec-tag">// 07 / risk tool</span><h2 class="sec-title">POSITION SIZE <span class="c">CALCULATOR</span></h2><p class="sec-desc" style="margin:0 auto">Never guess your position size. Risk exactly what you decide — nothing more.</p></div>
     <div class="calc-wrap fi">
       <div class="calc-grid">
         <div class="cfield"><label>Account Size ($)</label><input type="number" id="acc" value="10000" placeholder="10000"></div>
@@ -461,6 +699,12 @@
 
 <script>
 document.getElementById('yr').textContent=new Date().getFullYear();
+function toggleLesson(btn){
+  var lesson=btn.nextElementSibling;
+  var open=lesson.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  btn.textContent=open?'▾ CLOSE LESSON':'▸ READ LESSON';
+}
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');document.getElementById('hbBtn').classList.toggle('open');}
 function switchTab(id,btn){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('on'));document.getElementById('tab-'+id).classList.add('on');btn.classList.add('on');}
 function doCalc(){
