@@ -1,0 +1,19 @@
+---
+// Floating logout/account bar for member pages
+---
+<div id="ttAccountBar" style="display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:rgba(4,8,30,0.95);border:1px solid rgba(0,200,255,0.2);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:12px;font-family:'Rajdhani',sans-serif;box-shadow:0 0 30px rgba(0,200,255,0.1);">
+  <span style="font-size:0.8rem;color:rgba(180,210,255,0.6);">Signed in</span>
+  <a href="/manage" style="font-size:0.8rem;color:#00cfff;text-decoration:none;font-weight:600;">Manage</a>
+  <button onclick="ttLogout()" style="background:rgba(255,64,96,0.15);border:1px solid rgba(255,64,96,0.3);color:#ff4060;font-size:0.75rem;font-family:'Rajdhani',sans-serif;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;letter-spacing:0.05em;">Log Out</button>
+</div>
+<script>
+  (function(){
+    var t = localStorage.getItem('tt_dev_access') || localStorage.getItem('tt_sub_token');
+    if (t) document.getElementById('ttAccountBar').style.display = 'flex';
+  })();
+  function ttLogout() {
+    localStorage.removeItem('tt_dev_access');
+    localStorage.removeItem('tt_sub_token');
+    window.location.href = '/';
+  }
+</script>

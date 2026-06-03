@@ -523,9 +523,9 @@ h2{
 .ticker-list{display:flex;flex-wrap:wrap;gap:8px;}
 
 .ticker-tag{
-  background:rgba(0,200,255,0.07);
-  border:1px solid var(--border2);
-  color:var(--muted);
+  background:rgba(0,200,255,0.05);
+  border:1px solid var(--border);
+  color:var(--muted2);
   padding:4px 12px;border-radius:6px;
   font-size:12px;font-weight:700;
   font-family:'Rajdhani',monospace;
@@ -822,7 +822,7 @@ footer{
   <a href="/chart">Full Chart</a>
   <a href="/academy">Academy</a>
   <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
-  <a class="m-cta" href="/subscribe">Get Started →</a>
+  <a class="m-cta" onclick="openWaitlist();closeMobileMenu()">Get Started →</a>
 </div>
 
 <!-- HERO -->
@@ -843,7 +843,7 @@ footer{
     </p>
 
     <div class="hero-actions">
-      <a class="btn btn-primary" href="/subscribe">Get Started</a>
+      <a class="btn btn-primary" href="#" onclick="openWaitlist();return false;">Join Waitlist</a>
       <a class="btn btn-secondary" href="#chart">View Live Chart</a>
     </div>
 
@@ -1035,7 +1035,7 @@ footer{
       </div>
     </div>
 
-    <p style="color:var(--muted);font-size:13px;text-align:center;letter-spacing:1px;">
+    <p style="color:var(--muted2);font-size:13px;text-align:center;letter-spacing:1px;">
       Any exchange:symbol format works —
       <code style="background:rgba(0,200,255,0.06);padding:2px 8px;border-radius:5px;font-size:12px;border:1px solid var(--border);">TSX:FTS</code>
       <code style="background:rgba(0,200,255,0.06);padding:2px 8px;border-radius:5px;font-size:12px;border:1px solid var(--border);">NASDAQ:NVDA</code>
@@ -1044,29 +1044,6 @@ footer{
     </p>
   </div>
 </section>
-
-<!-- BOT PREVIEW -->
-<section id="bot-preview" style="padding:80px 0;position:relative;z-index:1;">
-  <div class="section-inner" style="max-width:1100px;">
-    <div class="section-label">Live Dashboard</div>
-    <h2 style="text-align:center;margin-bottom:12px;">Real-Time Bot Intelligence</h2>
-    <p class="section-sub" style="text-align:center;margin:0 auto 48px;max-width:560px;">Every signal card shows entry price, take-profit targets, and stop-loss levels — generated automatically from your TradingView strategy.</p>
-    <div style="position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(0,200,255,0.25);box-shadow:0 0 80px rgba(0,200,255,0.1),0 0 0 1px rgba(0,200,255,0.05);">
-      <img src="/bot-preview.png" alt="TrendTrooper Bot Dashboard — Stocks tab with live signal cards" style="width:100%;display:block;border-radius:16px;" loading="lazy" />
-      <div style="position:absolute;inset:0;border-radius:16px;background:linear-gradient(to bottom,transparent 70%,rgba(2,5,16,0.7) 100%);pointer-events:none;"></div>
-      <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;">
-        <span style="width:8px;height:8px;border-radius:50%;background:#00ff88;box-shadow:0 0 8px #00ff88;display:inline-block;animation:livePulse 1.5s ease-in-out infinite;"></span>
-        <span style="font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:#e8eeff;">LIVE BOT TRADING</span>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:28px;">
-      <a href="https://bot.trendtrooper.com" target="_blank" class="plan-btn primary-btn" style="display:inline-block;padding:14px 36px;font-family:'Orbitron',sans-serif;font-size:0.78rem;letter-spacing:0.1em;">View Live Dashboard →</a>
-    </div>
-  </div>
-</section>
-<style>
-@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 8px #00ff88;}50%{opacity:.5;box-shadow:0 0 16px #00ff88;}}
-</style>
 
 <!-- PRICING -->
 <section class="pricing-bg" id="pricing">
@@ -1086,7 +1063,7 @@ footer{
           <li>Signal board (delayed)</li>
           <li>1 watchlist ticker</li>
         </ul>
-        <a href="/subscribe" class="plan-btn">Get Started Free</a>
+        <a href="#" class="plan-btn" onclick="openWaitlist();return false;">Get Started Free</a>
       </div>
 
       <div class="pricing-card featured">
@@ -1102,7 +1079,7 @@ footer{
           <li>Bot status dashboard</li>
           <li>Email support</li>
         </ul>
-        <a href="/subscribe" class="plan-btn primary-btn">Start Pro Trial</a>
+        <a href="#" class="plan-btn primary-btn" onclick="openWaitlist();return false;">Start Pro Trial</a>
       </div>
 
       <div class="pricing-card">
@@ -1165,7 +1142,7 @@ footer{
       <h2>Ready to trade with an edge?</h2>
       <p>Join TrendTrooper and get algorithmic signals built for Canadian and US markets — starting free.</p>
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
-        <a class="btn btn-primary" href="/subscribe">Get Started</a>
+        <a class="btn btn-primary" href="#" onclick="openWaitlist();return false;">Join Waitlist</a>
         <a class="btn btn-secondary" href="/chart">Open Full Chart</a>
       </div>
     </div>
@@ -1202,12 +1179,7 @@ footer{
 
   <div class="footer-bottom">
     <span>© <span id="copyrightYear"></span> TrendTrooper. All rights reserved.</span>
-    <span style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center;">
-      <a href="/terms">Terms of Service</a>
-      <a href="/privacy">Privacy Policy</a>
-      <a href="/manage">Manage Subscription</a>
-      <a href="mailto:support@trendtrooper.com">Support</a>
-    </span>
+    <span>Not financial advice. Trade at your own risk.</span>
   </div>
 </footer>
 
@@ -1241,7 +1213,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   setInterval(fetchBotStatus,30000);
 });
 
-const BOT_URL="https://bot.trendtrooper.com/status-public";
+const BOT_URL="https://bot.trendtrooper.com/status";
 
 function timeAgo(iso){const diff=Math.floor((Date.now()-new Date(iso))/1000);if(diff<60)return diff+"s ago";if(diff<3600)return Math.floor(diff/60)+"m ago";return Math.floor(diff/3600)+"h ago";}
 

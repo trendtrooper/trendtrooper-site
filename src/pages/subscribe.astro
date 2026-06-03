@@ -166,6 +166,13 @@ p{
   cursor:pointer;transition:all 0.2s;white-space:nowrap;
 }
 .token-input button:hover{background:rgba(0,200,255,0.15);border-color:var(--cyan);}
+@media(max-width:520px){
+  .card{padding:36px 20px;}
+  .plans{grid-template-columns:1fr;}
+  h1{font-size:1.4rem;}
+  .token-input{flex-direction:column;}
+  .token-input button{width:100%;}
+}
 .back{
   color:var(--muted2);font-size:0.85rem;text-decoration:none;
   transition:color 0.2s;

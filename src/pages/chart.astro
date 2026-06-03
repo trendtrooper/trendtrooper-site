@@ -1,4 +1,5 @@
 ---
+import LogoutBar from "../components/LogoutBar.astro";
 import TradingViewAdvancedChart from "../components/TradingViewAdvancedChart.astro";
 
 const symbolParam = Astro.url.searchParams.get("symbol");
@@ -6,6 +7,7 @@ const initialSymbol = (symbolParam && symbolParam.trim())
   ? symbolParam.trim().toUpperCase()
   : "TSX:FTS";
 ---
+import LogoutBar from "../components/LogoutBar.astro";
 
 <html lang="en">
 <head>
@@ -426,5 +428,6 @@ const initialSymbol = (symbolParam && symbolParam.trim())
   (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
 </script>
 
+<LogoutBar />
 </body>
 </html>

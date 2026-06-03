@@ -1,6 +1,8 @@
 ---
+import LogoutBar from "../components/LogoutBar.astro";
 // TrendTrooper — Screener src/pages/screener.astro
 ---
+import LogoutBar from "../components/LogoutBar.astro";
 <!doctype html>
 <html lang="en">
 <head>
@@ -334,5 +336,6 @@ renderTable();
 <script>
   (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
 </script>
+<LogoutBar />
 </body>
 </html>

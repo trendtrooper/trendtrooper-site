@@ -1,0 +1,79 @@
+---
+// TrendTrooper — Privacy Policy
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy — TrendTrooper</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#020510;--cyan:#00cfff;--text:#e8eeff;--muted:rgba(220,235,255,0.95);--muted2:rgba(180,210,255,0.6);--border:rgba(0,200,255,0.1);}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;line-height:1.8;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px);background-size:50px 50px;z-index:0;pointer-events:none;}
+header{position:sticky;top:0;z-index:100;background:rgba(2,5,20,0.95);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;color:var(--cyan);}
+.back{color:var(--muted2);font-size:0.85rem;text-decoration:none;transition:color .2s;}
+.back:hover{color:var(--cyan);}
+.wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:60px 24px 80px;}
+.label{font-family:'Orbitron',sans-serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--cyan);text-transform:uppercase;margin-bottom:10px;}
+h1{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;margin-bottom:8px;}
+.updated{color:var(--muted2);font-size:0.85rem;margin-bottom:40px;}
+h2{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:var(--cyan);letter-spacing:0.1em;margin:36px 0 12px;}
+p,li{color:var(--muted);font-size:1rem;margin-bottom:12px;}
+ul{padding-left:20px;}
+li{margin-bottom:6px;}
+a{color:var(--cyan);}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">TrendTrooper</div>
+  <a href="/" class="back">← Back to Home</a>
+</header>
+<div class="wrap">
+  <div class="label">Legal</div>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: June 2, 2026</p>
+
+  <h2>1. Information We Collect</h2>
+  <ul>
+    <li><strong>Email address</strong> — collected when you subscribe via Stripe, used to deliver your access token and account communications.</li>
+    <li><strong>Payment information</strong> — handled entirely by Stripe. We never store your card details.</li>
+    <li><strong>Usage data</strong> — basic server logs (IP address, page visits) for security and performance monitoring.</li>
+  </ul>
+
+  <h2>2. How We Use Your Information</h2>
+  <ul>
+    <li>To deliver your access token and subscription confirmation.</li>
+    <li>To manage your subscription status (active/cancelled).</li>
+    <li>To send important account notifications.</li>
+    <li>We do not sell, rent, or share your information with third parties for marketing purposes.</li>
+  </ul>
+
+  <h2>3. Stripe</h2>
+  <p>Payments are processed by Stripe, Inc. Your payment data is subject to <a href="https://stripe.com/privacy" target="_blank">Stripe's Privacy Policy</a>. We receive only your email address and subscription status from Stripe.</p>
+
+  <h2>4. Cookies & Local Storage</h2>
+  <p>We use browser localStorage to store your access token locally on your device. No tracking cookies are used. The bot dashboard uses a session cookie solely for authentication.</p>
+
+  <h2>5. Data Retention</h2>
+  <p>Subscriber records are retained while your subscription is active and for up to 90 days after cancellation for accounting purposes. You may request deletion at any time.</p>
+
+  <h2>6. Your Rights</h2>
+  <ul>
+    <li>Request a copy of the data we hold about you.</li>
+    <li>Request deletion of your account and data.</li>
+    <li>Opt out of non-transactional emails.</li>
+  </ul>
+  <p>Contact us at <a href="mailto:support@trendtrooper.com">support@trendtrooper.com</a> to exercise any of these rights.</p>
+
+  <h2>7. Security</h2>
+  <p>Access tokens are generated using HMAC-SHA256 and are unique per subscriber. All data is transmitted over HTTPS. We take reasonable measures to protect your information.</p>
+
+  <h2>8. Contact</h2>
+  <p>Questions about this policy: <a href="mailto:support@trendtrooper.com">support@trendtrooper.com</a></p>
+</div>
+</body>
+</html>
