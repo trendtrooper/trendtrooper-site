@@ -337,7 +337,7 @@ function addSRLine(price, color, label) {
   const data = candleSeries.data();
   if (!data.length) return;
   const lastTime   = data[data.length - 1].time;
-  const futureTime = lastTime + 60 * 60 * 24 * 45; // 45 days to the right
+  const futureTime = lastTime + 60 * 60 * 24 * 12; // ~12 candles to the right
   const line = chart.addLineSeries({
     color,
     lineWidth: 2,
@@ -504,8 +504,8 @@ async function runAnalysis(ticker) {
 
     // Add S/R lines
     clearSRLines();
-    (data.resistance || []).forEach((v, i) => addSRLine(v, 'rgba(255,92,106,0.6)', `R${i+1}`));
-    (data.support    || []).forEach((v, i) => addSRLine(v, 'rgba(34,214,115,0.6)',  `S${i+1}`));
+    (data.resistance || []).forEach((v, i) => addSRLine(v, '#ff5c6a', `R${i+1}`));
+    (data.support    || []).forEach((v, i) => addSRLine(v, '#22d673', `S${i+1}`));
 
     // Render panels
     renderHeader(data);
