@@ -260,7 +260,7 @@ import LogoutBar from "../components/LogoutBar.astro";
       <div class="range-wrap" id="rangeWrap" style="display:none">
         <div class="range-labels">
           <span id="rangeLow">—</span>
-          <span style="color:var(--accent);font-weight:700" id="rangeCur">—</span>
+          <span style="color:var(--text);font-weight:700" id="rangeCur">—</span>
           <span id="rangeHigh">—</span>
         </div>
         <div class="range-track">
@@ -437,7 +437,7 @@ function renderIndicators(data) {
     let valColor = 'var(--text)';
     if (r.min !== null) {
       const pct = Math.min(100, (r.val / r.max) * 100);
-      let barColor = 'var(--accent)';
+      let barColor = 'var(--muted)';
       if (r.warn) {
         if (r.val < r.warn[0]) barColor = 'var(--green)';
         else if (r.val > r.warn[1]) barColor = 'var(--red)';
