@@ -334,20 +334,19 @@ function initChart() {
 }
 
 function addSRLine(price, color, label) {
-  const line = chart.addLineSeries({
-    color, lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed,
-    priceLineVisible: true, lastValueVisible: true,
+  const line = candleSeries.createPriceLine({
+    price,
+    color,
+    lineWidth: 2,
+    lineStyle: 0,
+    axisLabelVisible: true,
     title: label,
   });
-  const timeRange = candleSeries.data();
-  if (timeRange.length > 0) {
-    line.setData(timeRange.map(d => ({ time: d.time, value: price })));
-  }
   srLines.push(line);
 }
 
 function clearSRLines() {
-  srLines.forEach(l => { try { chart.removeSeries(l); } catch(e){} });
+  srLines.forEach(l => { try { candleSeries.removePriceLine(l); } catch(e){} });
   srLines = [];
 }
 
