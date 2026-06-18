@@ -192,7 +192,10 @@ import LogoutBar from "../components/LogoutBar.astro";
     <input id="tickerInput" type="text" placeholder="Enter ticker: FTS, NVDA, TQQQ…" autocomplete="off" spellcheck="false" onfocus="this.select()" />
     <button class="btn primary" id="analyzeBtn">Analyze</button>
     <div class="qp-wrap">
-      <span class="qp-label">CA</span>
+      <span class="qp-label">TIMEFRAME</span>
+      <button class="qp tf active" data-tf="1d">1D</button>
+      <button class="qp tf" data-tf="1h">1H</button>
+      <span class="qp-label" style="margin-left:8px">CA</span>
       <button class="qp" data-t="FTS.TO">FTS</button>
       <button class="qp" data-t="ENB.TO">ENB</button>
       <button class="qp" data-t="RY.TO">RY</button>
@@ -309,7 +312,7 @@ function toggleMenu(){
 }
 
 const BOT = 'https://bot.trendtrooper.com';
-let chart, candleSeries, srLines = [];
+let chart, candleSeries, srLines = [], currentTF = '1d';
 
 function initChart() {
   const el = document.getElementById('chartDiv');
@@ -337,7 +340,8 @@ function addSRLine(price, color, label) {
   const data = candleSeries.data();
   if (!data.length) return;
   const lastTime   = data[data.length - 1].time;
-  const futureTime = lastTime + 60 * 60 * 24 * 12; // ~12 candles to the right
+  const barInterval = data.length > 1 ? data[data.length-1].time - data[data.length-2].time : 86400;
+  const futureTime = lastTime + barInterval * 50; // 50 bars to the right — fills edge
   const line = chart.addLineSeries({
     color,
     lineWidth: 2,
@@ -487,7 +491,7 @@ async function runAnalysis(ticker) {
   document.getElementById('hPrice').textContent = '—';
 
   try {
-    const res = await fetch(`${BOT}/analyze/${encodeURIComponent(ticker)}`);
+    const res = await fetch(`${BOT}/analyze/${encodeURIComponent(ticker)}?interval=${currentTF}`);
     const data = await res.json();
 
     if (data.error) {
@@ -526,7 +530,16 @@ document.getElementById('analyzeBtn').addEventListener('click', () => {
 document.getElementById('tickerInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') runAnalysis(e.target.value);
 });
-document.querySelectorAll('.qp').forEach(b => {
+document.querySelectorAll('.qp.tf').forEach(b => {
+  b.addEventListener('click', () => {
+    currentTF = b.dataset.tf;
+    document.querySelectorAll('.qp.tf').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    const t = document.getElementById('tickerInput').value.trim().toUpperCase();
+    if (t) runAnalysis(t);
+  });
+});
+document.querySelectorAll('.qp:not(.tf)').forEach(b => {
   b.addEventListener('click', () => {
     document.getElementById('tickerInput').value = b.dataset.t;
     runAnalysis(b.dataset.t);
