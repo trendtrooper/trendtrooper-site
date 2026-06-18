@@ -85,10 +85,18 @@ import LogoutBar from "../components/LogoutBar.astro";
     .dir-bullish{background:rgba(34,214,115,.08);border:1px solid rgba(34,214,115,.25)}
     .dir-neutral{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25)}
     .dir-icon{font-size:28px;line-height:1}
+    .dir-label{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+    .dir-pct{font-family:var(--mono);font-size:12px;font-weight:700;opacity:.7}
     .dir-text{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;letter-spacing:1px}
     .dir-bearish .dir-text{color:var(--red)}
     .dir-bullish .dir-text{color:var(--green)}
     .dir-neutral .dir-text{color:var(--amber)}
+    /* TRADE FORCE */
+    .force-wrap{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border2);margin-top:10px}
+    .force-label{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.8px;white-space:nowrap}
+    .force-track{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden}
+    .force-fill{height:100%;border-radius:3px;transition:.4s}
+    .force-val{font-family:var(--mono);font-size:16px;font-weight:900;min-width:36px;text-align:right}
 
     /* LEVELS TABLE */
     .levels-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -223,9 +231,17 @@ import LogoutBar from "../components/LogoutBar.astro";
       <div class="card-title">Directional Bias — Daily</div>
       <div class="direction-badge dir-neutral" id="dirBadge">
         <span class="dir-icon" id="dirIcon">—</span>
-        <span class="dir-text" id="dirText">AWAITING</span>
+        <div class="dir-label">
+          <span class="dir-pct" id="dirPct">—</span>
+          <span class="dir-text" id="dirText">AWAITING</span>
+        </div>
       </div>
-      <div class="narrative" id="narrative">Run an analysis to see the directional breakdown.</div>
+      <div class="force-wrap" id="forceWrap">
+        <span class="force-label">TRADE FORCE</span>
+        <div class="force-track"><div class="force-fill" id="forceFill" style="width:0%"></div></div>
+        <span class="force-val" id="forceVal">—</span>
+      </div>
+      <div class="narrative" id="narrative" style="margin-top:12px">Run an analysis to see the directional breakdown.</div>
     </div>
 
     <!-- S/R LEVELS -->
@@ -344,10 +360,22 @@ function renderDirection(data) {
   const badge = document.getElementById('dirBadge');
   const icon  = document.getElementById('dirIcon');
   const text  = document.getElementById('dirText');
+  const pct   = document.getElementById('dirPct');
   badge.className = 'direction-badge dir-' + data.direction;
   if (data.direction === 'bearish') { icon.textContent = '↓'; text.textContent = 'BEARISH'; }
   else if (data.direction === 'bullish') { icon.textContent = '↑'; text.textContent = 'BULLISH'; }
   else { icon.textContent = '→'; text.textContent = 'NEUTRAL'; }
+  pct.textContent = (data.confidence || 0) + '% confidence';
+
+  // Trade Force
+  const force = data.trade_force || 0;
+  const forcePct = (force / 10) * 100;
+  const forceColor = force >= 7 ? 'var(--green)' : force >= 4.5 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('forceFill').style.width   = forcePct + '%';
+  document.getElementById('forceFill').style.background = forceColor;
+  document.getElementById('forceVal').textContent    = force.toFixed(1);
+  document.getElementById('forceVal').style.color    = forceColor;
+
   document.getElementById('narrative').textContent = data.narrative;
 }
 
