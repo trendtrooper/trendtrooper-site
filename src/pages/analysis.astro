@@ -1,0 +1,506 @@
+---
+import LogoutBar from "../components/LogoutBar.astro";
+---
+<!doctype html>
+<html lang="en">
+<head>
+<script>if(localStorage.getItem("tt_dev_access")!=="tt-ironclad-2026"&&!localStorage.getItem("tt_sub_token")){sessionStorage.setItem("tt_redirect",location.pathname);location.replace("/subscribe");}</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TrendTrooper — Stock Analysis</title>
+  <meta name="description" content="AI-powered daily chart analysis with support/resistance, moving averages, and directional bias." />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#070e1c;--card:#0f1b33;--card2:#111e38;
+      --muted:#7a96bb;--muted2:#4a6490;
+      --text:#ddeeff;--text2:#b8d0ee;
+      --accent:#6ee7ff;--accent2:#a78bfa;
+      --green:#22d673;--red:#ff5c6a;--amber:#f59e0b;
+      --border2:rgba(255,255,255,.06);--r:16px;--max:1400px;
+      --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);color:var(--text);background:var(--bg);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    header{position:sticky;top:0;z-index:100;background:rgba(7,14,28,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border2)}
+    .nav{max-width:var(--max);margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:13px;font-family:'Orbitron',monospace;letter-spacing:.5px}
+    .logo{width:34px;height:34px;border-radius:10px;flex:0 0 auto;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:900;font-size:11px;color:#fff;letter-spacing:.5px;box-shadow:0 0 16px rgba(110,231,255,.25)}
+    .brand-sub{font-size:11px;color:var(--muted);font-weight:500}
+    .navlinks{display:flex;gap:22px;color:var(--muted);font-size:13.5px;font-weight:500}
+    .navlinks a:hover{color:var(--text)}.navlinks a.active{color:var(--accent)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:12px;font-weight:600;font-size:13.5px;border:1px solid var(--border2);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;transition:.15s;font-family:var(--sans)}
+    .btn:hover{background:rgba(255,255,255,.08)}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#070e1c;font-weight:700}
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0}
+    .hamburger span{width:20px;height:2px;background:var(--text);border-radius:2px;display:block;transition:transform .2s,opacity .2s}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    .inner-mobile-menu{display:none;flex-direction:column;position:sticky;top:61px;z-index:99;background:rgba(7,14,28,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);padding:8px 24px 16px}
+    .inner-mobile-menu.open{display:flex}
+    .inner-mobile-menu a{color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;padding:11px 0;border-bottom:1px solid var(--border2);transition:color .15s}
+    .inner-mobile-menu a:last-child{border-bottom:none}
+    .inner-mobile-menu a:hover{color:var(--text)}
+
+    /* SEARCH BAR */
+    .search-bar{background:var(--card);border-bottom:1px solid var(--border2);padding:14px 24px}
+    .search-inner{max-width:var(--max);margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .search-inner input{flex:1;min-width:180px;max-width:320px;padding:10px 16px;border-radius:12px;border:1px solid var(--border2);background:rgba(255,255,255,.04);color:var(--text);font-size:14px;font-family:var(--mono);font-weight:700;outline:none;transition:.15s}
+    .search-inner input:focus{border-color:rgba(110,231,255,.4);background:rgba(110,231,255,.04)}
+    .search-inner input::placeholder{color:var(--muted2);font-weight:400}
+    .qp-wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+    .qp-label{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.5px;margin-right:2px}
+    .qp{padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--border2);color:var(--muted);cursor:pointer;background:transparent;font-family:var(--mono);transition:.15s}
+    .qp:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+    .qp.active{background:rgba(110,231,255,.12);border-color:rgba(110,231,255,.35);color:var(--accent)}
+
+    /* LAYOUT */
+    .wrap{max-width:var(--max);margin:0 auto;padding:24px 24px 40px;display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+    @media(max-width:1100px){.wrap{grid-template-columns:1fr}}
+
+    /* CHART PANEL */
+    .chart-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border2);overflow:hidden}
+    .chart-header{padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .ticker-badge{font-family:var(--mono);font-weight:900;font-size:22px;color:var(--accent)}
+    .price-big{font-family:var(--mono);font-size:22px;font-weight:700}
+    .chg-badge{font-family:var(--mono);font-size:13px;font-weight:700;padding:4px 10px;border-radius:8px}
+    .chg-up{background:rgba(34,214,115,.12);color:var(--green);border:1px solid rgba(34,214,115,.25)}
+    .chg-dn{background:rgba(255,92,106,.12);color:var(--red);border:1px solid rgba(255,92,106,.25)}
+    .chg-flat{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border2)}
+    #chartDiv{width:100%;height:420px;position:relative}
+    .chart-loading{display:flex;align-items:center;justify-content:center;height:420px;color:var(--muted);font-size:14px;gap:10px}
+    .spinner{width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* SIDEBAR */
+    .sidebar{display:flex;flex-direction:column;gap:16px}
+    .card{background:var(--card);border-radius:var(--r);border:1px solid var(--border2);padding:18px 20px}
+    .card-title{font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+
+    /* DIRECTION CARD */
+    .direction-badge{display:flex;align-items:center;justify-content:center;gap:12px;padding:18px;border-radius:12px;margin-bottom:12px}
+    .dir-bearish{background:rgba(255,92,106,.08);border:1px solid rgba(255,92,106,.25)}
+    .dir-bullish{background:rgba(34,214,115,.08);border:1px solid rgba(34,214,115,.25)}
+    .dir-neutral{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25)}
+    .dir-icon{font-size:28px;line-height:1}
+    .dir-text{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;letter-spacing:1px}
+    .dir-bearish .dir-text{color:var(--red)}
+    .dir-bullish .dir-text{color:var(--green)}
+    .dir-neutral .dir-text{color:var(--amber)}
+
+    /* LEVELS TABLE */
+    .levels-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .level-group{display:flex;flex-direction:column;gap:6px}
+    .level-group-label{font-size:10px;font-weight:700;letter-spacing:.8px;margin-bottom:2px}
+    .res-label{color:var(--red)}
+    .sup-label{color:var(--green)}
+    .level-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.025)}
+    .level-tag{font-size:10px;color:var(--muted2);font-weight:600}
+    .level-val{font-family:var(--mono);font-size:13px;font-weight:700}
+    .level-res{color:var(--red)}
+    .level-sup{color:var(--green)}
+
+    /* MA TABLE */
+    .ma-table{width:100%;border-collapse:collapse}
+    .ma-table td{padding:6px 4px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,.03)}
+    .ma-table tr:last-child td{border-bottom:none}
+    .ma-name{color:var(--muted2);font-size:11px;font-weight:700}
+    .ma-val{font-family:var(--mono);font-weight:700;text-align:right}
+    .above-ma{color:var(--green)}
+    .below-ma{color:var(--red)}
+    .ma-arrow{font-size:10px;text-align:center;width:20px}
+
+    /* INDICATORS */
+    .ind-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+    .ind-row:last-child{border-bottom:none}
+    .ind-label{font-size:12px;color:var(--muted2);font-weight:600}
+    .ind-val{font-family:var(--mono);font-size:13px;font-weight:700}
+    .ind-bar-wrap{flex:1;margin:0 10px;height:4px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden}
+    .ind-bar{height:100%;border-radius:2px;transition:.3s}
+
+    /* NARRATIVE */
+    .narrative{font-size:13px;line-height:1.7;color:var(--text2)}
+
+    /* 52W RANGE */
+    .range-wrap{margin-top:12px}
+    .range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px}
+    .range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.07);position:relative}
+    .range-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent2),var(--accent))}
+    .range-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 8px rgba(110,231,255,.5)}
+
+    /* EMPTY / ERROR */
+    .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:420px;gap:12px;color:var(--muted)}
+    .empty-state h3{font-size:16px;color:var(--text2)}
+    .error-msg{color:var(--red);font-size:13px}
+
+    footer{max-width:var(--max);margin:0 auto 0;padding:24px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted2);font-size:13px}
+    .foot-links{display:flex;gap:18px}.foot-links a:hover{color:var(--muted)}
+    @media(max-width:900px){.navlinks{display:none}.hamburger{display:flex}}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">TT</div>
+      <div><div>TrendTrooper</div><div class="brand-sub">ANALYSIS</div></div>
+    </div>
+    <nav class="navlinks">
+      <a href="/">Home</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/screener">Screener</a>
+      <a href="/chart">Chart</a>
+      <a href="/analysis" class="active">Analysis</a>
+      <a href="/strategy">Strategy</a>
+      <a href="/academy">Academy</a>
+    </nav>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a class="btn" href="/">← HQ</a>
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="inner-mobile-menu" id="mobileMenu">
+  <a href="/">Home</a>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/screener">Screener</a>
+  <a href="/chart">Chart</a>
+  <a href="/analysis">Analysis</a>
+  <a href="/strategy">Strategy</a>
+  <a href="/academy">Academy</a>
+</div>
+
+<!-- SEARCH BAR -->
+<div class="search-bar">
+  <div class="search-inner">
+    <input id="tickerInput" type="text" placeholder="Enter ticker: FTS, NVDA, TQQQ…" autocomplete="off" spellcheck="false" />
+    <button class="btn primary" id="analyzeBtn">Analyze</button>
+    <div class="qp-wrap">
+      <span class="qp-label">CA</span>
+      <button class="qp" data-t="FTS.TO">FTS</button>
+      <button class="qp" data-t="ENB.TO">ENB</button>
+      <button class="qp" data-t="RY.TO">RY</button>
+      <button class="qp" data-t="SHOP.TO">SHOP</button>
+      <span class="qp-label" style="margin-left:8px">US</span>
+      <button class="qp" data-t="NVDA">NVDA</button>
+      <button class="qp" data-t="TQQQ">TQQQ</button>
+      <button class="qp" data-t="SOXL">SOXL</button>
+      <button class="qp" data-t="SPY">SPY</button>
+      <button class="qp" data-t="TSLA">TSLA</button>
+      <button class="qp" data-t="AAPL">AAPL</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="wrap">
+
+  <!-- CHART PANEL -->
+  <div class="chart-card">
+    <div class="chart-header" id="chartHeader">
+      <span class="ticker-badge" id="hTicker">—</span>
+      <span class="price-big" id="hPrice">—</span>
+      <span class="chg-badge chg-flat" id="hChg">—</span>
+      <span style="color:var(--muted);font-size:12px;margin-left:auto" id="hRange">52W: — / —</span>
+    </div>
+    <div id="chartDiv">
+      <div class="empty-state" id="emptyState">
+        <div style="font-size:36px">📈</div>
+        <h3>Enter a ticker to analyze</h3>
+        <p style="font-size:13px">Try FTS, NVDA, TQQQ, or any stock symbol</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- DIRECTION -->
+    <div class="card">
+      <div class="card-title">Directional Bias — Daily</div>
+      <div class="direction-badge dir-neutral" id="dirBadge">
+        <span class="dir-icon" id="dirIcon">—</span>
+        <span class="dir-text" id="dirText">AWAITING</span>
+      </div>
+      <div class="narrative" id="narrative">Run an analysis to see the directional breakdown.</div>
+    </div>
+
+    <!-- S/R LEVELS -->
+    <div class="card">
+      <div class="card-title">Support &amp; Resistance</div>
+      <div class="levels-grid">
+        <div class="level-group">
+          <div class="level-group-label res-label">RESISTANCE</div>
+          <div id="resLevels"><div style="color:var(--muted);font-size:12px">—</div></div>
+        </div>
+        <div class="level-group">
+          <div class="level-group-label sup-label">SUPPORT</div>
+          <div id="supLevels"><div style="color:var(--muted);font-size:12px">—</div></div>
+        </div>
+      </div>
+      <div class="range-wrap" id="rangeWrap" style="display:none">
+        <div class="range-labels">
+          <span id="rangeLow">—</span>
+          <span style="color:var(--accent);font-weight:700" id="rangeCur">—</span>
+          <span id="rangeHigh">—</span>
+        </div>
+        <div class="range-track">
+          <div class="range-fill" id="rangeFill" style="width:0%"></div>
+          <div class="range-dot" id="rangeDot" style="left:0%"></div>
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:6px">52-Week Range</div>
+      </div>
+    </div>
+
+    <!-- MOVING AVERAGES -->
+    <div class="card">
+      <div class="card-title">Moving Averages (Daily SMA)</div>
+      <table class="ma-table" id="maTable">
+        <tr><td colspan="3" style="color:var(--muted);font-size:12px">—</td></tr>
+      </table>
+    </div>
+
+    <!-- INDICATORS -->
+    <div class="card">
+      <div class="card-title">Indicators</div>
+      <div id="indicators">
+        <div style="color:var(--muted);font-size:12px">—</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div>TrendTrooper Analysis &nbsp;•&nbsp; © <span id="yr"></span> &nbsp;•&nbsp; Data via Yahoo Finance</div>
+  <div class="foot-links"><a href="/">Home</a><a href="/dashboard">Dashboard</a><a href="/screener">Screener</a><a href="/chart">Chart</a></div>
+</footer>
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<script is:inline>
+document.getElementById('yr').textContent = new Date().getFullYear();
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+  document.getElementById('hamburgerBtn').classList.toggle('open');
+}
+
+const BOT = 'https://bot.trendtrooper.com';
+let chart, candleSeries, srLines = [];
+
+function initChart() {
+  const el = document.getElementById('chartDiv');
+  el.innerHTML = '';
+  if (chart) { try { chart.remove(); } catch(e){} }
+  chart = LightweightCharts.createChart(el, {
+    width: el.clientWidth,
+    height: 420,
+    layout: { background: { color: '#0f1b33' }, textColor: '#7a96bb' },
+    grid: { vertLines: { color: 'rgba(255,255,255,.04)' }, horzLines: { color: 'rgba(255,255,255,.04)' } },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: 'rgba(255,255,255,.08)' },
+    timeScale: { borderColor: 'rgba(255,255,255,.08)', timeVisible: true },
+  });
+  candleSeries = chart.addCandlestickSeries({
+    upColor: '#22d673', downColor: '#ff5c6a',
+    borderUpColor: '#22d673', borderDownColor: '#ff5c6a',
+    wickUpColor: '#22d673', wickDownColor: '#ff5c6a',
+  });
+  window.addEventListener('resize', () => { if(chart) chart.applyOptions({width: el.clientWidth}); });
+  return { chart, candleSeries };
+}
+
+function addSRLine(price, color, label) {
+  const line = chart.addLineSeries({
+    color, lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed,
+    priceLineVisible: true, lastValueVisible: true,
+    title: label,
+  });
+  const timeRange = candleSeries.data();
+  if (timeRange.length > 0) {
+    line.setData(timeRange.map(d => ({ time: d.time, value: price })));
+  }
+  srLines.push(line);
+}
+
+function clearSRLines() {
+  srLines.forEach(l => { try { chart.removeSeries(l); } catch(e){} });
+  srLines = [];
+}
+
+function renderHeader(data) {
+  document.getElementById('hTicker').textContent = data.ticker;
+  document.getElementById('hPrice').textContent = '$' + data.price.toFixed(2);
+  const chgEl = document.getElementById('hChg');
+  const up = data.change_pct >= 0;
+  chgEl.textContent = (up ? '+' : '') + data.change_pct.toFixed(2) + '%';
+  chgEl.className = 'chg-badge ' + (up ? 'chg-up' : 'chg-dn');
+  document.getElementById('hRange').textContent = '52W: $' + data.low_52 + ' / $' + data.high_52;
+}
+
+function renderDirection(data) {
+  const badge = document.getElementById('dirBadge');
+  const icon  = document.getElementById('dirIcon');
+  const text  = document.getElementById('dirText');
+  badge.className = 'direction-badge dir-' + data.direction;
+  if (data.direction === 'bearish') { icon.textContent = '↓'; text.textContent = 'BEARISH'; }
+  else if (data.direction === 'bullish') { icon.textContent = '↑'; text.textContent = 'BULLISH'; }
+  else { icon.textContent = '→'; text.textContent = 'NEUTRAL'; }
+  document.getElementById('narrative').textContent = data.narrative;
+}
+
+function renderLevels(data) {
+  const res = data.resistance || [];
+  const sup = data.support || [];
+  document.getElementById('resLevels').innerHTML = res.length
+    ? res.map((v,i) => `<div class="level-row"><span class="level-tag">R${i+1}</span><span class="level-val level-res">$${v.toFixed(2)}</span></div>`).join('')
+    : '<div style="color:var(--muted);font-size:12px">None above</div>';
+  document.getElementById('supLevels').innerHTML = sup.length
+    ? sup.map((v,i) => `<div class="level-row"><span class="level-tag">S${i+1}</span><span class="level-val level-sup">$${v.toFixed(2)}</span></div>`).join('')
+    : '<div style="color:var(--muted);font-size:12px">None below</div>';
+
+  // 52W range bar
+  const lo = data.low_52, hi = data.high_52, pr = data.price;
+  const pct = ((pr - lo) / (hi - lo) * 100).toFixed(1);
+  document.getElementById('rangeLow').textContent  = '$' + lo;
+  document.getElementById('rangeHigh').textContent = '$' + hi;
+  document.getElementById('rangeCur').textContent  = '$' + pr;
+  document.getElementById('rangeFill').style.width = pct + '%';
+  document.getElementById('rangeDot').style.left   = pct + '%';
+  document.getElementById('rangeWrap').style.display = 'block';
+}
+
+function renderMAs(data) {
+  const mas = data.moving_averages;
+  const price = data.price;
+  const rows = [
+    ['5-Day',  mas.ma5],
+    ['20-Day', mas.ma20],
+    ['50-Day', mas.ma50],
+    ['100-Day',mas.ma100],
+    ['200-Day',mas.ma200],
+  ];
+  document.getElementById('maTable').innerHTML = rows.map(([name, val]) => {
+    if (!val) return `<tr><td class="ma-name">${name}</td><td class="ma-arrow">—</td><td class="ma-val" style="color:var(--muted)">—</td></tr>`;
+    const above = price >= val;
+    const arrow = above ? '↑' : '↓';
+    const cls   = above ? 'above-ma' : 'below-ma';
+    return `<tr>
+      <td class="ma-name">${name}</td>
+      <td class="ma-arrow ${cls}">${arrow}</td>
+      <td class="ma-val ${cls}">$${val.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderIndicators(data) {
+  const ind = data.indicators;
+  const rows = [
+    { label: 'RSI (14)',     val: ind.rsi,    min:0, max:100, warn:[30,70] },
+    { label: 'Stoch %K',    val: ind.stoch_k, min:0, max:100, warn:[20,80] },
+    { label: 'ADX (14)',    val: ind.adx,     min:0, max:100, warn:[20,40] },
+    { label: 'ATR (14)',    val: ind.atr,     min:null },
+  ];
+  document.getElementById('indicators').innerHTML = rows.map(r => {
+    if (!r.val && r.val !== 0) return '';
+    let barHtml = '';
+    let valColor = 'var(--text)';
+    if (r.min !== null) {
+      const pct = Math.min(100, (r.val / r.max) * 100);
+      let barColor = 'var(--accent)';
+      if (r.warn) {
+        if (r.val < r.warn[0]) barColor = 'var(--green)';
+        else if (r.val > r.warn[1]) barColor = 'var(--red)';
+        if (r.label.includes('RSI') || r.label.includes('Stoch')) {
+          if (r.val > r.warn[1]) valColor = 'var(--red)';
+          else if (r.val < r.warn[0]) valColor = 'var(--green)';
+        }
+      }
+      barHtml = `<div class="ind-bar-wrap"><div class="ind-bar" style="width:${pct}%;background:${barColor}"></div></div>`;
+    }
+    return `<div class="ind-row">
+      <span class="ind-label">${r.label}</span>
+      ${barHtml}
+      <span class="ind-val" style="color:${valColor}">${r.val.toFixed(2)}</span>
+    </div>`;
+  }).join('');
+}
+
+async function runAnalysis(ticker) {
+  ticker = ticker.trim().toUpperCase();
+  if (!ticker) return;
+
+  // Update URL
+  const url = new URL(window.location.href);
+  url.searchParams.set('t', ticker);
+  window.history.replaceState({}, '', url.toString());
+
+  // Update quick picks
+  document.querySelectorAll('.qp').forEach(b => b.classList.toggle('active', b.dataset.t === ticker || b.dataset.t === ticker + '.TO'));
+
+  // Show loading state
+  document.getElementById('chartDiv').innerHTML = '<div class="chart-loading"><div class="spinner"></div> Loading ' + ticker + '…</div>';
+  document.getElementById('hTicker').textContent = ticker;
+  document.getElementById('hPrice').textContent = '—';
+
+  try {
+    const res = await fetch(`${BOT}/analyze/${encodeURIComponent(ticker)}`);
+    const data = await res.json();
+
+    if (data.error) {
+      document.getElementById('chartDiv').innerHTML = `<div class="empty-state"><div style="font-size:32px">⚠️</div><h3>Could not load ${ticker}</h3><p class="error-msg">${data.error}</p></div>`;
+      return;
+    }
+
+    // Render chart
+    initChart();
+    const candles = data.candles.map(c => ({ time: c.time, open: c.open, high: c.high, low: c.low, close: c.close }));
+    candleSeries.setData(candles);
+    chart.timeScale().fitContent();
+
+    // Add S/R lines
+    clearSRLines();
+    (data.resistance || []).forEach((v, i) => addSRLine(v, 'rgba(255,92,106,0.6)', `R${i+1}`));
+    (data.support    || []).forEach((v, i) => addSRLine(v, 'rgba(34,214,115,0.6)',  `S${i+1}`));
+
+    // Render panels
+    renderHeader(data);
+    renderDirection(data);
+    renderLevels(data);
+    renderMAs(data);
+    renderIndicators(data);
+
+  } catch (err) {
+    document.getElementById('chartDiv').innerHTML = `<div class="empty-state"><div style="font-size:32px">⚠️</div><h3>Error</h3><p class="error-msg">${err.message}</p></div>`;
+  }
+}
+
+// Event listeners
+document.getElementById('analyzeBtn').addEventListener('click', () => {
+  runAnalysis(document.getElementById('tickerInput').value);
+});
+document.getElementById('tickerInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runAnalysis(e.target.value);
+});
+document.querySelectorAll('.qp').forEach(b => {
+  b.addEventListener('click', () => {
+    document.getElementById('tickerInput').value = b.dataset.t;
+    runAnalysis(b.dataset.t);
+  });
+});
+
+// Auto-load from URL param
+const initTicker = new URLSearchParams(window.location.search).get('t');
+if (initTicker) {
+  document.getElementById('tickerInput').value = initTicker;
+  runAnalysis(initTicker);
+}
+</script>
+<script>
+  (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
+</script>
+<LogoutBar />
+</body>
+</html>
