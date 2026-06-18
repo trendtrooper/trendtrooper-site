@@ -66,8 +66,8 @@ import LogoutBar from "../components/LogoutBar.astro";
     @media(max-width:1100px){.wrap{grid-template-columns:1fr}}
 
     /* CHART PANEL */
-    .chart-card{background:rgba(7,14,28,.25);backdrop-filter:blur(6px);border-radius:var(--r);border:1px solid rgba(255,255,255,.1);overflow:hidden}
-    .chart-header{padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .chart-card{background:transparent;border-radius:var(--r);border:1px solid rgba(255,255,255,.08);overflow:hidden}
+    .chart-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06);background:transparent;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
     .ticker-badge{font-family:var(--mono);font-weight:900;font-size:22px;color:var(--text)}
     .price-big{font-family:var(--mono);font-size:22px;font-weight:700}
     .chg-badge{font-family:var(--mono);font-size:13px;font-weight:700;padding:4px 10px;border-radius:8px}
@@ -318,8 +318,8 @@ function initChart() {
   chart = LightweightCharts.createChart(el, {
     width: el.clientWidth,
     height: 420,
-    layout: { background: { color: 'rgba(7,14,28,0.01)' }, textColor: '#7a96bb' },
-    grid: { vertLines: { color: 'rgba(255,255,255,.04)' }, horzLines: { color: 'rgba(255,255,255,.04)' } },
+    layout: { background: { type: 'solid', color: 'transparent' }, textColor: '#ddeeff' },
+    grid: { vertLines: { color: 'rgba(255,255,255,.06)' }, horzLines: { color: 'rgba(255,255,255,.06)' } },
     crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
     rightPriceScale: { borderColor: 'rgba(255,255,255,.08)' },
     timeScale: { borderColor: 'rgba(255,255,255,.08)', timeVisible: true },
