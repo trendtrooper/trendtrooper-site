@@ -338,9 +338,13 @@ function initChart() {
 
 function addSRLine(price, color, label) {
   if (!chartCandles.length) return;
-  const lastTime    = chartCandles[chartCandles.length - 1].time;
-  const barInterval = chartCandles.length > 1 ? chartCandles[chartCandles.length-1].time - chartCandles[chartCandles.length-2].time : 86400;
-  const futureTime  = lastTime + barInterval * 50; // 50 bars to the right — fills edge
+  const lastIdx     = chartCandles.length - 1;
+  const lastTime    = chartCandles[lastIdx].time;
+  const barInterval = lastIdx > 0 ? chartCandles[lastIdx].time - chartCandles[lastIdx - 1].time : 86400;
+  const pts = [];
+  for (let i = 0; i <= 30; i++) {
+    pts.push({ time: lastTime + barInterval * i, value: price });
+  }
   const line = chart.addLineSeries({
     color,
     lineWidth: 2,
@@ -350,10 +354,7 @@ function addSRLine(price, color, label) {
     title: label,
     crosshairMarkerVisible: false,
   });
-  line.setData([
-    { time: lastTime,   value: price },
-    { time: futureTime, value: price },
-  ]);
+  line.setData(pts);
   srLines.push(line);
 }
 
@@ -502,13 +503,13 @@ async function runAnalysis(ticker) {
     initChart();
     chartCandles = data.candles.map(c => ({ time: c.time, open: c.open, high: c.high, low: c.low, close: c.close }));
     candleSeries.setData(chartCandles);
-    chart.timeScale().fitContent();
-    chart.timeScale().scrollToPosition(8, false);
 
-    // Add S/R lines
+    // Add S/R lines BEFORE fitContent so future points are included in the view
     clearSRLines();
     (data.resistance || []).forEach((v, i) => addSRLine(v, '#ff5c6a', `R${i+1}`));
     (data.support    || []).forEach((v, i) => addSRLine(v, '#22d673', `S${i+1}`));
+
+    chart.timeScale().fitContent();
 
     // Render panels
     renderHeader(data);
