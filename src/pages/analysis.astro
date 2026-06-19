@@ -312,7 +312,7 @@ function toggleMenu(){
 }
 
 const BOT = 'https://bot.trendtrooper.com';
-let chart, candleSeries, srLines = [], currentTF = '1d';
+let chart, candleSeries, srLines = [], currentTF = '1d', chartCandles = [];
 
 function initChart() {
   const el = document.getElementById('chartDiv');
@@ -337,11 +337,10 @@ function initChart() {
 }
 
 function addSRLine(price, color, label) {
-  const data = candleSeries.data();
-  if (!data.length) return;
-  const lastTime   = data[data.length - 1].time;
-  const barInterval = data.length > 1 ? data[data.length-1].time - data[data.length-2].time : 86400;
-  const futureTime = lastTime + barInterval * 50; // 50 bars to the right — fills edge
+  if (!chartCandles.length) return;
+  const lastTime    = chartCandles[chartCandles.length - 1].time;
+  const barInterval = chartCandles.length > 1 ? chartCandles[chartCandles.length-1].time - chartCandles[chartCandles.length-2].time : 86400;
+  const futureTime  = lastTime + barInterval * 50; // 50 bars to the right — fills edge
   const line = chart.addLineSeries({
     color,
     lineWidth: 2,
@@ -501,8 +500,8 @@ async function runAnalysis(ticker) {
 
     // Render chart
     initChart();
-    const candles = data.candles.map(c => ({ time: c.time, open: c.open, high: c.high, low: c.low, close: c.close }));
-    candleSeries.setData(candles);
+    chartCandles = data.candles.map(c => ({ time: c.time, open: c.open, high: c.high, low: c.low, close: c.close }));
+    candleSeries.setData(chartCandles);
     chart.timeScale().fitContent();
     chart.timeScale().scrollToPosition(8, false);
 
