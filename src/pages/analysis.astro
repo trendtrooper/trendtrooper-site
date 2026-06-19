@@ -125,6 +125,16 @@ import LogoutBar from "../components/LogoutBar.astro";
     .below-ma{color:var(--red)}
     .ma-arrow{font-size:10px;text-align:center;width:20px}
 
+    /* PATTERNS */
+    .pat-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .pat-item:last-child{border-bottom:none}
+    .pat-name{font-size:13px;font-weight:600;color:var(--text)}
+    .pat-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.5px;text-transform:uppercase}
+    .pat-bull{background:rgba(34,214,115,.12);color:#22d673;border:1px solid rgba(34,214,115,.25)}
+    .pat-bear{background:rgba(255,92,106,.12);color:#ff5c6a;border:1px solid rgba(255,92,106,.25)}
+    .pat-neutral{background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.25)}
+    .no-patterns{font-size:12px;color:var(--muted);padding:4px 0}
+
     /* INDICATORS */
     .ind-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03)}
     .ind-row:last-child{border-bottom:none}
@@ -292,6 +302,14 @@ import LogoutBar from "../components/LogoutBar.astro";
       <div class="card-title">Indicators</div>
       <div id="indicators">
         <div style="color:var(--muted);font-size:12px">—</div>
+      </div>
+    </div>
+
+    <!-- PATTERNS -->
+    <div class="card">
+      <div class="card-title">Candlestick Patterns</div>
+      <div id="patternsList">
+        <div class="no-patterns">Run an analysis to detect patterns.</div>
       </div>
     </div>
 
@@ -473,6 +491,35 @@ function renderIndicators(data) {
   }).join('');
 }
 
+function renderPatterns(data) {
+  const list = data.patterns || [];
+  const el = document.getElementById('patternsList');
+  if (!list.length) {
+    el.innerHTML = '<div class="no-patterns">No patterns detected in recent candles.</div>';
+    candleSeries.setMarkers([]);
+    return;
+  }
+  el.innerHTML = list.map(p => {
+    const cls = p.signal === 'bullish' ? 'pat-bull' : p.signal === 'bearish' ? 'pat-bear' : 'pat-neutral';
+    return `<div class="pat-item">
+      <span class="pat-name">${p.name}</span>
+      <span class="pat-badge ${cls}">${p.signal}</span>
+    </div>`;
+  }).join('');
+
+  // Chart markers
+  const markers = list.map(p => ({
+    time: p.time,
+    position: p.signal === 'bullish' ? 'belowBar' : p.signal === 'bearish' ? 'aboveBar' : 'inBar',
+    color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
+    shape:  p.signal === 'bullish' ? 'arrowUp'  : p.signal === 'bearish' ? 'arrowDown' : 'circle',
+    text:   p.name,
+    size:   1,
+  }));
+  markers.sort((a, b) => a.time - b.time);
+  candleSeries.setMarkers(markers);
+}
+
 async function runAnalysis(ticker) {
   ticker = ticker.trim().toUpperCase();
   if (!ticker) return;
@@ -517,6 +564,7 @@ async function runAnalysis(ticker) {
     renderLevels(data);
     renderMAs(data);
     renderIndicators(data);
+    renderPatterns(data);
 
   } catch (err) {
     document.getElementById('chartDiv').innerHTML = `<div class="empty-state"><div style="font-size:32px">⚠️</div><h3>Error</h3><p class="error-msg">${err.message}</p></div>`;
