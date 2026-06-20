@@ -598,12 +598,10 @@ document.querySelectorAll('.qp:not(.tf)').forEach(b => {
   });
 });
 
-// Auto-load from URL param
-const initTicker = new URLSearchParams(window.location.search).get('t');
-if (initTicker) {
-  document.getElementById('tickerInput').value = initTicker;
-  runAnalysis(initTicker);
-}
+// Auto-load from URL param, default to SPY
+const initTicker = new URLSearchParams(window.location.search).get('t') || 'SPY';
+document.getElementById('tickerInput').value = initTicker;
+runAnalysis(initTicker);
 </script>
 <script>
   (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
