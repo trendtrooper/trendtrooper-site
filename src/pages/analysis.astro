@@ -299,7 +299,8 @@ import LogoutBar from "../components/LogoutBar.astro";
       <span class="chg-badge chg-flat" id="hChg">—</span>
       <span style="color:var(--muted);font-size:12px;margin-left:auto" id="hRange">52W: — / —</span>
     </div>
-    <div id="chartDiv">
+    <div id="chartDiv" style="position:relative;">
+      <div id="markerTip" style="display:none;position:absolute;z-index:50;pointer-events:none;background:rgba(4,8,30,0.92);border:1px solid rgba(0,200,255,0.35);border-radius:7px;padding:5px 10px;font-size:12px;color:#e8f0ff;white-space:nowrap;letter-spacing:.5px;"></div>
       <div class="empty-state" id="emptyState">
         <div style="font-size:36px">📈</div>
         <h3>Enter a ticker to analyze</h3>
@@ -690,12 +691,26 @@ function renderPatterns(data) {
       position: p.signal === 'bearish' ? 'aboveBar' : 'belowBar',
       color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
       shape:  p.signal === 'bearish' ? 'arrowDown' : 'arrowUp',
-      text:   p.name,
       size:   1,
     };
   });
   markers.sort(function(a, b) { return a.time - b.time; });
   candleSeries.setMarkers(markers);
+
+  // Hover tooltip: show pattern name when crosshair is on a marker
+  var tip = document.getElementById('markerTip');
+  var markerMap = {};
+  list.forEach(function(p) { markerMap[p.time] = markerMap[p.time] ? markerMap[p.time]+' · '+p.name : p.name; });
+  chart.subscribeCrosshairMove(function(param) {
+    if (!param || !param.time || !markerMap[param.time]) {
+      tip.style.display = 'none';
+      return;
+    }
+    tip.textContent = markerMap[param.time];
+    tip.style.display = 'block';
+    tip.style.left = (param.point && param.point.x != null ? Math.min(param.point.x + 12, document.getElementById('chartDiv').clientWidth - tip.offsetWidth - 8) : 12) + 'px';
+    tip.style.top  = (param.point && param.point.y != null ? Math.max(param.point.y - 28, 4) : 4) + 'px';
+  });
 }
 
 // CHANGE 7: Risk calculator logic
