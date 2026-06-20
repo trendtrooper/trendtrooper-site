@@ -307,6 +307,7 @@ import LogoutBar from "../components/LogoutBar.astro";
         <p style="font-size:13px">Try FTS, NVDA, TQQQ, or any stock symbol</p>
       </div>
     </div>
+    <div id="patternBar" style="display:none;padding:8px 12px;border-top:1px solid rgba(0,200,255,0.1);display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:36px;"></div>
     <!-- CHANGE 14: Full chart link footer -->
     <div class="chart-footer">
       <a id="fullChartLink" href="/chart">Open in Full Chart →</a>
@@ -677,6 +678,8 @@ function renderPatterns(data) {
   if (!list.length) {
     el.innerHTML = '<div class="no-patterns">No patterns detected in recent candles.</div>';
     candleSeries.setMarkers([]);
+    var bar = document.getElementById('patternBar');
+    if (bar) { bar.style.display = 'none'; bar.innerHTML = ''; }
     return;
   }
   el.innerHTML = list.map(function(p) {
@@ -691,12 +694,22 @@ function renderPatterns(data) {
       position: p.signal === 'bearish' ? 'aboveBar' : 'belowBar',
       color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
       shape:  p.signal === 'bearish' ? 'arrowDown' : 'arrowUp',
-      text:   p.name,
-      size:   2,
+      size:   1,
     };
   });
   markers.sort(function(a, b) { return a.time - b.time; });
   candleSeries.setMarkers(markers);
+
+  // Pattern bar below chart
+  var bar = document.getElementById('patternBar');
+  if (bar) {
+    bar.style.display = 'flex';
+    bar.innerHTML = list.map(function(p) {
+      var arrow = p.signal === 'bearish' ? '▼' : '▲';
+      var col   = p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa';
+      return '<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border:1px solid '+col+'44;border-radius:5px;padding:2px 8px;font-size:11px;color:'+col+';letter-spacing:.5px;white-space:nowrap;"><span>'+arrow+'</span><span>'+p.name+'</span></span>';
+    }).join('');
+  }
 
   // Hover tooltip: show pattern name when crosshair is on a marker
   var tip = document.getElementById('markerTip');
