@@ -690,7 +690,7 @@ function renderPatterns(data) {
       color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
       shape:  p.signal === 'bearish' ? 'arrowDown' : 'arrowUp',
       text:   p.name,
-      size:   4,
+      size:   1,
     };
   });
   markers.sort(function(a, b) { return a.time - b.time; });
