@@ -8,6 +8,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Trading Tools — TrendTrooper</title>
 <meta name="description" content="Free trading tools: position size calculator, risk/reward calculator, ATR stop calculator, and compound growth planner.">
+<meta property="og:title" content="TrendTrooper — Free Trading Calculators">
+<meta property="og:description" content="Position size calculator, risk/reward calculator, ATR stop calculator, and compound growth planner. Free.">
+<meta property="og:image" content="https://trendtrooper.com/bot-preview.png">
+<meta property="og:url" content="https://trendtrooper.com/tools">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://trendtrooper.com/tools">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -391,8 +397,7 @@ function calcCompound(){
   const rows=[];
   for(let y=1;y<=years;y++){
     const startBal=balance;
-    let yearProfit=0;
-    for(let m=0;m<12;m++){balance=balance*(1+r)+contrib;yearProfit+=balance-startBal-(m+1)*contrib;}
+    for(let m=0;m<12;m++){balance=balance*(1+r)+contrib;}
     totalContrib+=contrib*12;
     rows.push({year:y,start:startBal,contrib:contrib*12,profit:balance-startBal-contrib*12,end:balance});
   }
