@@ -520,7 +520,8 @@ function renderPatterns(data) {
     position: p.signal === 'bullish' ? 'belowBar' : p.signal === 'bearish' ? 'aboveBar' : 'inBar',
     color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
     shape:  p.signal === 'bullish' ? 'arrowUp'  : p.signal === 'bearish' ? 'arrowDown' : 'circle',
-    size:   1,
+    text:   p.name,
+    size:   2,
   }));
   markers.sort((a, b) => a.time - b.time);
   candleSeries.setMarkers(markers);
