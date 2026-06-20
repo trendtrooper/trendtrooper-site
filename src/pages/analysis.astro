@@ -466,6 +466,7 @@ document.querySelectorAll('#ttMob a').forEach(function(a) {
 
 const BOT = 'https://bot.trendtrooper.com';
 let chart, candleSeries, srLines = [], currentTF = '1d', chartCandles = [];
+let bullMarkerSeries = null, bearMarkerSeries = null;
 let currentTicker = 'SPY';
 let currentSupportLevel = null; // CHANGE 7: store support level for risk calc
 
@@ -663,10 +664,25 @@ function renderIndicators(data) {
   }).join('');
 }
 
+function calcATR(candles, period) {
+  if (!candles || candles.length < 2) return {};
+  var trs = candles.map(function(c, i) {
+    if (i === 0) return c.high - c.low;
+    var p = candles[i - 1];
+    return Math.max(c.high - c.low, Math.abs(c.high - p.close), Math.abs(c.low - p.close));
+  });
+  var atrMap = {};
+  var atr = trs.slice(0, period).reduce(function(s, v) { return s + v; }, 0) / Math.min(period, trs.length);
+  for (var i = period; i < candles.length; i++) {
+    atr = (atr * (period - 1) + trs[i]) / period;
+    atrMap[candles[i].time] = atr;
+  }
+  return atrMap;
+}
+
 function renderPatterns(data) {
   const list = data.patterns || [];
   const el = document.getElementById('patternsList');
-  // CHANGE 6: pattern count summary
   const summaryEl = document.getElementById('patSummary');
   if (list.length > 0) {
     summaryEl.textContent = list.length + ' pattern' + (list.length !== 1 ? 's' : '') + ' detected in last 20 candles';
@@ -675,54 +691,86 @@ function renderPatterns(data) {
     summaryEl.style.display = 'none';
   }
 
+  // Clean up old marker series
+  if (bullMarkerSeries) { try { chart.removeSeries(bullMarkerSeries); } catch(e){} bullMarkerSeries = null; }
+  if (bearMarkerSeries) { try { chart.removeSeries(bearMarkerSeries); } catch(e){} bearMarkerSeries = null; }
+
+  var bar = document.getElementById('patternBar');
   if (!list.length) {
     el.innerHTML = '<div class="no-patterns">No patterns detected in recent candles.</div>';
-    candleSeries.setMarkers([]);
-    var bar = document.getElementById('patternBar');
     if (bar) { bar.style.display = 'none'; bar.innerHTML = ''; }
     return;
   }
+
   el.innerHTML = list.map(function(p) {
     const cls = p.signal === 'bullish' ? 'pat-bull' : p.signal === 'bearish' ? 'pat-bear' : 'pat-neutral';
     return '<div class="pat-item"><span class="pat-name">'+p.name+'</span><span class="pat-badge '+cls+'">'+p.signal+'</span></div>';
   }).join('');
 
-  // Chart markers
-  const markers = list.map(function(p) {
-    return {
-      time: p.time,
-      position: p.signal === 'bearish' ? 'aboveBar' : 'belowBar',
-      color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
-      shape:  p.signal === 'bearish' ? 'arrowDown' : 'arrowUp',
-      size:   1,
-    };
+  // Color pattern candles white
+  var patternTimes = {};
+  list.forEach(function(p) { patternTimes[p.time] = p.signal; });
+  var coloredCandles = chartCandles.map(function(c) {
+    if (patternTimes[c.time]) {
+      return Object.assign({}, c, { color: '#ffffff', borderColor: '#ffffff', wickColor: '#ffffff' });
+    }
+    return c;
   });
-  markers.sort(function(a, b) { return a.time - b.time; });
-  candleSeries.setMarkers(markers);
+  candleSeries.setData(coloredCandles);
+
+  // ATR-based marker positions (3 ATR offset from bar)
+  var atrMap = calcATR(chartCandles, 14);
+  var candleByTime = {};
+  chartCandles.forEach(function(c) { candleByTime[c.time] = c; });
+
+  var bullData = [], bearData = [], bullMarkers = [], bearMarkers = [];
+  list.forEach(function(p) {
+    var c = candleByTime[p.time];
+    if (!c) return;
+    var atr = atrMap[p.time] || (c.high - c.low);
+    var col = p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa';
+    var isBear = p.signal === 'bearish';
+    if (isBear) {
+      bearData.push({ time: p.time, value: c.high + 3 * atr });
+      bearMarkers.push({ time: p.time, position: 'inBar', color: col, shape: 'arrowDown', size: 0.6 });
+    } else {
+      bullData.push({ time: p.time, value: c.low - 3 * atr });
+      bullMarkers.push({ time: p.time, position: 'inBar', color: col, shape: 'arrowUp', size: 0.6 });
+    }
+  });
+
+  var hiddenOpts = { color: 'transparent', lineWidth: 0, lastValueVisible: false, priceLineVisible: false, crosshairMarkerVisible: false };
+  if (bullData.length) {
+    bullMarkerSeries = chart.addLineSeries(hiddenOpts);
+    bullMarkerSeries.setData(bullData.sort(function(a,b){return a.time-b.time;}));
+    bullMarkerSeries.setMarkers(bullMarkers.sort(function(a,b){return a.time-b.time;}));
+  }
+  if (bearData.length) {
+    bearMarkerSeries = chart.addLineSeries(hiddenOpts);
+    bearMarkerSeries.setData(bearData.sort(function(a,b){return a.time-b.time;}));
+    bearMarkerSeries.setMarkers(bearMarkers.sort(function(a,b){return a.time-b.time;}));
+  }
 
   // Pattern bar below chart
-  var bar = document.getElementById('patternBar');
   if (bar) {
     bar.style.display = 'flex';
     bar.innerHTML = list.map(function(p) {
       var arrow = p.signal === 'bearish' ? '▼' : '▲';
-      var col   = p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa';
+      var col = p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa';
       return '<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border:1px solid '+col+'44;border-radius:5px;padding:2px 8px;font-size:11px;color:'+col+';letter-spacing:.5px;white-space:nowrap;"><span>'+arrow+'</span><span>'+p.name+'</span></span>';
     }).join('');
   }
 
-  // Hover tooltip: show pattern name when crosshair is on a marker
+  // Hover tooltip on crosshair
   var tip = document.getElementById('markerTip');
   var markerMap = {};
   list.forEach(function(p) { markerMap[p.time] = markerMap[p.time] ? markerMap[p.time]+' · '+p.name : p.name; });
   chart.subscribeCrosshairMove(function(param) {
-    if (!param || !param.time || !markerMap[param.time]) {
-      tip.style.display = 'none';
-      return;
-    }
+    if (!param || !param.time || !markerMap[param.time]) { tip.style.display = 'none'; return; }
     tip.textContent = markerMap[param.time];
     tip.style.display = 'block';
-    tip.style.left = (param.point && param.point.x != null ? Math.min(param.point.x + 12, document.getElementById('chartDiv').clientWidth - tip.offsetWidth - 8) : 12) + 'px';
+    var cdiv = document.getElementById('chartDiv');
+    tip.style.left = (param.point && param.point.x != null ? Math.min(param.point.x + 12, cdiv.clientWidth - tip.offsetWidth - 8) : 12) + 'px';
     tip.style.top  = (param.point && param.point.y != null ? Math.max(param.point.y - 28, 4) : 4) + 'px';
   });
 }
