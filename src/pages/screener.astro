@@ -231,7 +231,7 @@ import LogoutBar from "../components/LogoutBar.astro";
           <th data-col="sector">SECTOR<span class="sort-arrow" id="arr-sector"></span></th>
         </tr>
       </thead>
-      <tbody id="tableBody"></tbody>
+      <tbody id="tableBody"><tr id="skeletonRow"><td colspan="11" style="text-align:center;padding:28px;color:rgba(180,210,255,.4);font-size:13px;letter-spacing:1px;">LOADING SIGNALS...</td></tr></tbody>
     </table>
     <div class="empty" id="emptyState" style="display:none">
       <h3>No results match your filters</h3>
