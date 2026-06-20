@@ -192,6 +192,7 @@ import LogoutBar from "../components/LogoutBar.astro";
     <a href="/chart">Full Chart</a>
     <a href="/analysis">Analysis</a>
     <a href="/academy">Academy</a>
+    <a href="/tools">Tools</a>
     <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
     <a href="/#pricing" class="tt-cta">Get Started</a>
   </nav>
@@ -205,6 +206,7 @@ import LogoutBar from "../components/LogoutBar.astro";
   <a href="/chart">Full Chart</a>
   <a href="/analysis">Analysis</a>
   <a href="/academy">Academy</a>
+  <a href="/tools">Tools</a>
   <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
   <a href="/#pricing">Get Started</a>
 </div>
@@ -592,7 +594,10 @@ signals.forEach(function(s) {
 });
 
 // ── FEAR & GREED ─────────────────────────────────────────────────────────────
-var fg = Math.round(rnd(25, 80));
+// Seed by date so value is stable for the whole day
+var _fgDate = new Date(); var _fgSeed = _fgDate.getFullYear()*10000+(_fgDate.getMonth()+1)*100+_fgDate.getDate();
+function seededFg(seed){ var x=Math.sin(seed+1)*10000; return x-(Math.floor(x)); }
+var fg = Math.round(25 + seededFg(_fgSeed) * 55);
 document.getElementById('fgNum').textContent = fg;
 var lbl = fg < 25 ? 'EXTREME FEAR' : fg < 45 ? 'FEAR' : fg < 55 ? 'NEUTRAL' : fg < 75 ? 'GREED' : 'EXTREME GREED';
 var col = fg < 25 ? '#ff5c6a' : fg < 45 ? '#f59e0b' : fg < 55 ? '#6ee7ff' : fg < 75 ? '#22d673' : '#a78bfa';
