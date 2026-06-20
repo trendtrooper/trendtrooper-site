@@ -63,9 +63,10 @@ import LogoutBar from "../components/LogoutBar.astro";
     .search-inner input::placeholder{color:var(--muted2);font-weight:400}
     .qp-wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
     .qp-label{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.5px;margin-right:2px}
-    .qp{padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--border2);color:var(--muted);cursor:pointer;background:transparent;font-family:var(--mono);transition:.15s}
+    .qp{padding:7px 15px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--border2);color:var(--muted);cursor:pointer;background:transparent;font-family:var(--mono);transition:.15s}
     .qp:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
     .qp.active{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.35);color:var(--accent2)}
+    .qp.tf.active{background:rgba(0,207,255,.15);border-color:rgba(0,207,255,.5);color:#00cfff}
 
     /* LAYOUT */
     .wrap{max-width:var(--max);margin:0 auto;padding:24px 24px 40px;display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
@@ -221,6 +222,8 @@ import LogoutBar from "../components/LogoutBar.astro";
       <button class="qp" data-t="SPY">SPY</button>
       <button class="qp" data-t="TSLA">TSLA</button>
       <button class="qp" data-t="AAPL">AAPL</button>
+      <button class="qp" data-t="MSFT">MSFT</button>
+      <button class="qp" data-t="XOM">XOM</button>
     </div>
   </div>
 </div>
