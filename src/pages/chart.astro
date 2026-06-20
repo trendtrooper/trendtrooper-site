@@ -7,7 +7,6 @@ const initialSymbol = (symbolParam && symbolParam.trim())
   ? symbolParam.trim().toUpperCase()
   : "TSX:FTS";
 ---
-import LogoutBar from "../components/LogoutBar.astro";
 
 <html lang="en">
 <head>
@@ -27,6 +26,7 @@ import LogoutBar from "../components/LogoutBar.astro";
       --border2: #223044;
       --green: #00ff88;
       --blue: #38bdf8;
+      --amber: #f59e0b;
       --text: #e5e7eb;
       --muted: #6b7280;
       --muted2: #9ca3af;
@@ -122,6 +122,14 @@ import LogoutBar from "../components/LogoutBar.astro";
       min-width: 0;
     }
 
+    .search-input-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+    }
+
     .exchange-select {
       background: var(--bg);
       border: 1px solid var(--border2);
@@ -145,7 +153,7 @@ import LogoutBar from "../components/LogoutBar.astro";
       border-radius: 9px;
       font-size: 14px;
       font-weight: 700;
-      flex: 1;
+      width: 100%;
       min-width: 120px;
       max-width: 240px;
       outline: none;
@@ -154,6 +162,14 @@ import LogoutBar from "../components/LogoutBar.astro";
     }
 
     .symbol-input:focus { border-color: var(--green); }
+
+    .input-hint {
+      font-size: 10px;
+      color: var(--muted);
+      font-style: italic;
+      padding-left: 2px;
+      white-space: nowrap;
+    }
 
     .go-btn {
       background: linear-gradient(135deg, var(--green), var(--blue));
@@ -170,16 +186,72 @@ import LogoutBar from "../components/LogoutBar.astro";
 
     .go-btn:hover { opacity: .9; }
 
+    /* ── TOOLBAR ACTION BUTTONS ── */
+    .toolbar-btn {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--muted2);
+      padding: 7px 12px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all .15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .toolbar-btn:hover {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .delay-note {
+      font-size: 10px;
+      color: var(--amber);
+      opacity: 0.7;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-style: italic;
+    }
+
     /* ── QUICK PICKS ── */
+    .quickpicks-wrapper {
+      position: relative;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
     .quickpicks {
       display: flex;
       align-items: center;
       gap: 5px;
-      flex-wrap: wrap;
       padding: 8px 16px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg2);
-      flex-shrink: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .quickpicks::-webkit-scrollbar { display: none; }
+
+    /* Fade gradient on right edge (mobile) */
+    @media (max-width: 600px) {
+      .quickpicks-wrapper::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        background: linear-gradient(to right, transparent, var(--bg2));
+        pointer-events: none;
+      }
     }
 
     .qp-label {
@@ -190,12 +262,12 @@ import LogoutBar from "../components/LogoutBar.astro";
       letter-spacing: 1px;
       margin-right: 4px;
       flex-shrink: 0;
+      scroll-snap-align: start;
     }
 
     .qp-group {
       display: flex;
       gap: 5px;
-      flex-wrap: wrap;
       align-items: center;
     }
 
@@ -219,6 +291,8 @@ import LogoutBar from "../components/LogoutBar.astro";
       transition: all .12s;
       font-family: monospace;
       white-space: nowrap;
+      flex-shrink: 0;
+      scroll-snap-align: start;
     }
 
     .qp:hover, .qp.active {
@@ -280,9 +354,75 @@ import LogoutBar from "../components/LogoutBar.astro";
       font-size: 12px;
     }
 
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green);
+      color: #020617;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 8px 20px;
+      border-radius: 20px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .2s, transform .2s;
+      z-index: 9999;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── MOBILE TOOLBAR ── */
     @media (max-width: 600px) {
-      .chart-toolbar { height: auto; padding: 8px 12px; }
-      .quickpicks { gap: 4px; }
+      .chart-toolbar {
+        height: auto;
+        padding: 10px 12px;
+        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-wrap {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+
+      .exchange-select {
+        width: 100%;
+        order: 1;
+      }
+
+      .search-input-block {
+        order: 2;
+      }
+
+      .symbol-input {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .go-btn {
+        order: 3;
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .toolbar-actions {
+        display: flex;
+        gap: 8px;
+        order: 4;
+      }
+
+      .delay-note {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -300,7 +440,6 @@ import LogoutBar from "../components/LogoutBar.astro";
     <a href="/chart" class="cur">Live Chart</a>
     <a href="/#markets">Markets</a>
     <a href="/#pricing">Pricing</a>
-    <a href="/chart" class="cur">Full Chart</a>
     <a href="/analysis">Analysis</a>
     <a href="/academy">Academy</a>
     <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
@@ -313,7 +452,6 @@ import LogoutBar from "../components/LogoutBar.astro";
   <a href="/chart">Live Chart</a>
   <a href="/#markets">Markets</a>
   <a href="/#pricing">Pricing</a>
-  <a href="/chart">Full Chart</a>
   <a href="/analysis">Analysis</a>
   <a href="/academy">Academy</a>
   <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
@@ -338,52 +476,74 @@ import LogoutBar from "../components/LogoutBar.astro";
       </optgroup>
     </select>
 
-    <input
-      id="symbolInput"
-      class="symbol-input"
-      value={initialSymbol}
-      placeholder="TSX:FTS, NVDA, SOXL…"
-      autocomplete="off"
-      spellcheck="false"
-    />
+    <div class="search-input-block">
+      <input
+        id="symbolInput"
+        class="symbol-input"
+        value={initialSymbol}
+        placeholder="TSX:FTS, NVDA, SOXL…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <span class="input-hint">e.g. NVDA, TSX:FTS, NASDAQ:AAPL</span>
+    </div>
 
-    <button class="go-btn" id="goBtn">Go</button>
+    <button class="go-btn" id="goBtn" title="Press Enter to load chart">Go</button>
+  </div>
+
+  <div class="toolbar-actions" style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+    <button class="toolbar-btn" id="shareBtn">&#128279; Share</button>
+    <a class="toolbar-btn" id="analyzeBtn" href={`/analysis?t=${initialSymbol}`}>&#128269; Analyze</a>
+    <span class="delay-note">TradingView data may be 15-min delayed for free accounts</span>
   </div>
 </div>
 
 <!-- QUICK PICKS -->
-<div class="quickpicks">
-  <span class="qp-label">CA</span>
-  <div class="qp-group">
-    <button class="qp" data-sym="TSX:FTS">FTS</button>
-    <button class="qp" data-sym="TSX:CNQ">CNQ</button>
-    <button class="qp" data-sym="TSX:HIVE">HIVE</button>
-    <button class="qp" data-sym="TSX:SU">SU</button>
-    <button class="qp" data-sym="TSX:RY">RY</button>
-    <button class="qp" data-sym="TSX:SHOP">SHOP</button>
-    <button class="qp" data-sym="TSX:ENB">ENB</button>
-    <button class="qp" data-sym="TSXV:NFG">NFG</button>
-  </div>
+<div class="quickpicks-wrapper">
+  <div class="quickpicks">
+    <span class="qp-label">CA</span>
+    <div class="qp-group">
+      <button class="qp" data-sym="TSX:FTS">FTS</button>
+      <button class="qp" data-sym="TSX:CNQ">CNQ</button>
+      <button class="qp" data-sym="TSX:CNQ.TO">CNQ.TO</button>
+      <button class="qp" data-sym="TSX:HIVE">HIVE</button>
+      <button class="qp" data-sym="TSX:SU">SU</button>
+      <button class="qp" data-sym="TSX:RY">RY</button>
+      <button class="qp" data-sym="TSX:RY.TO">RY.TO</button>
+      <button class="qp" data-sym="TSX:TD.TO">TD.TO</button>
+      <button class="qp" data-sym="TSX:ENB">ENB</button>
+      <button class="qp" data-sym="TSX:ENB.TO">ENB.TO</button>
+      <button class="qp" data-sym="TSX:SHOP">SHOP</button>
+      <button class="qp" data-sym="TSX:SHOP.TO">SHOP.TO</button>
+      <button class="qp" data-sym="TSXV:NFG">NFG</button>
+    </div>
 
-  <div class="qp-divider"></div>
-  <span class="qp-label">US</span>
-  <div class="qp-group">
-    <button class="qp" data-sym="AMEX:SPY">SPY</button>
-    <button class="qp" data-sym="NASDAQ:QQQ">QQQ</button>
-    <button class="qp" data-sym="NASDAQ:NVDA">NVDA</button>
-    <button class="qp" data-sym="NASDAQ:SOXL">SOXL</button>
-    <button class="qp" data-sym="NASDAQ:TSLA">TSLA</button>
-    <button class="qp" data-sym="NASDAQ:AMD">AMD</button>
-    <button class="qp" data-sym="NASDAQ:META">META</button>
-    <button class="qp" data-sym="NASDAQ:MSFT">MSFT</button>
-    <button class="qp" data-sym="NASDAQ:AAPL">AAPL</button>
-    <button class="qp" data-sym="NASDAQ:AMZN">AMZN</button>
-    <button class="qp" data-sym="NASDAQ:GOOGL">GOOGL</button>
-    <button class="qp" data-sym="NASDAQ:COIN">COIN</button>
-    <button class="qp" data-sym="NASDAQ:MSTR">MSTR</button>
-    <button class="qp" data-sym="NASDAQ:TQQQ">TQQQ</button>
-    <button class="qp" data-sym="NASDAQ:SQQQ">SQQQ</button>
-    <button class="qp" data-sym="AMEX:IWM">IWM</button>
+    <div class="qp-divider"></div>
+    <span class="qp-label">US</span>
+    <div class="qp-group">
+      <button class="qp" data-sym="AMEX:SPY">SPY</button>
+      <button class="qp" data-sym="NASDAQ:QQQ">QQQ</button>
+      <button class="qp" data-sym="NASDAQ:NVDA">NVDA</button>
+      <button class="qp" data-sym="NASDAQ:SOXL">SOXL</button>
+      <button class="qp" data-sym="NASDAQ:TSLA">TSLA</button>
+      <button class="qp" data-sym="NASDAQ:AMD">AMD</button>
+      <button class="qp" data-sym="NASDAQ:META">META</button>
+      <button class="qp" data-sym="NASDAQ:MSFT">MSFT</button>
+      <button class="qp" data-sym="NASDAQ:AAPL">AAPL</button>
+      <button class="qp" data-sym="NASDAQ:AMZN">AMZN</button>
+      <button class="qp" data-sym="NASDAQ:GOOGL">GOOGL</button>
+      <button class="qp" data-sym="NASDAQ:COIN">COIN</button>
+      <button class="qp" data-sym="NASDAQ:MSTR">MSTR</button>
+      <button class="qp" data-sym="NASDAQ:TQQQ">TQQQ</button>
+      <button class="qp" data-sym="NASDAQ:SQQQ">SQQQ</button>
+      <button class="qp" data-sym="AMEX:IWM">IWM</button>
+      <button class="qp" data-sym="NYSE:XOM">XOM</button>
+      <button class="qp" data-sym="NYSE:CVX">CVX</button>
+      <button class="qp" data-sym="NYSE:JPM">JPM</button>
+      <button class="qp" data-sym="NYSE:V">V</button>
+      <button class="qp" data-sym="NYSE:WMT">WMT</button>
+      <button class="qp" data-sym="NASDAQ:BTC">BTC</button>
+    </div>
   </div>
 </div>
 
@@ -408,6 +568,9 @@ import LogoutBar from "../components/LogoutBar.astro";
   </div>
 </div>
 
+<!-- TOAST -->
+<div id="toast">Link copied!</div>
+
 <script is:inline>
 (function () {
   const KNOWN = {
@@ -420,6 +583,8 @@ import LogoutBar from "../components/LogoutBar.astro";
     AMZN: "NASDAQ:AMZN", GOOGL: "NASDAQ:GOOGL", COIN: "NASDAQ:COIN",
     MSTR: "NASDAQ:MSTR", IWM: "AMEX:IWM", DIA: "AMEX:DIA",
     TQQQ: "NASDAQ:TQQQ", SQQQ: "NASDAQ:SQQQ",
+    XOM: "NYSE:XOM", CVX: "NYSE:CVX", JPM: "NYSE:JPM",
+    V: "NYSE:V", WMT: "NYSE:WMT", BTC: "NASDAQ:BTC",
   };
 
   const input = document.getElementById("symbolInput");
@@ -427,17 +592,23 @@ import LogoutBar from "../components/LogoutBar.astro";
   const exchSel = document.getElementById("exchangeSelect");
   const activeSym = document.getElementById("activeSym");
   const shareLink = document.getElementById("shareLink");
+  const shareBtn = document.getElementById("shareBtn");
+  const analyzeBtn = document.getElementById("analyzeBtn");
+  const toast = document.getElementById("toast");
 
   function normalizeSymbol(raw, exchOverride) {
     let s = (raw || "").trim().toUpperCase().replace(/\s+/g, "");
     if (!s) return "TSX:FTS";
     if (s.includes(":")) return s;
     if (exchOverride) return exchOverride + ":" + s;
+    // Use selected exchange as default, falling back to KNOWN lookup then TSX
+    const selectedExch = exchSel.value;
+    if (selectedExch) return selectedExch + ":" + s;
     return KNOWN[s] || "TSX:" + s;
   }
 
   function setSymbol(sym) {
-    const symbol = normalizeSymbol(sym, exchSel.value || null);
+    const symbol = normalizeSymbol(sym, null);
     if (!symbol) return;
 
     input.value = symbol;
@@ -451,6 +622,11 @@ import LogoutBar from "../components/LogoutBar.astro";
       shareLink.textContent = "/chart?symbol=" + encodeURIComponent(symbol);
     }
 
+    // Update analyze button href dynamically
+    if (analyzeBtn) {
+      analyzeBtn.href = "/analysis?t=" + encodeURIComponent(symbol);
+    }
+
     const url = new URL(window.location.href);
     url.searchParams.set("symbol", symbol);
     window.history.replaceState({}, "", url.toString());
@@ -458,16 +634,58 @@ import LogoutBar from "../components/LogoutBar.astro";
     window.dispatchEvent(new CustomEvent("tt:setSymbol", { detail: { symbol } }));
   }
 
+  // Exchange dropdown auto-reload
+  exchSel.addEventListener("change", () => {
+    const sym = input.value.trim().toUpperCase();
+    if (sym) setSymbol(sym);
+  });
+
   btn.addEventListener("click", () => setSymbol(input.value));
   input.addEventListener("keydown", (e) => { if (e.key === "Enter") setSymbol(input.value); });
   document.querySelectorAll(".qp").forEach((b) => {
     b.addEventListener("click", () => setSymbol(b.dataset.sym));
   });
 
+  // Share button — copy URL to clipboard
+  if (shareBtn) {
+    shareBtn.addEventListener("click", () => {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        if (toast) {
+          toast.classList.add("show");
+          setTimeout(() => toast.classList.remove("show"), 2000);
+        }
+      }).catch(() => {
+        // Fallback for older browsers
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (toast) {
+          toast.classList.add("show");
+          setTimeout(() => toast.classList.remove("show"), 2000);
+        }
+      });
+    });
+  }
+
+  // Burger menu close on link click
+  document.querySelectorAll("#ttMob a").forEach(a => {
+    a.addEventListener("click", () => {
+      document.getElementById("ttMob").classList.remove("open");
+      document.getElementById("ttBurger").classList.remove("open");
+    });
+  });
+
   // Set initial state
   const initSym = input.value;
   if (activeSym) activeSym.textContent = initSym;
   if (shareLink) shareLink.textContent = "/chart?symbol=" + encodeURIComponent(initSym);
+  if (analyzeBtn) analyzeBtn.href = "/analysis?t=" + encodeURIComponent(initSym);
   document.querySelectorAll(".qp").forEach(b => {
     b.classList.toggle("active", b.dataset.sym === initSym);
   });

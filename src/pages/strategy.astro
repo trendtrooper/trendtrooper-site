@@ -2,7 +2,6 @@
 import LogoutBar from "../components/LogoutBar.astro";
 // TrendTrooper — Strategy Page src/pages/strategy.astro
 ---
-import LogoutBar from "../components/LogoutBar.astro";
 <!doctype html>
 <html lang="en">
 <head>
@@ -415,6 +414,7 @@ new Chart(document.getElementById('equityChart'), {
 </script>
 <script>
   (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
+  document.querySelectorAll('#ttMob a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('ttMob').classList.remove('open');document.getElementById('ttBurger').classList.remove('open');}));
 </script>
 <LogoutBar />
 </body>

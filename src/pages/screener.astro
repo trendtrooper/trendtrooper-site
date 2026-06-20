@@ -2,7 +2,6 @@
 import LogoutBar from "../components/LogoutBar.astro";
 // TrendTrooper — Screener src/pages/screener.astro
 ---
-import LogoutBar from "../components/LogoutBar.astro";
 <!doctype html>
 <html lang="en">
 <head>
@@ -45,6 +44,8 @@ import LogoutBar from "../components/LogoutBar.astro";
     .tt-mob a{color:rgba(180,210,255,.65);padding:10px 0;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.04);}
     .tt-mob a:hover{color:#e8eeff;}
     @media(max-width:900px){.tt-nav{display:none;}.tt-burger{display:flex;}}
+    /* Simulated data banner */
+    .sim-banner{width:100%;background:#f59e0b;color:#1a1000;font-size:13.5px;font-weight:700;text-align:center;padding:8px 16px;letter-spacing:.3px;}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:12px;font-weight:600;font-size:13.5px;border:1px solid var(--border2);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;transition:.15s;font-family:var(--sans)}
     .btn:hover{background:rgba(255,255,255,.08)}
     .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#070e1c;font-weight:700}
@@ -68,20 +69,23 @@ import LogoutBar from "../components/LogoutBar.astro";
     .results-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
     .results-count{font-size:13px;color:var(--muted)}
     .results-count strong{color:var(--text)}
-    .sort-row{display:flex;gap:8px;align-items:center}
-    .sort-label{font-size:12px;color:var(--muted2)}
+    .results-bar-right{display:flex;align-items:center;gap:10px}
+    /* CSV export button */
+    .btn-csv{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;font-size:12.5px;font-weight:600;border:1px solid rgba(110,231,255,.3);background:rgba(110,231,255,.07);color:var(--accent);cursor:pointer;font-family:var(--sans);transition:.15s;}
+    .btn-csv:hover{background:rgba(110,231,255,.14);border-color:rgba(110,231,255,.5);}
     select{padding:7px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--card);color:var(--text);font-size:12.5px;font-family:var(--sans);outline:none;cursor:pointer}
     /* TABLE */
     .table-wrap{border-radius:var(--r);border:1px solid var(--border2);overflow:hidden;background:var(--card)}
     table{width:100%;border-collapse:collapse}
-    th{padding:12px 16px;font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:.8px;text-align:left;border-bottom:1px solid var(--border2);background:rgba(255,255,255,.02);cursor:pointer;user-select:none;white-space:nowrap}
+    th{padding:12px 16px;font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:.8px;text-align:left;border-bottom:1px solid var(--border2);background:rgba(255,255,255,.02);cursor:pointer;user-select:none;white-space:nowrap}
     th:hover{color:var(--muted)}
-    th .sort-arrow{margin-left:4px;opacity:.5}
+    th.sort-active{color:var(--accent)}
+    th .sort-arrow{margin-left:4px;opacity:.7;font-size:10px}
     td{padding:11px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.03);white-space:nowrap}
     tr:last-child td{border-bottom:none}
     tr:hover td{background:rgba(255,255,255,.025)}
     .td-sym{font-family:var(--mono);font-weight:700;color:var(--accent);font-size:14px}
-    .td-name{color:var(--muted);font-size:12px}
+    .td-name{color:var(--muted);font-size:13px}
     .td-price{font-family:var(--mono);font-weight:700}
     .td-chg{font-family:var(--mono);font-weight:700}
     .up{color:var(--green)}.dn{color:var(--red)}
@@ -94,25 +98,39 @@ import LogoutBar from "../components/LogoutBar.astro";
     .rsi-track{width:50px;height:5px;border-radius:3px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}
     .rsi-fill{height:100%;border-radius:3px;transition:.3s}
     .td-tag{font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid var(--border2);color:var(--muted2);background:rgba(255,255,255,.03)}
+    .td-vol{font-family:var(--mono);font-size:13px;color:var(--muted)}
     /* EMPTY STATE */
     .empty{text-align:center;padding:60px 20px;color:var(--muted)}
     .empty h3{font-size:16px;margin-bottom:8px;color:var(--text2)}
+    /* PAGINATION */
+    .pagination{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;border-top:1px solid var(--border2);flex-wrap:wrap}
+    .pg-btn{padding:7px 16px;border-radius:10px;font-size:13px;font-weight:600;border:1px solid var(--border2);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-family:var(--sans);transition:.15s;}
+    .pg-btn:hover:not(:disabled){background:rgba(110,231,255,.08);border-color:rgba(110,231,255,.3);color:var(--accent);}
+    .pg-btn:disabled{opacity:.3;cursor:default;}
+    .pg-info{font-size:13px;color:var(--muted);font-family:var(--mono);}
+    @media(max-width:768px){
+      .pg-info-full{display:none;}
+      .pg-info-short{display:block;}
+      td,th{padding:9px 10px;}
+      td{font-size:13px;}
+      th{font-size:11px;}
+    }
+    @media(min-width:769px){
+      .pg-info-short{display:none;}
+      .pg-info-full{display:block;}
+    }
+    /* highlight matches */
+    mark{background:rgba(110,231,255,.22);color:var(--accent);border-radius:2px;padding:0 1px;}
     footer{max-width:var(--max);margin:40px auto 0;padding:24px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted2);font-size:13px}
     .foot-links{display:flex;gap:18px}.foot-links a:hover{color:var(--muted)}
-    @media(max-width:900px){.navlinks{display:none}.hamburger{display:flex;}table{font-size:12px}td,th{padding:10px 10px}}
-    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
-    .hamburger span{width:20px;height:2px;background:var(--text);border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
-    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-    .hamburger.open span:nth-child(2){opacity:0;}
-    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-    .inner-mobile-menu{display:none;flex-direction:column;position:sticky;top:61px;z-index:99;background:rgba(7,14,28,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);padding:8px 24px 16px;}
-    .inner-mobile-menu.open{display:flex;}
-    .inner-mobile-menu a{color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;padding:11px 0;border-bottom:1px solid var(--border2);transition:color .15s;}
-    .inner-mobile-menu a:last-child{border-bottom:none;}
-    .inner-mobile-menu a:hover{color:var(--text);}
+    @media(max-width:900px){table{font-size:12px}}
   </style>
 </head>
 <body>
+
+<!-- Simulated data banner -->
+<div class="sim-banner">&#9888; Simulated data for demonstration purposes. Not real-time market data.</div>
+
 <header>
   <a class="tt-brand" href="/">
     <div class="tt-logo">TT</div>
@@ -153,11 +171,11 @@ import LogoutBar from "../components/LogoutBar.astro";
   <div class="filter-bar">
     <div class="filter-row">
       <span class="filter-label">SIGNAL</span>
-      <button class="fchip green-on" data-filter="signal" data-val="BUY">BUY</button>
-      <button class="fchip red-on" data-filter="signal" data-val="SELL">SELL</button>
+      <button class="fchip on" data-filter="signal" data-val="ALL">ALL</button>
+      <button class="fchip" data-filter="signal" data-val="BUY">BUY</button>
+      <button class="fchip" data-filter="signal" data-val="SELL">SELL</button>
       <button class="fchip" data-filter="signal" data-val="HOLD">HOLD</button>
       <button class="fchip" data-filter="signal" data-val="NEUTRAL">NEUTRAL</button>
-      <button class="fchip on" data-filter="signal" data-val="ALL">ALL</button>
       <div class="search-wrap" style="margin-left:auto">
         <input type="text" id="searchInput" placeholder="Search symbol or name…" />
       </div>
@@ -171,6 +189,8 @@ import LogoutBar from "../components/LogoutBar.astro";
       <button class="fchip" data-filter="sector" data-val="Energy">Energy</button>
       <button class="fchip" data-filter="sector" data-val="Health">Health</button>
       <button class="fchip" data-filter="sector" data-val="Industrials">Industrials</button>
+      <button class="fchip" data-filter="sector" data-val="Consumer">Consumer</button>
+      <button class="fchip" data-filter="sector" data-val="Telecom">Telecom</button>
     </div>
     <div class="filter-row">
       <span class="filter-label">RSI ZONE</span>
@@ -186,32 +206,27 @@ import LogoutBar from "../components/LogoutBar.astro";
   </div>
 
   <div class="results-bar">
-    <div class="results-count">Showing <strong id="resCount">0</strong> results</div>
-    <div class="sort-row">
-      <span class="sort-label">Sort by</span>
-      <select id="sortSel">
-        <option value="sym">Symbol</option>
-        <option value="chg">Change %</option>
-        <option value="rsi">RSI</option>
-        <option value="atr">ATR</option>
-      </select>
+    <div class="results-count" id="resultsCount">Showing <strong id="resRange">—</strong> of <strong id="resTotal">0</strong> results</div>
+    <div class="results-bar-right">
+      <button class="btn-csv" id="exportCsvBtn">&#8659; Export CSV</button>
     </div>
   </div>
 
   <div class="table-wrap">
     <table>
       <thead>
-        <tr>
-          <th>SYMBOL</th>
-          <th>NAME</th>
-          <th>PRICE</th>
-          <th>CHG %</th>
-          <th>SIGNAL</th>
-          <th>RSI(14)</th>
-          <th>VWAP</th>
-          <th>ATR(14)</th>
-          <th>EMA TREND</th>
-          <th>SECTOR</th>
+        <tr id="tableHead">
+          <th data-col="sym">SYMBOL<span class="sort-arrow" id="arr-sym"></span></th>
+          <th data-col="name">NAME<span class="sort-arrow" id="arr-name"></span></th>
+          <th data-col="price">PRICE<span class="sort-arrow" id="arr-price"></span></th>
+          <th data-col="chg">CHG %<span class="sort-arrow" id="arr-chg"></span></th>
+          <th data-col="signal">SIGNAL<span class="sort-arrow" id="arr-signal"></span></th>
+          <th data-col="rsi" title="Relative Strength Index — >70 overbought, <30 oversold">RSI(14)<span class="sort-arrow" id="arr-rsi"></span></th>
+          <th data-col="vwap" title="Volume Weighted Average Price — price vs. daily average">VWAP<span class="sort-arrow" id="arr-vwap"></span></th>
+          <th data-col="atr" title="Average True Range — measures volatility">ATR(14)<span class="sort-arrow" id="arr-atr"></span></th>
+          <th data-col="vol">VOLUME<span class="sort-arrow" id="arr-vol"></span></th>
+          <th data-col="ema" title="Exponential Moving Average trend using 9 and 20 period EMAs">EMA TREND (9/20)<span class="sort-arrow" id="arr-ema"></span></th>
+          <th data-col="sector">SECTOR<span class="sort-arrow" id="arr-sector"></span></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -220,132 +235,371 @@ import LogoutBar from "../components/LogoutBar.astro";
       <h3>No results match your filters</h3>
       <p>Try adjusting the signal or sector filters above.</p>
     </div>
+    <div class="pagination" id="paginationBar">
+      <button class="pg-btn" id="pgPrev">&#8592; Prev</button>
+      <span class="pg-info pg-info-full" id="pgInfoFull">Page 1 of 1</span>
+      <span class="pg-info pg-info-short" id="pgInfoShort">Page 1 of 1</span>
+      <button class="pg-btn" id="pgNext">Next &#8594;</button>
+    </div>
   </div>
 </div>
 
 <footer>
-  <div>TrendTrooper Screener &nbsp;•&nbsp; © <span id="yr"></span> &nbsp;•&nbsp; Simulated data</div>
+  <div>TrendTrooper Screener &nbsp;•&nbsp; &copy; <span id="yr"></span> &nbsp;•&nbsp; Simulated data</div>
   <div class="foot-links"><a href="/">Home</a><a href="/dashboard">Dashboard</a><a href="/academy">Academy</a></div>
 </footer>
 
 <script>
-document.getElementById('yr').textContent=new Date().getFullYear();
-function toggleInnerMenu(){
-  document.getElementById('innerMobileMenu').classList.toggle('open');
-  document.getElementById('hamburgerBtn').classList.toggle('open');
-}
+document.getElementById('yr').textContent = new Date().getFullYear();
 
-function rnd(a,b){return+(Math.random()*(b-a)+a).toFixed(2)}
-
-const RAW=[
-  {sym:'SPXL',name:'Direxion S&P 500 Bull 3x',sector:'ETF',base:98.4,signal:'BUY',rsi:58,vwap:true,ema:'Bullish'},
-  {sym:'TQQQ',name:'ProShares Ultra QQQ 3x',sector:'ETF',base:62.15,signal:'BUY',rsi:62,vwap:true,ema:'Bullish'},
-  {sym:'SQQQ',name:'ProShares UltraPro Short QQQ',sector:'ETF',base:8.44,signal:'HOLD',rsi:42,vwap:false,ema:'Bearish'},
-  {sym:'SPXS',name:'Direxion S&P 500 Bear 3x',sector:'ETF',base:14.22,signal:'SELL',rsi:38,vwap:false,ema:'Bearish'},
-  {sym:'UVXY',name:'ProShares Ultra VIX',sector:'ETF',base:5.88,signal:'HOLD',rsi:55,vwap:true,ema:'Neutral'},
-  {sym:'LABU',name:'Direxion Daily Biotech Bull',sector:'ETF',base:102.3,signal:'NEUTRAL',rsi:50,vwap:true,ema:'Neutral'},
-  {sym:'AAPL',name:'Apple Inc.',sector:'Tech',base:211.5,signal:'BUY',rsi:64,vwap:true,ema:'Bullish'},
-  {sym:'MSFT',name:'Microsoft Corp.',sector:'Tech',base:415.2,signal:'BUY',rsi:68,vwap:true,ema:'Bullish'},
-  {sym:'NVDA',name:'NVIDIA Corp.',sector:'Tech',base:875.4,signal:'BUY',rsi:72,vwap:true,ema:'Bullish'},
-  {sym:'GOOGL',name:'Alphabet Inc.',sector:'Tech',base:178.9,signal:'HOLD',rsi:58,vwap:true,ema:'Neutral'},
-  {sym:'META',name:'Meta Platforms',sector:'Tech',base:492.1,signal:'BUY',rsi:61,vwap:true,ema:'Bullish'},
-  {sym:'TSLA',name:'Tesla Inc.',sector:'Tech',base:182.4,signal:'SELL',rsi:35,vwap:false,ema:'Bearish'},
-  {sym:'AMD',name:'Advanced Micro Devices',sector:'Tech',base:155.8,signal:'HOLD',rsi:48,vwap:false,ema:'Neutral'},
-  {sym:'JPM',name:'JPMorgan Chase',sector:'Finance',base:198.5,signal:'BUY',rsi:60,vwap:true,ema:'Bullish'},
-  {sym:'BAC',name:'Bank of America',sector:'Finance',base:38.9,signal:'HOLD',rsi:45,vwap:false,ema:'Neutral'},
-  {sym:'GS',name:'Goldman Sachs',sector:'Finance',base:448.2,signal:'BUY',rsi:63,vwap:true,ema:'Bullish'},
-  {sym:'XOM',name:'Exxon Mobil',sector:'Energy',base:112.4,signal:'SELL',rsi:29,vwap:false,ema:'Bearish'},
-  {sym:'CVX',name:'Chevron Corp.',sector:'Energy',base:154.8,signal:'HOLD',rsi:44,vwap:false,ema:'Neutral'},
-  {sym:'JNJ',name:'Johnson & Johnson',sector:'Health',base:158.2,signal:'HOLD',rsi:52,vwap:true,ema:'Neutral'},
-  {sym:'PFE',name:'Pfizer Inc.',sector:'Health',base:27.4,signal:'SELL',rsi:32,vwap:false,ema:'Bearish'},
-  {sym:'UNH',name:'UnitedHealth Group',sector:'Health',base:492.0,signal:'BUY',rsi:66,vwap:true,ema:'Bullish'},
-  {sym:'CAT',name:'Caterpillar Inc.',sector:'Industrials',base:352.1,signal:'BUY',rsi:61,vwap:true,ema:'Bullish'},
-  {sym:'BA',name:'Boeing Co.',sector:'Industrials',base:182.5,signal:'SELL',rsi:34,vwap:false,ema:'Bearish'},
-];
-
-// Generate live-ish prices
-const DATA=RAW.map(r=>{
-  const chg=rnd(-2.8,2.8);
-  const price=+(r.base*(1+chg/100)).toFixed(2);
-  const atr=rnd(0.8,4.5);
-  return{...r,price,chg,atr};
+// Burger menu: close on link click inside mobile menu
+document.querySelectorAll('#ttMob a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('ttMob').classList.remove('open');
+    document.getElementById('ttBurger').classList.remove('open');
+  });
 });
 
-let filters={signal:'ALL',sector:'ALL',rsi:'ALL',vwap:'ALL',search:''};
-let sortKey='sym';
+function rnd(a, b) { return +(Math.random() * (b - a) + a).toFixed(2); }
 
-function getRsiZone(r){return r<30?'OS':r>70?'OB':'MID'}
+function fmtVol(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(0) + 'K';
+  return n.toString();
+}
 
-function applyFilters(){
-  return DATA.filter(r=>{
-    if(filters.signal!=='ALL'&&r.signal!==filters.signal)return false;
-    if(filters.sector!=='ALL'&&r.sector!==filters.sector)return false;
-    if(filters.rsi!=='ALL'&&getRsiZone(r.rsi)!==filters.rsi)return false;
-    if(filters.vwap==='YES'&&!r.vwap)return false;
-    if(filters.vwap==='NO'&&r.vwap)return false;
-    if(filters.search&&!r.sym.toLowerCase().includes(filters.search)&&!r.name.toLowerCase().includes(filters.search))return false;
+function rndVol() {
+  // return a raw number, format on display
+  const tiers = [
+    [200000, 900000],
+    [900000, 5000000],
+    [5000000, 80000000],
+  ];
+  const t = tiers[Math.floor(Math.random() * tiers.length)];
+  return Math.floor(Math.random() * (t[1] - t[0]) + t[0]);
+}
+
+const RAW = [
+  // ETFs
+  {sym:'SPXL', name:'Direxion S&P 500 Bull 3x',    sector:'ETF',      base:98.4,  signal:'BUY',     rsi:58, vwap:true,  ema:'Bullish'},
+  {sym:'TQQQ', name:'ProShares Ultra QQQ 3x',       sector:'ETF',      base:62.15, signal:'BUY',     rsi:62, vwap:true,  ema:'Bullish'},
+  {sym:'SQQQ', name:'ProShares UltraPro Short QQQ', sector:'ETF',      base:8.44,  signal:'HOLD',    rsi:42, vwap:false, ema:'Bearish'},
+  {sym:'SPXS', name:'Direxion S&P 500 Bear 3x',     sector:'ETF',      base:14.22, signal:'SELL',    rsi:38, vwap:false, ema:'Bearish'},
+  {sym:'UVXY', name:'ProShares Ultra VIX',           sector:'ETF',      base:5.88,  signal:'HOLD',    rsi:55, vwap:true,  ema:'Neutral'},
+  {sym:'LABU', name:'Direxion Daily Biotech Bull',   sector:'ETF',      base:102.3, signal:'NEUTRAL', rsi:50, vwap:true,  ema:'Neutral'},
+  // US Tech
+  {sym:'AAPL', name:'Apple Inc.',                    sector:'Tech',     base:211.5, signal:'BUY',     rsi:64, vwap:true,  ema:'Bullish'},
+  {sym:'MSFT', name:'Microsoft Corp.',               sector:'Tech',     base:415.2, signal:'BUY',     rsi:68, vwap:true,  ema:'Bullish'},
+  {sym:'NVDA', name:'NVIDIA Corp.',                  sector:'Tech',     base:875.4, signal:'BUY',     rsi:72, vwap:true,  ema:'Bullish'},
+  {sym:'GOOGL',name:'Alphabet Inc.',                 sector:'Tech',     base:178.9, signal:'HOLD',    rsi:58, vwap:true,  ema:'Neutral'},
+  {sym:'META', name:'Meta Platforms',                sector:'Tech',     base:492.1, signal:'BUY',     rsi:61, vwap:true,  ema:'Bullish'},
+  {sym:'TSLA', name:'Tesla Inc.',                    sector:'Tech',     base:182.4, signal:'SELL',    rsi:35, vwap:false, ema:'Bearish'},
+  {sym:'AMD',  name:'Advanced Micro Devices',        sector:'Tech',     base:155.8, signal:'HOLD',    rsi:48, vwap:false, ema:'Neutral'},
+  {sym:'AMZN', name:'Amazon.com Inc.',               sector:'Tech',     base:188.3, signal:'BUY',     rsi:65, vwap:true,  ema:'Bullish'},
+  {sym:'CRM',  name:'Salesforce Inc.',               sector:'Tech',     base:273.6, signal:'HOLD',    rsi:52, vwap:true,  ema:'Neutral'},
+  // US Finance
+  {sym:'JPM',  name:'JPMorgan Chase',                sector:'Finance',  base:198.5, signal:'BUY',     rsi:60, vwap:true,  ema:'Bullish'},
+  {sym:'BAC',  name:'Bank of America',               sector:'Finance',  base:38.9,  signal:'HOLD',    rsi:45, vwap:false, ema:'Neutral'},
+  {sym:'GS',   name:'Goldman Sachs',                 sector:'Finance',  base:448.2, signal:'BUY',     rsi:63, vwap:true,  ema:'Bullish'},
+  {sym:'V',    name:'Visa Inc.',                     sector:'Finance',  base:276.4, signal:'BUY',     rsi:66, vwap:true,  ema:'Bullish'},
+  {sym:'BRK.B',name:'Berkshire Hathaway B',          sector:'Finance',  base:410.5, signal:'HOLD',    rsi:53, vwap:true,  ema:'Neutral'},
+  // US Energy
+  {sym:'XOM',  name:'Exxon Mobil',                   sector:'Energy',   base:112.4, signal:'SELL',    rsi:29, vwap:false, ema:'Bearish'},
+  {sym:'CVX',  name:'Chevron Corp.',                  sector:'Energy',   base:154.8, signal:'HOLD',    rsi:44, vwap:false, ema:'Neutral'},
+  // US Health
+  {sym:'JNJ',  name:'Johnson & Johnson',             sector:'Health',   base:158.2, signal:'HOLD',    rsi:52, vwap:true,  ema:'Neutral'},
+  {sym:'PFE',  name:'Pfizer Inc.',                   sector:'Health',   base:27.4,  signal:'SELL',    rsi:32, vwap:false, ema:'Bearish'},
+  {sym:'UNH',  name:'UnitedHealth Group',            sector:'Health',   base:492.0, signal:'BUY',     rsi:66, vwap:true,  ema:'Bullish'},
+  // US Industrials
+  {sym:'CAT',  name:'Caterpillar Inc.',              sector:'Industrials',base:352.1,signal:'BUY',    rsi:61, vwap:true,  ema:'Bullish'},
+  {sym:'BA',   name:'Boeing Co.',                    sector:'Industrials',base:182.5,signal:'SELL',   rsi:34, vwap:false, ema:'Bearish'},
+  // US Consumer
+  {sym:'WMT',  name:'Walmart Inc.',                  sector:'Consumer', base:68.4,  signal:'BUY',     rsi:59, vwap:true,  ema:'Bullish'},
+  {sym:'HD',   name:'Home Depot Inc.',               sector:'Consumer', base:338.2, signal:'HOLD',    rsi:49, vwap:true,  ema:'Neutral'},
+  {sym:'MCD',  name:'McDonald\'s Corp.',             sector:'Consumer', base:287.5, signal:'HOLD',    rsi:51, vwap:false, ema:'Neutral'},
+  // Canadian stocks (.TO)
+  {sym:'T.TO', name:'Telus Corp.',                   sector:'Telecom',  base:22.18, signal:'HOLD',    rsi:47, vwap:false, ema:'Neutral'},
+  {sym:'BCE.TO',name:'BCE Inc.',                     sector:'Telecom',  base:34.52, signal:'SELL',    rsi:31, vwap:false, ema:'Bearish'},
+  {sym:'MFC.TO',name:'Manulife Financial',           sector:'Finance',  base:29.74, signal:'BUY',     rsi:60, vwap:true,  ema:'Bullish'},
+  {sym:'POW.TO',name:'Power Corp of Canada',         sector:'Finance',  base:38.85, signal:'HOLD',    rsi:50, vwap:true,  ema:'Neutral'},
+  {sym:'SLF.TO',name:'Sun Life Financial',           sector:'Finance',  base:71.42, signal:'BUY',     rsi:62, vwap:true,  ema:'Bullish'},
+  {sym:'BAM.TO',name:'Brookfield Asset Mgmt',        sector:'Finance',  base:55.30, signal:'BUY',     rsi:64, vwap:true,  ema:'Bullish'},
+  {sym:'CNR.TO',name:'Canadian National Railway',    sector:'Industrials',base:165.8,signal:'HOLD',  rsi:53, vwap:true,  ema:'Neutral'},
+  {sym:'RY.TO', name:'Royal Bank of Canada',         sector:'Finance',  base:138.6, signal:'BUY',     rsi:67, vwap:true,  ema:'Bullish'},
+  {sym:'TD.TO', name:'Toronto-Dominion Bank',        sector:'Finance',  base:82.45, signal:'HOLD',    rsi:44, vwap:false, ema:'Neutral'},
+  {sym:'ENB.TO',name:'Enbridge Inc.',                sector:'Energy',   base:55.10, signal:'HOLD',    rsi:54, vwap:true,  ema:'Neutral'},
+];
+
+// Generate live-ish prices and volumes
+const DATA = RAW.map(function(r) {
+  var chg = rnd(-2.8, 2.8);
+  var price = +(r.base * (1 + chg / 100)).toFixed(2);
+  var atr = rnd(0.8, 4.5);
+  var vol = rndVol();
+  return Object.assign({}, r, {price: price, chg: chg, atr: atr, vol: vol});
+});
+
+// ── State ──────────────────────────────────────────────────────────────
+var signalFilters = new Set(['ALL']); // multi-select for signal
+var filters = {sector:'ALL', rsi:'ALL', vwap:'ALL', search:''};
+var sortKey = 'sym';
+var sortDir = 0; // 0=default asc, 1=desc, 2=asc
+var PAGE_SIZE = 25;
+var currentPage = 1;
+var searchTimer = null;
+
+// ── Helpers ────────────────────────────────────────────────────────────
+function getRsiZone(r) { return r < 30 ? 'OS' : r > 70 ? 'OB' : 'MID'; }
+
+function highlightText(text, query) {
+  if (!query) return escHtml(text);
+  var escaped = escHtml(text);
+  var re = new RegExp('(' + escRe(query) + ')', 'gi');
+  return escaped.replace(re, '<mark>$1</mark>');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function escRe(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ── Filtering & Sorting ────────────────────────────────────────────────
+function applyFilters() {
+  var q = filters.search;
+  var rows = DATA.filter(function(r) {
+    // Signal: if ALL in set or set is empty → pass; else must match one of the selected
+    if (!signalFilters.has('ALL') && signalFilters.size > 0 && !signalFilters.has(r.signal)) return false;
+    if (filters.sector !== 'ALL' && r.sector !== filters.sector) return false;
+    if (filters.rsi !== 'ALL' && getRsiZone(r.rsi) !== filters.rsi) return false;
+    if (filters.vwap === 'YES' && !r.vwap) return false;
+    if (filters.vwap === 'NO' && r.vwap) return false;
+    if (q && !r.sym.toLowerCase().includes(q) && !r.name.toLowerCase().includes(q)) return false;
     return true;
-  }).sort((a,b)=>{
-    if(sortKey==='chg')return b.chg-a.chg;
-    if(sortKey==='rsi')return b.rsi-a.rsi;
-    if(sortKey==='atr')return b.atr-a.atr;
-    return a.sym.localeCompare(b.sym);
+  });
+
+  rows.sort(function(a, b) {
+    var dir = (sortDir === 1) ? -1 : 1; // sortDir 1=desc, 2=asc (default=0 is asc by sym)
+    if (sortKey === 'sym')    return dir * a.sym.localeCompare(b.sym);
+    if (sortKey === 'name')   return dir * a.name.localeCompare(b.name);
+    if (sortKey === 'price')  return dir * (b.price - a.price);
+    if (sortKey === 'chg')    return dir * (b.chg - a.chg);
+    if (sortKey === 'rsi')    return dir * (b.rsi - a.rsi);
+    if (sortKey === 'atr')    return dir * (b.atr - a.atr);
+    if (sortKey === 'vol')    return dir * (b.vol - a.vol);
+    if (sortKey === 'vwap')   return dir * ((b.vwap ? 1 : 0) - (a.vwap ? 1 : 0));
+    if (sortKey === 'ema')    return dir * a.ema.localeCompare(b.ema);
+    if (sortKey === 'sector') return dir * a.sector.localeCompare(b.sector);
+    if (sortKey === 'signal') return dir * a.signal.localeCompare(b.signal);
+    return dir * a.sym.localeCompare(b.sym);
+  });
+
+  return rows;
+}
+
+// ── Render ─────────────────────────────────────────────────────────────
+function renderTable() {
+  var allRows = applyFilters();
+  var total = allRows.length;
+  var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  var start = (currentPage - 1) * PAGE_SIZE;
+  var end = Math.min(start + PAGE_SIZE, total);
+  var pageRows = allRows.slice(start, end);
+
+  var tb = document.getElementById('tableBody');
+  var empty = document.getElementById('emptyState');
+  var pgBar = document.getElementById('paginationBar');
+
+  // Update counts
+  if (total === 0) {
+    document.getElementById('resRange').textContent = '0';
+    document.getElementById('resTotal').textContent = '0';
+  } else {
+    document.getElementById('resRange').textContent = (start + 1) + '–' + end;
+    document.getElementById('resTotal').textContent = total;
+  }
+
+  // Pagination controls
+  var pgFull = document.getElementById('pgInfoFull');
+  var pgShort = document.getElementById('pgInfoShort');
+  pgFull.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+  pgShort.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+  document.getElementById('pgPrev').disabled = (currentPage <= 1);
+  document.getElementById('pgNext').disabled = (currentPage >= totalPages);
+  pgBar.style.display = total === 0 ? 'none' : 'flex';
+
+  if (total === 0) {
+    tb.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  var q = filters.search;
+
+  function rsiCol(r) {
+    var col = r < 30 ? '#ff5c6a' : r > 70 ? '#a78bfa' : '#6ee7ff';
+    return '<div class="rsi-bar"><div class="rsi-track"><div class="rsi-fill" style="width:' + r + '%;background:' + col + '"></div></div><span style="font-family:var(--mono);font-size:13px">' + r + '</span></div>';
+  }
+
+  tb.innerHTML = pageRows.map(function(r) {
+    var symHl = highlightText(r.sym, q);
+    var nameHl = highlightText(r.name, q);
+    var vwapColor = r.vwap ? 'var(--green)' : 'var(--red)';
+    var emaColor = r.ema === 'Bullish' ? 'var(--green)' : r.ema === 'Bearish' ? 'var(--red)' : 'var(--amber)';
+    return '<tr>' +
+      '<td class="td-sym">' + symHl + '</td>' +
+      '<td class="td-name">' + nameHl + '</td>' +
+      '<td class="td-price">$' + r.price.toFixed(2) + '</td>' +
+      '<td class="td-chg ' + (r.chg >= 0 ? 'up' : 'dn') + '">' + (r.chg >= 0 ? '+' : '') + r.chg.toFixed(2) + '%</td>' +
+      '<td><span class="sig ' + r.signal.toLowerCase() + '">' + r.signal + '</span></td>' +
+      '<td>' + rsiCol(r.rsi) + '</td>' +
+      '<td style="color:' + vwapColor + ';font-family:var(--mono);font-size:13px">' + (r.vwap ? '&#8593; Above' : '&#8595; Below') + '</td>' +
+      '<td style="font-family:var(--mono)">$' + r.atr.toFixed(2) + '</td>' +
+      '<td class="td-vol">' + fmtVol(r.vol) + '</td>' +
+      '<td><span class="td-tag" style="color:' + emaColor + '">' + r.ema + '</span></td>' +
+      '<td><span class="td-tag">' + r.sector + '</span></td>' +
+    '</tr>';
+  }).join('');
+
+  updateSortHeaders();
+}
+
+function updateSortHeaders() {
+  var cols = ['sym','name','price','chg','signal','rsi','vwap','atr','vol','ema','sector'];
+  cols.forEach(function(col) {
+    var th = document.querySelector('th[data-col="' + col + '"]');
+    var arr = document.getElementById('arr-' + col);
+    if (!th || !arr) return;
+    th.classList.remove('sort-active');
+    arr.textContent = '';
+    if (col === sortKey) {
+      th.classList.add('sort-active');
+      arr.textContent = sortDir === 1 ? ' ▼' : ' ▲';
+    }
   });
 }
 
-function renderTable(){
-  const rows=applyFilters();
-  const tb=document.getElementById('tableBody');
-  const empty=document.getElementById('emptyState');
-  document.getElementById('resCount').textContent=rows.length;
-  if(rows.length===0){tb.innerHTML='';empty.style.display='block';return;}
-  empty.style.display='none';
-  const rsiCol=(r)=>{
-    const pct=r/100;
-    const col=r<30?'#ff5c6a':r>70?'#a78bfa':'#6ee7ff';
-    return`<div class="rsi-bar"><div class="rsi-track"><div class="rsi-fill" style="width:${r}%;background:${col}"></div></div><span style="font-family:var(--mono);font-size:12px">${r}</span></div>`;
-  };
-  tb.innerHTML=rows.map(r=>`
-    <tr>
-      <td class="td-sym">${r.sym}</td>
-      <td class="td-name">${r.name}</td>
-      <td class="td-price">$${r.price.toFixed(2)}</td>
-      <td class="td-chg ${r.chg>=0?'up':'dn'}">${r.chg>=0?'+':''}${r.chg.toFixed(2)}%</td>
-      <td><span class="sig ${r.signal.toLowerCase()}">${r.signal}</span></td>
-      <td>${rsiCol(r.rsi)}</td>
-      <td style="color:${r.vwap?'var(--green)':'var(--red)'};font-family:var(--mono);font-size:12px">${r.vwap?'↑ Above':'↓ Below'}</td>
-      <td style="font-family:var(--mono)">$${r.atr.toFixed(2)}</td>
-      <td><span class="td-tag" style="color:${r.ema==='Bullish'?'var(--green)':r.ema==='Bearish'?'var(--red)':'var(--amber)'}">${r.ema}</span></td>
-      <td><span class="td-tag">${r.sector}</span></td>
-    </tr>`).join('');
-}
+// ── Column sort click ──────────────────────────────────────────────────
+document.getElementById('tableHead').addEventListener('click', function(e) {
+  var th = e.target.closest('th[data-col]');
+  if (!th) return;
+  var col = th.dataset.col;
+  if (sortKey === col) {
+    sortDir = (sortDir + 1) % 3; // 0→1→2→0
+    if (sortDir === 0) { sortKey = 'sym'; } // reset to default
+  } else {
+    sortKey = col;
+    sortDir = 1; // first click = descending
+  }
+  currentPage = 1;
+  renderTable();
+});
 
-// Filter chips
-document.querySelectorAll('.fchip').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const f=btn.dataset.filter;
-    const v=btn.dataset.val;
-    filters[f]=v;
-    document.querySelectorAll(`.fchip[data-filter="${f}"]`).forEach(b=>{
-      b.classList.remove('on','green-on','red-on');
+// ── Signal filter chips (multi-select) ────────────────────────────────
+document.querySelectorAll('.fchip[data-filter="signal"]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var v = btn.dataset.val;
+    if (v === 'ALL') {
+      signalFilters.clear();
+      signalFilters.add('ALL');
+    } else {
+      signalFilters.delete('ALL');
+      if (signalFilters.has(v)) {
+        signalFilters.delete(v);
+        if (signalFilters.size === 0) signalFilters.add('ALL');
+      } else {
+        signalFilters.add(v);
+      }
+    }
+    // Update chip visual states
+    document.querySelectorAll('.fchip[data-filter="signal"]').forEach(function(b) {
+      var bv = b.dataset.val;
+      b.classList.remove('on', 'green-on', 'red-on');
+      if (signalFilters.has(bv)) {
+        if (bv === 'BUY') b.classList.add('green-on');
+        else if (bv === 'SELL') b.classList.add('red-on');
+        else b.classList.add('on');
+      }
     });
-    if(v==='BUY')btn.classList.add('green-on');
-    else if(v==='SELL')btn.classList.add('red-on');
-    else btn.classList.add('on');
+    currentPage = 1;
     renderTable();
   });
 });
 
-document.getElementById('searchInput').addEventListener('input',e=>{
-  filters.search=e.target.value.toLowerCase().trim();
-  renderTable();
+// ── Sector / RSI / VWAP chips (exclusive) ─────────────────────────────
+document.querySelectorAll('.fchip[data-filter="sector"], .fchip[data-filter="rsi"], .fchip[data-filter="vwap"]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var f = btn.dataset.filter;
+    var v = btn.dataset.val;
+    filters[f] = v;
+    document.querySelectorAll('.fchip[data-filter="' + f + '"]').forEach(function(b) {
+      b.classList.remove('on', 'green-on', 'red-on');
+    });
+    btn.classList.add('on');
+    currentPage = 1;
+    renderTable();
+  });
 });
 
-document.getElementById('sortSel').addEventListener('change',e=>{
-  sortKey=e.target.value;
-  renderTable();
+// ── Debounced search ───────────────────────────────────────────────────
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  clearTimeout(searchTimer);
+  var val = e.target.value;
+  searchTimer = setTimeout(function() {
+    filters.search = val.toLowerCase().trim();
+    currentPage = 1;
+    renderTable();
+  }, 300);
 });
 
+// ── Pagination buttons ─────────────────────────────────────────────────
+document.getElementById('pgPrev').addEventListener('click', function() {
+  if (currentPage > 1) { currentPage--; renderTable(); }
+});
+document.getElementById('pgNext').addEventListener('click', function() {
+  var allRows = applyFilters();
+  var totalPages = Math.max(1, Math.ceil(allRows.length / PAGE_SIZE));
+  if (currentPage < totalPages) { currentPage++; renderTable(); }
+});
+
+// ── CSV export ─────────────────────────────────────────────────────────
+document.getElementById('exportCsvBtn').addEventListener('click', function() {
+  var rows = applyFilters();
+  var headers = ['Symbol','Name','Price','Chg%','Signal','RSI','VWAP','ATR','Volume','EMA Trend','Sector'];
+  var lines = [headers.join(',')];
+  rows.forEach(function(r) {
+    lines.push([
+      r.sym,
+      '"' + r.name.replace(/"/g,'""') + '"',
+      r.price.toFixed(2),
+      r.chg.toFixed(2),
+      r.signal,
+      r.rsi,
+      r.vwap ? 'Above' : 'Below',
+      r.atr.toFixed(2),
+      r.vol,
+      r.ema,
+      r.sector
+    ].join(','));
+  });
+  var csv = lines.join('\r\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'trendtrooper-screener.csv';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+});
+
+// ── Initial render ─────────────────────────────────────────────────────
 renderTable();
 </script>
 <script>

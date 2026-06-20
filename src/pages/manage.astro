@@ -182,6 +182,7 @@ header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92)
     localStorage.removeItem('tt_sub_token');
     window.location.href = '/';
   }
+  document.querySelectorAll('#ttMob a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('ttMob').classList.remove('open');document.getElementById('ttBurger').classList.remove('open');}));
 </script>
 </div></div>
 </body>

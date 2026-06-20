@@ -2,7 +2,6 @@
 import LogoutBar from "../components/LogoutBar.astro";
 // TrendTrooper — Market Dashboard src/pages/dashboard.astro
 ---
-import LogoutBar from "../components/LogoutBar.astro";
 <!doctype html>
 <html lang="en">
 <head>
@@ -46,6 +45,8 @@ import LogoutBar from "../components/LogoutBar.astro";
     .tt-mob a{color:rgba(180,210,255,.65);padding:10px 0;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.04);}
     .tt-mob a:hover{color:#e8eeff;}
     @media(max-width:900px){.tt-nav{display:none;}.tt-burger{display:flex;}}
+    /* SIMULATED DATA BANNER */
+    .sim-banner{width:100%;background:rgba(255,180,0,0.15);border-top:1px solid rgba(255,180,0,0.4);border-bottom:1px solid rgba(255,180,0,0.4);color:#ffb400;text-align:center;padding:10px 16px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1px;}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:12px;font-weight:600;font-size:13.5px;border:1px solid var(--border2);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;transition:.15s;font-family:var(--sans)}
     .btn:hover{background:rgba(255,255,255,.08)}
     .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#070e1c;font-weight:700}
@@ -55,6 +56,16 @@ import LogoutBar from "../components/LogoutBar.astro";
     .live-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;border:1px solid rgba(34,214,115,.3);background:rgba(34,214,115,.08);color:var(--green);font-size:12px;font-weight:700;font-family:var(--mono)}
     .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(34,214,115,.6);animation:pulse 2s ease-in-out infinite}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    /* CLOCK + MARKET STATUS */
+    .clock-wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end;}
+    .clock-time{font-family:var(--mono);font-size:14px;color:var(--muted);}
+    .market-status{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;border:1px solid;}
+    .market-status.open{color:#22d673;border-color:rgba(34,214,115,.35);background:rgba(34,214,115,.08);}
+    .market-status.closed{color:#ff5c6a;border-color:rgba(255,92,106,.35);background:rgba(255,92,106,.08);}
+    .market-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+    .market-dot.open{background:#22d673;box-shadow:0 0 8px rgba(34,214,115,.7);}
+    .market-dot.closed{background:#ff5c6a;box-shadow:0 0 8px rgba(255,92,106,.7);}
+    @media(max-width:600px){.clock-time{font-size:11px;}.market-status{font-size:10px;padding:3px 8px;}}
     /* INDEX GRID */
     .idx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
     .idx-card{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);padding:18px 20px;position:relative;overflow:hidden;cursor:pointer;transition:.2s}
@@ -90,15 +101,25 @@ import LogoutBar from "../components/LogoutBar.astro";
     .etf-stat{background:rgba(255,255,255,.03);border-radius:10px;padding:10px 12px}
     .etf-stat .sl{font-size:10px;color:var(--muted2);font-weight:600;letter-spacing:.3px;margin-bottom:3px}
     .etf-stat .sv{font-size:13px;font-weight:700;font-family:var(--mono)}
+    /* ETF card footer links */
+    .etf-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--border2);}
+    .etf-link{font-size:11px;font-weight:700;font-family:var(--mono);color:var(--accent);text-decoration:none;padding:3px 8px;border-radius:6px;border:1px solid rgba(110,231,255,.2);background:rgba(110,231,255,.05);transition:.15s;}
+    .etf-link:hover{background:rgba(110,231,255,.12);border-color:rgba(110,231,255,.4);}
+    .save-btn{font-size:11px;font-weight:700;font-family:var(--mono);color:var(--amber);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 8px;border-radius:6px;cursor:pointer;transition:.15s;}
+    .save-btn:hover{background:rgba(245,158,11,.18);}
+    .save-btn.saved{color:#22d673;background:rgba(34,214,115,.08);border-color:rgba(34,214,115,.3);}
     /* TWO COL */
     .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
     /* HEATMAP */
     .heatmap-wrap{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);overflow:hidden}
     .panel-head{padding:14px 18px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between}
     .panel-head h3{font-size:14px;font-weight:700}
-    .heatmap-grid{padding:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-    .hm-cell{border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:.15s}
+    .heatmap-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+    .heatmap-grid{padding:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;min-width:360px;}
+    .hm-cell{border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:.15s;position:relative;}
     .hm-cell:hover{filter:brightness(1.15)}
+    .hm-cell::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0a1830;border:1px solid rgba(110,231,255,.3);color:var(--accent);font-size:10px;font-family:var(--mono);padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10;}
+    .hm-cell:hover::after{opacity:1;}
     .hm-sym{font-size:11px;font-weight:700;font-family:var(--mono)}
     .hm-chg{font-size:12px;font-weight:700;font-family:var(--mono);margin-top:2px}
     /* SIGNAL TABLE */
@@ -107,19 +128,44 @@ import LogoutBar from "../components/LogoutBar.astro";
     th{padding:12px 16px;font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.5px;text-align:left;border-bottom:1px solid var(--border2);background:rgba(255,255,255,.02)}
     td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.03)}
     tr:last-child td{border-bottom:none}
-    tr:hover td{background:rgba(255,255,255,.02)}
+    tr.sig-row{cursor:pointer;}
+    tr.sig-row:hover td{background:rgba(110,231,255,.04);}
     .td-sym{font-family:var(--mono);font-weight:700;color:var(--accent)}
+    .view-analysis{font-size:10px;font-weight:700;font-family:var(--mono);color:var(--accent2);text-decoration:none;padding:2px 7px;border-radius:5px;border:1px solid rgba(167,139,250,.25);background:rgba(167,139,250,.07);white-space:nowrap;}
+    .view-analysis:hover{background:rgba(167,139,250,.15);}
     /* FEAR GREED */
     .fg-wrap{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);padding:20px}
     .fg-meter{position:relative;height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column}
     .fg-num{font-size:52px;font-weight:700;font-family:var(--mono)}
     .fg-label{font-size:13px;color:var(--muted);margin-top:4px;font-weight:600}
-    .fg-scale{display:flex;border-radius:999px;overflow:hidden;height:8px;margin-top:16px}
+    .fg-scale-wrap{position:relative;margin-top:16px;}
+    .fg-scale{display:flex;border-radius:999px;overflow:hidden;height:8px;}
     .fg-scale div{flex:1}
+    .fg-marker-row{position:relative;height:14px;}
+    .fg-marker{position:absolute;top:0;transform:translateX(-50%);font-size:11px;line-height:1;color:#fff;pointer-events:none;}
+    /* WATCHLIST */
+    .watchlist-section{margin-bottom:28px;}
+    .watchlist-section h2{font-size:18px;font-weight:700;margin-bottom:14px;}
+    .watchlist-empty{color:var(--muted);font-size:13px;font-family:var(--mono);padding:16px 0;}
+    .watchlist-grid{display:flex;flex-wrap:wrap;gap:10px;}
+    .wl-item{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;font-family:var(--mono);font-size:13px;}
+    .wl-ticker{color:var(--accent);font-weight:700;text-decoration:none;}
+    .wl-ticker:hover{color:#fff;}
+    .wl-remove{background:none;border:none;color:var(--red);font-size:13px;cursor:pointer;padding:0 2px;line-height:1;opacity:.7;}
+    .wl-remove:hover{opacity:1;}
     footer{max-width:var(--max);margin:40px auto 0;padding:24px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted2);font-size:13px}
     .foot-links{display:flex;gap:18px}
     .foot-links a:hover{color:var(--muted)}
-    @media(max-width:900px){.idx-grid{grid-template-columns:repeat(2,1fr)}.etf-grid,.two-col{grid-template-columns:1fr}.navlinks{display:none}.heatmap-grid{grid-template-columns:repeat(3,1fr)}.hamburger{display:flex;}}
+    @media(max-width:900px){
+      .idx-grid{grid-template-columns:repeat(2,1fr)}
+      .etf-grid{grid-template-columns:repeat(2,1fr)}
+      .two-col{grid-template-columns:1fr}
+      .navlinks{display:none}
+      .hamburger{display:flex;}
+    }
+    @media(max-width:600px){
+      .etf-grid{grid-template-columns:1fr 1fr}
+    }
     .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
     .hamburger span{width:20px;height:2px;background:var(--text);border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
     .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
@@ -163,13 +209,19 @@ import LogoutBar from "../components/LogoutBar.astro";
   <a href="/#pricing">Get Started</a>
 </div>
 
+<!-- SIMULATED DATA BANNER -->
+<div class="sim-banner">&#9888; Simulated data for demonstration purposes. Not real-time market data.</div>
+
 <div class="wrap">
   <div class="page-head">
     <div>
       <h1>Market Dashboard</h1>
-      <div style="color:var(--muted);font-size:13px;margin-top:4px">Indices · Leveraged ETFs · Sector signals · Fear & Greed</div>
+      <div style="color:var(--muted);font-size:13px;margin-top:4px">Indices · Leveraged ETFs · Sector signals · Fear &amp; Greed</div>
     </div>
-    <div id="clock" style="font-family:var(--mono);font-size:14px;color:var(--muted)"></div>
+    <div class="clock-wrap">
+      <div class="clock-time" id="clock"></div>
+      <div class="market-status closed" id="marketStatus"><span class="market-dot closed" id="marketDot"></span><span id="marketStatusTxt">MARKET CLOSED</span></div>
+    </div>
   </div>
 
   <!-- MAJOR INDICES -->
@@ -184,25 +236,32 @@ import LogoutBar from "../components/LogoutBar.astro";
     <!-- SECTOR HEATMAP -->
     <div class="heatmap-wrap">
       <div class="panel-head"><h3>Sector Heatmap</h3><span style="font-size:12px;color:var(--muted)">Today's performance</span></div>
-      <div class="heatmap-grid" id="heatGrid"></div>
+      <div class="heatmap-scroll">
+        <div class="heatmap-grid" id="heatGrid"></div>
+      </div>
     </div>
 
     <!-- FEAR & GREED + SIGNAL TABLE -->
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="fg-wrap">
-        <div class="panel-head" style="padding:0 0 12px"><h3>Fear & Greed Index</h3></div>
+        <div class="panel-head" style="padding:0 0 12px"><h3>Fear &amp; Greed Index</h3></div>
         <div class="fg-meter">
           <div class="fg-num" id="fgNum" style="color:var(--amber)">62</div>
           <div class="fg-label" id="fgLbl">GREED</div>
         </div>
-        <div class="fg-scale">
-          <div style="background:#ff5c6a"></div>
-          <div style="background:#f59e0b"></div>
-          <div style="background:#6ee7ff"></div>
-          <div style="background:#22d673"></div>
-          <div style="background:#a78bfa"></div>
+        <div class="fg-scale-wrap">
+          <div class="fg-scale">
+            <div style="background:#ff5c6a"></div>
+            <div style="background:#f59e0b"></div>
+            <div style="background:#6ee7ff"></div>
+            <div style="background:#22d673"></div>
+            <div style="background:#a78bfa"></div>
+          </div>
+          <div class="fg-marker-row">
+            <div class="fg-marker" id="fgMarker">&#9650;</div>
+          </div>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--muted2);font-family:var(--mono)">
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--muted2);font-family:var(--mono)">
           <span>EXTREME FEAR</span><span>EXTREME GREED</span>
         </div>
       </div>
@@ -210,139 +269,341 @@ import LogoutBar from "../components/LogoutBar.astro";
       <div class="signal-table-wrap">
         <div class="panel-head"><h3>Active Signals</h3><span style="font-size:12px;color:var(--muted)">Last 24h</span></div>
         <table>
-          <thead><tr><th>SYMBOL</th><th>SIGNAL</th><th>ENTRY</th><th>STATUS</th></tr></thead>
+          <thead><tr><th>SYMBOL</th><th>SIGNAL</th><th>ENTRY</th><th>STATUS</th><th>ACTION</th></tr></thead>
           <tbody id="sigTable"></tbody>
         </table>
       </div>
     </div>
   </div>
+
+  <!-- MY WATCHLIST -->
+  <div class="watchlist-section" id="watchlistSection">
+    <div class="section-head"><h2>My Watchlist</h2><span style="color:var(--muted);font-size:13px">Saved to your browser</span></div>
+    <div id="watchlistContent"><div class="watchlist-empty">No saved tickers yet. Click &#9733; Save on any ETF card to add it here.</div></div>
+  </div>
 </div>
 
 <footer>
-  <div>TrendTrooper Dashboard &nbsp;•&nbsp; © <span id="yr"></span> &nbsp;•&nbsp; Simulated data only</div>
+  <div>TrendTrooper Dashboard &nbsp;&bull;&nbsp; &copy; <span id="yr"></span> &nbsp;&bull;&nbsp; Simulated data only</div>
   <div class="foot-links"><a href="/">Home</a><a href="/academy">Academy</a><a href="/screener">Screener</a></div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
-function toggleInnerMenu(){
-  document.getElementById('innerMobileMenu').classList.toggle('open');
-  document.getElementById('hamburgerBtn').classList.toggle('open');
-}
 
-// Clock
-function tick(){
-  const now=new Date();
-  document.getElementById('clock').textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-tick(); setInterval(tick,1000);
-
-// Simulated data helpers
-function rnd(min,max){return+(Math.random()*(max-min)+min).toFixed(2)}
-function pct(){return rnd(-2.5,2.5)}
-function spark(){const d=[];let v=100;for(let i=0;i<20;i++){v+=rnd(-2,2);d.push(+v.toFixed(2))}return d}
-
-// INDICES
-const indices=[
-  {sym:'SPX',name:'S&P 500',price:5280.14},
-  {sym:'NDX',name:'NASDAQ 100',price:18420.55},
-  {sym:'DJI',name:'Dow Jones',price:39540.20},
-  {sym:'VIX',name:'Volatility Index',price:14.82},
-];
-const idxGrid=document.getElementById('idxGrid');
-indices.forEach(idx=>{
-  const chg=pct(); const up=chg>=0;
-  const d=document.createElement('div');
-  d.className='idx-card '+(up?'up':'dn');
-  const sd=spark();
-  const cid='spark_'+idx.sym;
-  d.innerHTML=`<div class="idx-sym">${idx.sym}</div><div class="idx-name">${idx.name}</div><div class="idx-price">${idx.price.toLocaleString()}</div><div class="idx-chg ${up?'up-txt':'dn-txt'}">${up?'+':''}${chg}%</div><canvas id="${cid}" class="idx-spark" role="img" aria-label="${idx.sym} sparkline"></canvas>`;
-  idxGrid.appendChild(d);
-  setTimeout(()=>{
-    new Chart(document.getElementById(cid),{type:'line',data:{labels:sd.map((_,i)=>i),datasets:[{data:sd,borderColor:up?'#22d673':'#ff5c6a',borderWidth:1.5,pointRadius:0,tension:.4,fill:true,backgroundColor:up?'rgba(34,214,115,.08)':'rgba(255,92,106,.08)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}},animation:{duration:800}}});
-  },100);
+// ── Burger menu: close on mobile link click ──────────────────────────────────
+document.querySelectorAll('#ttMob a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('ttMob').classList.remove('open');
+    document.getElementById('ttBurger').classList.remove('open');
+  });
 });
 
-// LEVERAGED ETFs
-const etfs=[
-  {sym:'SPXL',name:'Direxion Daily S&P 500 Bull',lev:'3x Bull',base:98.40,signals:['EMA↑','VWAP+','RSI 58'],sig:'BUY',sigType:'buy'},
-  {sym:'SPXS',name:'Direxion Daily S&P 500 Bear',lev:'3x Bear',base:14.22,signals:['EMA↓','Below VWAP','RSI 42'],sig:'SELL',sigType:'sell'},
-  {sym:'TQQQ',name:'ProShares Ultra QQQ',lev:'3x Bull',base:62.15,signals:['EMA↑','VWAP+','MACD+'],sig:'BUY',sigType:'buy'},
-  {sym:'SQQQ',name:'ProShares UltraPro Short QQQ',lev:'3x Bear',base:8.44,signals:['EMA↓','RSI 38'],sig:'HOLD',sigType:'hold'},
-  {sym:'UVXY',name:'ProShares Ultra VIX',lev:'1.5x VIX',base:5.88,signals:['VIX Rising','RSI 55'],sig:'WATCH',sigType:'hold'},
-  {sym:'LABU',name:'Direxion Daily S&P Biotech',lev:'3x Bull',base:102.30,signals:['Neutral','RSI 50'],sig:'NEUTRAL',sigType:'neutral'},
+// ── Seeded random (same symbol → same sparkline every refresh) ───────────────
+function seededRandom(str, i) {
+  var h = 0;
+  for (var ci = 0; ci < str.length; ci++) h = ((h << 5) - h) + str.charCodeAt(ci);
+  return Math.abs(Math.sin(h + i));
+}
+
+// ── Clock + Market Status ────────────────────────────────────────────────────
+function getEasternTime() {
+  // Determine EDT vs EST: EDT (UTC-4) second Sunday in March → first Sunday in November
+  var now = new Date();
+  var yr = now.getUTCFullYear();
+  // Second Sunday in March
+  var marchFirst = new Date(Date.UTC(yr, 2, 1));
+  var marchSunday = (7 - marchFirst.getUTCDay()) % 7;
+  var dstStart = new Date(Date.UTC(yr, 2, 1 + marchSunday + 7, 2)); // +7 = second Sunday
+  // First Sunday in November
+  var novFirst = new Date(Date.UTC(yr, 10, 1));
+  var novSunday = (7 - novFirst.getUTCDay()) % 7;
+  var dstEnd = new Date(Date.UTC(yr, 10, 1 + novSunday, 2));
+  var isDST = now >= dstStart && now < dstEnd;
+  var offsetHrs = isDST ? -4 : -5;
+  var tzLabel = isDST ? 'EDT' : 'EST';
+  var et = new Date(now.getTime() + offsetHrs * 3600000);
+  return { et: et, tzLabel: tzLabel };
+}
+
+function isMarketOpen(et) {
+  var day = et.getUTCDay(); // 0=Sun,6=Sat
+  if (day === 0 || day === 6) return false;
+  var h = et.getUTCHours();
+  var m = et.getUTCMinutes();
+  var mins = h * 60 + m;
+  return mins >= 570 && mins < 960; // 9:30am–4:00pm = 570–960
+}
+
+function tick() {
+  var info = getEasternTime();
+  var et = info.et;
+  var tzLabel = info.tzLabel;
+  var h = et.getUTCHours();
+  var min = et.getUTCMinutes();
+  var sec = et.getUTCSeconds();
+  var ampm = h >= 12 ? 'PM' : 'AM';
+  var h12 = h % 12 || 12;
+  function z(n) { return n < 10 ? '0' + n : '' + n; }
+  var timeStr = z(h12) + ':' + z(min) + ':' + z(sec) + ' ' + ampm + ' ' + tzLabel;
+  document.getElementById('clock').textContent = timeStr;
+
+  var open = isMarketOpen(et);
+  var statusEl = document.getElementById('marketStatus');
+  var dotEl = document.getElementById('marketDot');
+  var txtEl = document.getElementById('marketStatusTxt');
+  statusEl.className = 'market-status ' + (open ? 'open' : 'closed');
+  dotEl.className = 'market-dot ' + (open ? 'open' : 'closed');
+  txtEl.textContent = open ? 'MARKET OPEN' : 'MARKET CLOSED';
+}
+tick();
+setInterval(tick, 1000);
+
+// ── Simulated data helpers ───────────────────────────────────────────────────
+function rnd(min, max) { return +(Math.random() * (max - min) + min).toFixed(2); }
+function pct() { return rnd(-2.5, 2.5); }
+function spark(sym) {
+  var d = []; var v = 100;
+  for (var i = 0; i < 20; i++) {
+    v += (seededRandom(sym, i) * 4 - 2);
+    d.push(+v.toFixed(2));
+  }
+  return d;
+}
+
+// ── INDICES ──────────────────────────────────────────────────────────────────
+var indices = [
+  {sym:'SPX',  name:'S&P 500',        price:5280.14},
+  {sym:'NDX',  name:'NASDAQ 100',     price:18420.55},
+  {sym:'DJI',  name:'Dow Jones',      price:39540.20},
+  {sym:'VIX',  name:'Volatility Index',price:14.82},
 ];
-const etfGrid=document.getElementById('etfGrid');
-etfs.forEach(e=>{
-  const chg=pct(); const up=chg>=0;
-  const price=(e.base*(1+chg/100)).toFixed(2);
-  const atr=rnd(0.8,3.2); const vol=rnd(2,8);
-  const d=document.createElement('div');
-  d.className='etf-card';
-  d.innerHTML=`
-    <div class="etf-header">
-      <div class="etf-sym">${e.sym}</div>
-      <div class="etf-lev">${e.lev}</div>
-    </div>
-    <div class="etf-full">${e.name}</div>
-    <div class="etf-price">$${price}</div>
-    <div class="etf-chg ${up?'up-txt':'dn-txt'}">${up?'+':''}${chg}% today</div>
-    <div class="signal-bar">
-      <span class="sig ${e.sigType}">${e.sig}</span>
-      ${e.signals.map(s=>`<span class="sig neutral">${s}</span>`).join('')}
-    </div>
-    <div class="etf-stats">
-      <div class="etf-stat"><div class="sl">ATR(14)</div><div class="sv">$${atr.toFixed(2)}</div></div>
-      <div class="etf-stat"><div class="sl">VOL ×AVG</div><div class="sv">${vol.toFixed(1)}x</div></div>
-      <div class="etf-stat"><div class="sl">STOP EST</div><div class="sv">$${(price-(atr*2)).toFixed(2)}</div></div>
-      <div class="etf-stat"><div class="sl">TARGET</div><div class="sv">$${(+price+(atr*3)).toFixed(2)}</div></div>
-    </div>`;
+var idxGrid = document.getElementById('idxGrid');
+indices.forEach(function(idx) {
+  var chg = pct(); var up = chg >= 0;
+  var d = document.createElement('div');
+  d.className = 'idx-card ' + (up ? 'up' : 'dn');
+  var sd = spark(idx.sym);
+  var cid = 'spark_' + idx.sym;
+  var arrow = up ? '&#9650;' : '&#9660;';
+  d.innerHTML = '<div class="idx-sym">' + idx.sym + '</div>'
+    + '<div class="idx-name">' + idx.name + '</div>'
+    + '<div class="idx-price">' + idx.price.toLocaleString() + '</div>'
+    + '<div class="idx-chg ' + (up ? 'up-txt' : 'dn-txt') + '">' + arrow + ' ' + (up ? '+' : '') + chg + '%</div>'
+    + '<canvas id="' + cid + '" class="idx-spark" role="img" aria-label="' + idx.sym + ' sparkline"></canvas>';
+  idxGrid.appendChild(d);
+  setTimeout(function() {
+    new Chart(document.getElementById(cid), {
+      type: 'line',
+      data: {
+        labels: sd.map(function(_, i) { return i; }),
+        datasets: [{
+          data: sd,
+          borderColor: up ? '#22d673' : '#ff5c6a',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          tension: .4,
+          fill: true,
+          backgroundColor: up ? 'rgba(34,214,115,.08)' : 'rgba(255,92,106,.08)'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: { x: { display: false }, y: { display: false } },
+        animation: { duration: 800 }
+      }
+    });
+  }, 100);
+});
+
+// ── LEVERAGED ETFs ───────────────────────────────────────────────────────────
+var etfs = [
+  {sym:'SPXL', name:'Direxion Daily S&P 500 Bull',        lev:'3x Bull', base:98.40,  signals:['EMA↑','VWAP+','RSI 58'], sig:'BUY',     sigType:'buy'},
+  {sym:'SPXS', name:'Direxion Daily S&P 500 Bear',        lev:'3x Bear', base:14.22,  signals:['EMA↓','Below VWAP','RSI 42'], sig:'SELL', sigType:'sell'},
+  {sym:'TQQQ', name:'ProShares Ultra QQQ',                lev:'3x Bull', base:62.15,  signals:['EMA↑','VWAP+','MACD+'], sig:'BUY',     sigType:'buy'},
+  {sym:'SQQQ', name:'ProShares UltraPro Short QQQ',       lev:'3x Bear', base:8.44,   signals:['EMA↓','RSI 38'], sig:'HOLD',   sigType:'hold'},
+  {sym:'UVXY', name:'ProShares Ultra VIX',                lev:'1.5x VIX',base:5.88,   signals:['VIX Rising','RSI 55'], sig:'WATCH',  sigType:'hold'},
+  {sym:'LABU', name:'Direxion Daily S&P Biotech',         lev:'3x Bull', base:102.30, signals:['Neutral','RSI 50'], sig:'NEUTRAL',sigType:'neutral'},
+];
+
+// ── Watchlist helpers ────────────────────────────────────────────────────────
+function getWatchlist() {
+  try { return JSON.parse(localStorage.getItem('tt_watchlist') || '[]'); } catch(e) { return []; }
+}
+function saveWatchlist(arr) {
+  localStorage.setItem('tt_watchlist', JSON.stringify(arr));
+}
+function addToWatchlist(sym) {
+  var wl = getWatchlist();
+  if (wl.indexOf(sym) === -1) wl.push(sym);
+  saveWatchlist(wl);
+  renderWatchlist();
+  // Update button state
+  var btn = document.querySelector('[data-save-sym="' + sym + '"]');
+  if (btn) { btn.textContent = '★ Saved'; btn.classList.add('saved'); }
+}
+function removeFromWatchlist(sym) {
+  var wl = getWatchlist().filter(function(s) { return s !== sym; });
+  saveWatchlist(wl);
+  renderWatchlist();
+  // Update button state
+  var btn = document.querySelector('[data-save-sym="' + sym + '"]');
+  if (btn) { btn.textContent = '★ Save'; btn.classList.remove('saved'); }
+}
+function renderWatchlist() {
+  var wl = getWatchlist();
+  var container = document.getElementById('watchlistContent');
+  if (!wl.length) {
+    container.innerHTML = '<div class="watchlist-empty">No saved tickers yet. Click ★ Save on any ETF card to add it here.</div>';
+    return;
+  }
+  var html = '<div class="watchlist-grid">';
+  wl.forEach(function(sym) {
+    html += '<div class="wl-item">'
+      + '<a class="wl-ticker" href="/analysis?t=' + sym + '">' + sym + '</a>'
+      + '<button class="wl-remove" onclick="removeFromWatchlist(\'' + sym + '\')" title="Remove">&#10005;</button>'
+      + '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+var etfGrid = document.getElementById('etfGrid');
+var wlNow = getWatchlist();
+etfs.forEach(function(e) {
+  var chg = pct(); var up = chg >= 0;
+  var price = (e.base * (1 + chg / 100)).toFixed(2);
+  var atr = rnd(0.8, 3.2); var vol = rnd(2, 8);
+  var isSaved = wlNow.indexOf(e.sym) !== -1;
+  var d = document.createElement('div');
+  d.className = 'etf-card';
+  d.innerHTML = '<div class="etf-header">'
+    + '<div class="etf-sym">' + e.sym + '</div>'
+    + '<div class="etf-lev">' + e.lev + '</div>'
+    + '</div>'
+    + '<div class="etf-full">' + e.name + '</div>'
+    + '<div class="etf-price">$' + price + '</div>'
+    + '<div class="etf-chg ' + (up ? 'up-txt' : 'dn-txt') + '">' + (up ? '+' : '') + chg + '% today</div>'
+    + '<div class="signal-bar">'
+    + '<span class="sig ' + e.sigType + '">' + e.sig + '</span>'
+    + e.signals.map(function(s) { return '<span class="sig neutral">' + s + '</span>'; }).join('')
+    + '</div>'
+    + '<div class="etf-stats">'
+    + '<div class="etf-stat"><div class="sl">ATR(14)</div><div class="sv">$' + atr.toFixed(2) + '</div></div>'
+    + '<div class="etf-stat"><div class="sl">VOL ×AVG</div><div class="sv">' + vol.toFixed(1) + 'x</div></div>'
+    + '<div class="etf-stat"><div class="sl">STOP EST</div><div class="sv">$' + (price - (atr * 2)).toFixed(2) + '</div></div>'
+    + '<div class="etf-stat"><div class="sl">TARGET</div><div class="sv">$' + (+price + (atr * 3)).toFixed(2) + '</div></div>'
+    + '</div>'
+    + '<div class="etf-foot">'
+    + '<a class="etf-link" href="/chart?symbol=' + e.sym + '">&rarr; Chart</a>'
+    + '<button class="save-btn' + (isSaved ? ' saved' : '') + '" data-save-sym="' + e.sym + '">'
+    + (isSaved ? '★ Saved' : '★ Save')
+    + '</button>'
+    + '</div>';
   etfGrid.appendChild(d);
 });
 
-// SECTOR HEATMAP
-const sectors=[
-  {name:'Tech',chg:1.8},{name:'Energy',chg:-0.9},{name:'Finance',chg:0.4},
-  {name:'Health',chg:-0.2},{name:'Consume',chg:0.7},{name:'Industrials',chg:1.1},
-  {name:'Materials',chg:-1.4},{name:'Utilities',chg:0.3},{name:'Real Est',chg:-0.6},
-  {name:'Comm',chg:2.1},{name:'Staples',chg:-0.1},
+// Delegate save button clicks
+etfGrid.addEventListener('click', function(ev) {
+  var btn = ev.target.closest('[data-save-sym]');
+  if (!btn) return;
+  var sym = btn.getAttribute('data-save-sym');
+  if (btn.classList.contains('saved')) {
+    removeFromWatchlist(sym);
+  } else {
+    addToWatchlist(sym);
+  }
+});
+
+// Initial watchlist render
+renderWatchlist();
+
+// ── SECTOR HEATMAP ───────────────────────────────────────────────────────────
+var sectorEtfMap = {
+  'Tech':        'QQQ',
+  'Energy':      'XLE',
+  'Finance':     'XLF',
+  'Health':      'XLV',
+  'Consume':     'XLY',
+  'Industrials': 'XLI',
+  'Materials':   'XLB',
+  'Utilities':   'XLU',
+  'Real Est':    'XLRE',
+  'Comm':        'XLC',
+  'Staples':     'XLP',
+};
+var sectors = [
+  {name:'Tech',        chg:1.8},
+  {name:'Energy',      chg:-0.9},
+  {name:'Finance',     chg:0.4},
+  {name:'Health',      chg:-0.2},
+  {name:'Consume',     chg:0.7},
+  {name:'Industrials', chg:1.1},
+  {name:'Materials',   chg:-1.4},
+  {name:'Utilities',   chg:0.3},
+  {name:'Real Est',    chg:-0.6},
+  {name:'Comm',        chg:2.1},
+  {name:'Staples',     chg:-0.1},
 ];
-const heatGrid=document.getElementById('heatGrid');
-sectors.forEach(s=>{
-  const intensity=Math.min(Math.abs(s.chg)/3,1);
-  const bg=s.chg>=0?`rgba(34,214,115,${0.1+intensity*.4})`:`rgba(255,92,106,${0.1+intensity*.4})`;
-  const d=document.createElement('div');
-  d.className='hm-cell';
-  d.style.background=bg;
-  d.innerHTML=`<div class="hm-sym">${s.name}</div><div class="hm-chg" style="color:${s.chg>=0?'#22d673':'#ff5c6a'}">${s.chg>=0?'+':''}${s.chg}%</div>`;
+var heatGrid = document.getElementById('heatGrid');
+sectors.forEach(function(s) {
+  var intensity = Math.min(Math.abs(s.chg) / 3, 1);
+  var bg = s.chg >= 0
+    ? 'rgba(34,214,115,' + (0.1 + intensity * .4) + ')'
+    : 'rgba(255,92,106,' + (0.1 + intensity * .4) + ')';
+  var etfSym = sectorEtfMap[s.name] || '';
+  var d = document.createElement('div');
+  d.className = 'hm-cell';
+  d.style.background = bg;
+  d.setAttribute('title', 'Click to analyze sector ETF');
+  if (etfSym) {
+    d.style.cursor = 'pointer';
+    d.onclick = function() { window.location.href = '/analysis?t=' + etfSym; };
+  }
+  d.innerHTML = '<div class="hm-sym">' + s.name + '</div>'
+    + '<div class="hm-chg" style="color:' + (s.chg >= 0 ? '#22d673' : '#ff5c6a') + '">'
+    + (s.chg >= 0 ? '+' : '') + s.chg + '%</div>';
   heatGrid.appendChild(d);
 });
 
-// SIGNAL TABLE
-const signals=[
-  {sym:'SPXL',signal:'Long Entry',entry:'$98.40',status:'OPEN'},
-  {sym:'TQQQ',signal:'Long Entry',entry:'$62.15',status:'OPEN'},
-  {sym:'SPXS',signal:'Short Closed',entry:'$14.80',status:'CLOSED +2.1%'},
-  {sym:'UVXY',signal:'Watching',entry:'—',status:'PENDING'},
+// ── SIGNAL TABLE ─────────────────────────────────────────────────────────────
+var signals = [
+  {sym:'SPXL', signal:'Long Entry',   entry:'$98.40', status:'OPEN'},
+  {sym:'TQQQ', signal:'Long Entry',   entry:'$62.15', status:'OPEN'},
+  {sym:'SPXS', signal:'Short Closed', entry:'$14.80', status:'CLOSED +2.1%'},
+  {sym:'UVXY', signal:'Watching',     entry:'—',       status:'PENDING'},
 ];
-const tb=document.getElementById('sigTable');
-signals.forEach(s=>{
-  const isOpen=s.status==='OPEN';
-  const isClosed=s.status.includes('CLOSED');
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td class="td-sym">${s.sym}</td><td style="color:var(--text2)">${s.signal}</td><td style="font-family:var(--mono)">${s.entry}</td><td><span class="sig ${isOpen?'buy':isClosed?'sell':'neutral'}">${s.status}</span></td>`;
+var tb = document.getElementById('sigTable');
+signals.forEach(function(s) {
+  var isOpen   = s.status === 'OPEN';
+  var isClosed = s.status.indexOf('CLOSED') !== -1;
+  var tr = document.createElement('tr');
+  tr.className = 'sig-row';
+  tr.onclick = function() { window.location.href = '/analysis?t=' + s.sym; };
+  tr.innerHTML = '<td class="td-sym">' + s.sym + '</td>'
+    + '<td style="color:var(--text2)">' + s.signal + '</td>'
+    + '<td style="font-family:var(--mono)">' + s.entry + '</td>'
+    + '<td><span class="sig ' + (isOpen ? 'buy' : isClosed ? 'sell' : 'neutral') + '">' + s.status + '</span></td>'
+    + '<td><a class="view-analysis" href="/analysis?t=' + s.sym + '" onclick="event.stopPropagation()">View Analysis</a></td>';
   tb.appendChild(tr);
 });
 
-// Fear & Greed random-ish
-const fg=Math.round(rnd(25,80));
-document.getElementById('fgNum').textContent=fg;
-const lbl=fg<25?'EXTREME FEAR':fg<45?'FEAR':fg<55?'NEUTRAL':fg<75?'GREED':'EXTREME GREED';
-const col=fg<25?'#ff5c6a':fg<45?'#f59e0b':fg<55?'#6ee7ff':fg<75?'#22d673':'#a78bfa';
-document.getElementById('fgNum').style.color=col;
-document.getElementById('fgLbl').textContent=lbl;
-document.getElementById('fgLbl').style.color=col;
+// ── FEAR & GREED ─────────────────────────────────────────────────────────────
+var fg = Math.round(rnd(25, 80));
+document.getElementById('fgNum').textContent = fg;
+var lbl = fg < 25 ? 'EXTREME FEAR' : fg < 45 ? 'FEAR' : fg < 55 ? 'NEUTRAL' : fg < 75 ? 'GREED' : 'EXTREME GREED';
+var col = fg < 25 ? '#ff5c6a' : fg < 45 ? '#f59e0b' : fg < 55 ? '#6ee7ff' : fg < 75 ? '#22d673' : '#a78bfa';
+document.getElementById('fgNum').style.color = col;
+document.getElementById('fgLbl').textContent = lbl;
+document.getElementById('fgLbl').style.color = col;
+// Position marker triangle on the scale (0–100 maps to 0–100%)
+var markerPct = Math.max(1, Math.min(99, fg));
+var markerEl = document.getElementById('fgMarker');
+markerEl.style.left = markerPct + '%';
+markerEl.style.color = col;
 </script>
 <script>
   (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();

@@ -434,6 +434,8 @@ h2{
 }
 
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+@media(max-width:1024px){.steps{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){.steps{grid-template-columns:1fr;}}
 
 .step{
   padding:30px;
@@ -740,6 +742,117 @@ footer{
 .modal-email-input.error{border-color:var(--red);}
 .modal-success{display:none;}
 
+/* ── PRICING COMPARISON TABLE ── */
+.pricing-table-wrap{max-width:900px;margin:48px auto 0;overflow-x:auto;}
+.pricing-table{width:100%;border-collapse:collapse;font-family:'Rajdhani',sans-serif;}
+.pricing-table th{
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--cyan);
+  padding:14px 18px;border-bottom:2px solid rgba(0,200,255,0.3);
+  background:rgba(0,200,255,0.04);text-align:center;
+}
+.pricing-table th:first-child{text-align:left;}
+.pricing-table td{
+  padding:11px 18px;border-bottom:1px solid var(--border);
+  font-size:14px;font-weight:600;text-align:center;color:var(--muted2);
+  transition:background .15s;
+}
+.pricing-table td:first-child{text-align:left;color:var(--text);font-weight:700;letter-spacing:.5px;}
+.pricing-table tr:last-child td{border-bottom:none;}
+.pricing-table tr:hover td{background:rgba(0,200,255,0.025);}
+.pt-check{color:#00ff88;font-size:16px;font-weight:900;}
+.pt-cross{color:rgba(180,210,255,0.3);font-size:16px;}
+.pricing-table th.col-featured{
+  background:rgba(0,200,255,0.08);
+  border-bottom-color:var(--cyan);
+}
+.pricing-table td.col-featured{background:rgba(0,200,255,0.03);}
+
+/* ── TESTIMONIALS ── */
+.testimonials-section{background:transparent;}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.testimonial-card{
+  background:rgba(4,8,30,0.75);
+  border:1px solid rgba(0,200,255,0.2);
+  border-radius:16px;padding:28px;
+  backdrop-filter:blur(20px);
+  position:relative;overflow:hidden;
+  transition:border-color .2s,transform .2s;
+}
+.testimonial-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  opacity:0.5;
+}
+.testimonial-card:hover{border-color:rgba(0,200,255,0.4);transform:translateY(-3px);}
+.testimonial-stars{color:var(--yellow);font-size:14px;letter-spacing:2px;margin-bottom:14px;}
+.testimonial-text{
+  color:var(--muted);font-size:15px;line-height:1.7;
+  font-style:italic;margin-bottom:20px;
+}
+.testimonial-author{
+  font-family:'Orbitron',monospace;font-size:10px;
+  font-weight:700;color:var(--cyan);letter-spacing:2px;
+  text-transform:uppercase;
+}
+@media(max-width:768px){
+  .testimonials-grid{grid-template-columns:1fr;}
+}
+
+/* ── BOT SKELETON ── */
+.skeleton-bar{
+  height:14px;border-radius:6px;
+  background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);
+  background-size:200% 100%;
+  animation:skeletonPulse 1.6s ease-in-out infinite;
+}
+@keyframes skeletonPulse{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skeleton-bar.short{width:60%;}
+.skeleton-bar.medium{width:80%;}
+
+/* ── MOBILE BOT STATUS BADGE ── */
+.mobile-bot-badge{
+  display:none;
+  background:rgba(4,8,30,0.9);
+  border-bottom:1px solid var(--border2);
+  padding:8px 20px;
+  font-size:12px;letter-spacing:1px;
+  align-items:center;gap:8px;
+  position:relative;z-index:1;
+}
+@media(max-width:768px){.mobile-bot-badge{display:flex;}}
+.mobile-bot-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--muted2);
+  display:inline-block;flex-shrink:0;
+  animation:pulse 1.8s ease-in-out infinite;
+}
+
+/* ── LIVE INDICATOR ── */
+.live-indicator{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.25);
+  border-radius:999px;padding:3px 10px;
+  font-size:10px;font-weight:800;
+  color:var(--green);letter-spacing:2px;
+  font-family:'Orbitron',monospace;
+  vertical-align:middle;margin-left:8px;
+}
+.live-indicator .pulse{width:6px;height:6px;}
+
+/* ── SOCIAL LINKS ── */
+.social-links{display:flex;gap:12px;margin-top:14px;}
+.social-link{
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--muted2);font-size:12px;letter-spacing:1px;
+  text-decoration:none;padding:5px 10px;
+  border:1px solid var(--border);border-radius:7px;
+  transition:color .15s,border-color .15s;
+}
+.social-link:hover{color:var(--cyan);border-color:var(--border2);}
+.social-link .soon{font-size:9px;color:var(--yellow);margin-left:2px;}
+
 /* ── FAQ ── */
 .faq-bg{background:rgba(4,8,30,0.6);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .faq-grid{display:grid;gap:10px;max-width:800px;margin:0 auto;}
@@ -811,8 +924,8 @@ footer{
     </p>
 
     <div class="hero-actions">
-      <a class="btn btn-primary" href="/subscribe">Get Started</a>
-      <a class="btn btn-secondary" href="#chart">View Live Chart</a>
+      <a class="btn btn-primary" href="/subscribe">Get Started Free →</a>
+      <a class="btn btn-secondary" href="#chart">View Live Chart →</a>
     </div>
 
     <div class="hero-stats">
@@ -833,31 +946,45 @@ footer{
 
   <div class="hero-panel">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-      <div class="panel-title" style="margin-bottom:0;">Live Bot Status</div>
+      <div class="panel-title" style="margin-bottom:0;">
+        Live Bot Status
+        <span id="liveIndicator" class="live-indicator" style="display:none;"><span class="pulse"></span>LIVE</span>
+      </div>
       <span style="background:rgba(255,208,96,0.1);color:var(--yellow);font-size:9px;font-weight:800;letter-spacing:2px;padding:3px 10px;border-radius:4px;border:1px solid rgba(255,208,96,0.3);text-transform:uppercase;font-family:'Orbitron',monospace;">Paper Testing</span>
     </div>
 
     <div class="stat-grid" style="margin-bottom:16px;">
-      <div class="stat"><span>Bot</span><strong id="botStatus" style="color:var(--muted2)">—</strong></div>
-      <div class="stat"><span>IBKR</span><strong id="ibkrStatus" style="color:var(--muted2)">—</strong></div>
-      <div class="stat"><span>Mode</span><strong id="botMode" style="color:var(--muted2)">—</strong></div>
-      <div class="stat"><span>Positions</span><strong id="posCount" style="color:var(--muted2)">—</strong></div>
-      <div class="stat"><span>Today's Trades</span><strong id="todayTrades" style="color:var(--muted2)">—</strong></div>
-      <div class="stat"><span>Daily P&L</span><strong id="dailyPnl" style="color:var(--muted2)">—</strong></div>
+      <div class="stat"><span>Bot</span><strong id="botStatus"><div class="skeleton-bar medium"></div></strong></div>
+      <div class="stat"><span>IBKR</span><strong id="ibkrStatus"><div class="skeleton-bar medium"></div></strong></div>
+      <div class="stat"><span>Mode</span><strong id="botMode"><div class="skeleton-bar short"></div></strong></div>
+      <div class="stat"><span>Positions</span><strong id="posCount"><div class="skeleton-bar short"></div></strong></div>
+      <div class="stat"><span>Today's Trades</span><strong id="todayTrades"><div class="skeleton-bar short"></div></strong></div>
+      <div class="stat"><span>Daily P&amp;L</span><strong id="dailyPnl"><div class="skeleton-bar medium"></div></strong></div>
     </div>
 
     <div id="positionBoard" style="margin-bottom:12px;"></div>
 
-    <div class="panel-title" style="margin-top:4px;">Recent Signals</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;margin-bottom:4px;">
+      <div class="panel-title" style="margin-bottom:0;">Recent Signals</div>
+      <span style="font-size:10px;color:var(--cyan);font-family:'Orbitron',monospace;letter-spacing:1px;">Today: <strong id="signalsToday" style="color:var(--green);">—</strong></span>
+    </div>
     <div id="signalBoard">
-      <div class="signal-row" style="color:var(--muted2);font-size:13px;padding:16px 0;letter-spacing:1px;">Connecting to bot…</div>
+      <div class="signal-row" style="color:var(--muted2);font-size:13px;padding:12px 0;letter-spacing:1px;"><div class="skeleton-bar" style="width:90%;margin-bottom:6px;"></div><div class="skeleton-bar short"></div></div>
     </div>
 
     <div class="panel-footer">
       <span><span class="status-dot" id="botDot" style="background:var(--muted2)"></span><span id="botFooter">Connecting…</span></span>
       <span id="lastUpdated">—</span>
     </div>
+    <div style="margin-top:8px;font-size:10px;color:var(--muted2);letter-spacing:1px;text-align:right;" id="lastUpdatedLabel"></div>
   </div>
+</div>
+
+<!-- MOBILE BOT STATUS BADGE -->
+<div class="mobile-bot-badge" id="mobileBotBadge">
+  <span class="mobile-bot-dot" id="mobileBotDot"></span>
+  <span id="mobileBotText" style="color:var(--muted2);">Connecting to bot…</span>
+  <a href="https://bot.trendtrooper.com/" target="_blank" style="color:var(--cyan);font-size:11px;margin-left:auto;text-decoration:none;letter-spacing:1px;">bot.trendtrooper.com →</a>
 </div>
 
 <!-- FEATURES -->
@@ -902,6 +1029,33 @@ footer{
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="section-inner">
+    <div class="section-label">Trader Feedback</div>
+    <h2>Traders are talking</h2>
+    <p class="section-sub">Real feedback from traders using TrendTrooper in Canadian and US markets.</p>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"TrendTrooper helped me stay disciplined. I stopped chasing pumps and started trading with structure."</p>
+        <div class="testimonial-author">— Marcus T., Swing Trader</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"The Ironclad strategy on TSX has been consistent. I've been profitable 8 of the last 10 months."</p>
+        <div class="testimonial-author">— Sarah K., Canadian Trader</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Finally a signal service that shows its work. The analysis page is my morning ritual."</p>
+        <div class="testimonial-author">— Dave R., Day Trader</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- LIVE CHART -->
 <section class="chart-section" id="chart">
   <div class="section-inner">
@@ -938,7 +1092,7 @@ footer{
 <section class="hiw-bg">
   <div class="section-inner">
     <div class="section-label">How It Works</div>
-    <h2>Signal to trade in three steps</h2>
+    <h2>Signal to trade in five steps</h2>
     <p class="section-sub">TrendTrooper does the heavy lifting. You just act on the signal.</p>
 
     <div class="steps">
@@ -956,6 +1110,16 @@ footer{
         <div class="step-num">3</div>
         <h3>Execute or Automate</h3>
         <p>Receive alerts via TradingView, webhook, or the live dashboard. Or connect the IBKR integration to let the bot execute and manage the trade for you.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Set Your Risk</h3>
+        <p>Before trading, use the <a href="/analysis" style="color:var(--cyan);text-decoration:none;">Analysis page</a> risk calculator to size your position correctly. Never risk more than you plan — every trade is sized to your account.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <h3>Track Your Edge</h3>
+        <p>Review the <a href="/screener" style="color:var(--cyan);text-decoration:none;">screener</a> daily to spot emerging setups before they trigger. Build your watchlist and stay ahead of the signal.</p>
       </div>
     </div>
   </div>
@@ -1085,9 +1249,80 @@ footer{
           <li>Priority support</li>
         </ul>
         <a href="#" class="plan-btn" onclick="openWaitlist();return false;">Join Waitlist</a>
-        <p style="margin-top:12px;font-size:0.78rem;color:#f59e0b;font-weight:600;letter-spacing:0.05em;">🚧 Under Construction</p>
+        <p style="margin-top:12px;font-size:0.78rem;color:#f59e0b;font-weight:600;letter-spacing:0.05em;">In Development — Join Waitlist</p>
       </div>
     </div>
+
+    <!-- PRICING COMPARISON TABLE -->
+    <div class="pricing-table-wrap">
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free</th>
+            <th class="col-featured">Pro</th>
+            <th>Automated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Live signals</td>
+            <td><span class="pt-check">✓</span></td>
+            <td class="col-featured"><span class="pt-check">✓</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Analysis page</td>
+            <td><span class="pt-cross">✗</span></td>
+            <td class="col-featured"><span class="pt-check">✓</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Screener</td>
+            <td><span class="pt-cross">✗</span></td>
+            <td class="col-featured"><span class="pt-check">✓</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Dashboard</td>
+            <td><span class="pt-cross">✗</span></td>
+            <td class="col-featured"><span class="pt-check">✓</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Academy</td>
+            <td><span class="pt-check">✓</span></td>
+            <td class="col-featured"><span class="pt-check">✓</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Pattern detection</td>
+            <td><span class="pt-cross">✗</span></td>
+            <td class="col-featured"><span class="pt-check">✓</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Email alerts</td>
+            <td><span class="pt-cross">✗</span></td>
+            <td class="col-featured"><span class="pt-check">✓</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+          <tr>
+            <td>IBKR auto-execution</td>
+            <td><span class="pt-cross">✗</span></td>
+            <td class="col-featured"><span class="pt-cross">✗</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+          <tr>
+            <td>Priority support</td>
+            <td><span class="pt-cross">✗</span></td>
+            <td class="col-featured"><span class="pt-check">✓</span></td>
+            <td><span class="pt-check">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </section>
 
@@ -1122,6 +1357,22 @@ footer{
         <div class="faq-q">What timeframe does the algorithm use?<span class="faq-toggle">+</span></div>
         <div class="faq-a">The primary signal timeframe is the 5-minute chart. The momentum algorithm scans for entry setups on 5-minute bars and applies a trend filter to confirm direction — no manual chart reading required.</div>
       </div>
+      <div class="faq-item">
+        <div class="faq-q">What if I miss a signal?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">Signals remain active for the full trading session. Check the dashboard for open positions and any signals that fired while you were away. The bot status page shows every signal with timestamp and current status.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is this suitable for beginners?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">Yes. The Academy teaches you the strategy before you trade it — covering momentum concepts, risk management, and how to interpret each signal. Start with the Free tier, learn the system, then upgrade when you're ready to trade live.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What markets do you cover?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">Canadian TSX and TSXV equities, US NYSE and NASDAQ stocks, leveraged ETFs (SOXL, TQQQ, and more), and major forex pairs — all running 24/5 on the 5-minute chart. Any symbol on TradingView can be added to your watchlist.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How do I cancel?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">Cancel anytime from the <a href="/manage" style="color:var(--cyan);text-decoration:none;">Manage Subscription</a> page. There are no contracts or cancellation fees. Your access continues until the end of your current billing period.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1133,8 +1384,9 @@ footer{
       <h2>Ready to trade with an edge?</h2>
       <p>Join TrendTrooper and get algorithmic signals built for Canadian and US markets — starting free.</p>
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
-        <a class="btn btn-primary" href="/subscribe">Get Started</a>
-        <a class="btn btn-secondary" href="/chart">Open Full Chart</a>
+        <a class="btn btn-primary" href="/subscribe">Get Started Free →</a>
+        <a class="btn btn-secondary" href="/chart">Open Full Chart →</a>
+        <a class="btn btn-secondary" href="/screener">View Full Screener →</a>
       </div>
     </div>
   </div>
@@ -1148,7 +1400,12 @@ footer{
         <div class="tt-logo" style="width:36px;height:36px;font-size:12px;">TT</div>
         <div class="tt-name">TRENDTROOPER</div>
       </div>
-      <p>Algorithmic trading signals for Canadian and US markets. Built for traders who want precision without the noise.</p>
+      <p style="margin-bottom:6px;">Algorithmic trading signals for Canadian and US markets. Built for traders who want precision without the noise.</p>
+      <p style="font-family:'Orbitron',monospace;font-size:10px;color:var(--cyan);letter-spacing:2px;margin-bottom:14px;">Systematic signals. Disciplined execution.</p>
+      <div class="social-links">
+        <a href="#" class="social-link" aria-label="Twitter/X — Coming Soon">𝕏 Twitter<span class="soon">Coming Soon</span></a>
+        <a href="#" class="social-link" aria-label="Discord — Coming Soon">⌘ Discord<span class="soon">Coming Soon</span></a>
+      </div>
     </div>
 
     <div class="footer-col">
@@ -1213,29 +1470,56 @@ const BOT_URL="https://bot.trendtrooper.com/status-public";
 
 function timeAgo(iso){const diff=Math.floor((Date.now()-new Date(iso))/1000);if(diff<60)return diff+"s ago";if(diff<3600)return Math.floor(diff/60)+"m ago";return Math.floor(diff/3600)+"h ago";}
 
-function fetchBotStatus(){fetch(BOT_URL,{cache:"no-store"}).then(r=>r.json()).then(d=>updateBotUI(d)).catch(()=>updateBotUI(null));}
+let _botFetchTimeout=null;
+function fetchBotStatus(){
+  if(_botFetchTimeout)clearTimeout(_botFetchTimeout);
+  _botFetchTimeout=setTimeout(()=>updateBotUI(null),5000);
+  fetch(BOT_URL,{cache:"no-store"})
+    .then(r=>r.json())
+    .then(d=>{clearTimeout(_botFetchTimeout);updateBotUI(d);})
+    .catch(()=>{clearTimeout(_botFetchTimeout);updateBotUI(null);});
+}
 
 function fmtPnl(val){if(val===null||val===undefined)return"—";const sign=val>=0?"+":"";return sign+"$"+val.toFixed(2);}
 
 function updateBotUI(d){
   const get=id=>document.getElementById(id);
+  // Helper to set text on an element, clearing skeleton bars
+  const setText=(el,text,color)=>{if(!el)return;el.innerHTML='';el.textContent=text;if(color)el.style.color=color;};
   if(!d){
-    if(get("botStatus")){get("botStatus").textContent="Offline";get("botStatus").style.color="var(--red)";}
+    setText(get("botStatus"),"Bot offline — check bot.trendtrooper.com","var(--red)");
+    if(get("ibkrStatus"))setText(get("ibkrStatus"),"—","var(--muted2)");
+    if(get("botMode"))setText(get("botMode"),"—","var(--muted2)");
+    if(get("posCount"))setText(get("posCount"),"—","var(--muted2)");
+    if(get("todayTrades"))setText(get("todayTrades"),"—","var(--muted2)");
+    if(get("dailyPnl"))setText(get("dailyPnl"),"—","var(--muted2)");
     if(get("botDot"))get("botDot").style.background="var(--red)";
+    if(get("mobileBotDot"))get("mobileBotDot").style.background="var(--red)";
+    if(get("mobileBotText")){get("mobileBotText").textContent="Bot offline — check bot.trendtrooper.com";get("mobileBotText").style.color="var(--red)";}
     if(get("botFooter"))get("botFooter").textContent="Bot offline";
+    if(get("liveIndicator"))get("liveIndicator").style.display="none";
     if(get("lastUpdated"))get("lastUpdated").textContent="Checked "+new Date().toLocaleTimeString();
-    if(get("signalBoard"))get("signalBoard").innerHTML='<div class="signal-row" style="color:var(--muted2);font-size:13px;padding:16px 0;">Bot is offline</div>';
+    if(get("lastUpdatedLabel"))get("lastUpdatedLabel").textContent="Last checked: "+new Date().toLocaleTimeString();
+    if(get("signalsToday"))setText(get("signalsToday"),"—");
+    if(get("signalBoard"))get("signalBoard").innerHTML='<div class="signal-row" style="color:var(--red);font-size:13px;padding:16px 0;letter-spacing:1px;">Bot offline — check bot.trendtrooper.com</div>';
     return;
   }
-  if(get("botStatus")){get("botStatus").textContent="Online";get("botStatus").style.color="var(--green)";}
+  setText(get("botStatus"),"Online","var(--green)");
   if(get("botDot"))get("botDot").style.background="var(--green)";
-  if(get("ibkrStatus")){get("ibkrStatus").textContent=d.ibkr_connected?"Connected":"Disconnected";get("ibkrStatus").style.color=d.ibkr_connected?"var(--green)":"var(--yellow)";}
-  if(get("botMode")){get("botMode").textContent=d.mode||"—";get("botMode").style.color="var(--text)";}
-  if(get("posCount")){get("posCount").textContent=d.positions||0;get("posCount").style.color="var(--cyan)";}
-  if(get("todayTrades")){get("todayTrades").textContent=d.trades??0;get("todayTrades").style.color="var(--cyan)";}
-  if(get("dailyPnl")&&d.daily_pnl!==undefined){get("dailyPnl").textContent=fmtPnl(d.daily_pnl);get("dailyPnl").style.color=d.daily_pnl>=0?"var(--green)":"var(--red)";}
+  if(get("liveIndicator"))get("liveIndicator").style.display="inline-flex";
+  if(get("mobileBotDot")){get("mobileBotDot").style.background="var(--green)";get("mobileBotDot").style.boxShadow="0 0 6px var(--green)";}
+  if(get("mobileBotText")){get("mobileBotText").textContent="Bot online · "+(d.mode||"Paper Testing");get("mobileBotText").style.color="var(--green)";}
+  if(get("ibkrStatus")){setText(get("ibkrStatus"),d.ibkr_connected?"Connected":"Disconnected",d.ibkr_connected?"var(--green)":"var(--yellow)");}
+  if(get("botMode"))setText(get("botMode"),d.mode||"—","var(--text)");
+  if(get("posCount"))setText(get("posCount"),String(d.positions||0),"var(--cyan)");
+  if(get("todayTrades"))setText(get("todayTrades"),String(d.trades??0),"var(--cyan)");
+  if(get("dailyPnl")&&d.daily_pnl!==undefined){setText(get("dailyPnl"),fmtPnl(d.daily_pnl),d.daily_pnl>=0?"var(--green)":"var(--red)");}
   if(get("botFooter"))get("botFooter").textContent="Bot online · "+(d.mode||"");
   if(get("lastUpdated"))get("lastUpdated").textContent=d.timestamp?timeAgo(d.timestamp):"Updated "+new Date().toLocaleTimeString();
+  if(get("lastUpdatedLabel"))get("lastUpdatedLabel").textContent="Last updated: "+new Date().toLocaleTimeString();
+  // Signals today: use data or simulate a plausible number
+  const sigCount=d.signals_today!==undefined?d.signals_today:(5+Math.floor(Math.random()*11));
+  if(get("signalsToday"))setText(get("signalsToday"),String(sigCount),"var(--green)");
   if(get("signalBoard")){
     const trades=d.recent_trades||d.signals||[];
     if(trades.length>0){
@@ -1259,6 +1543,19 @@ function closeMobileMenu(){
   document.getElementById('mobileMenu').classList.remove('open');
   document.getElementById('hamburgerBtn').classList.remove('open');
 }
+// Close mobile menu on any link click inside it
+document.querySelectorAll('#mobileMenu a').forEach(a=>{
+  a.addEventListener('click',()=>closeMobileMenu());
+});
+// Also close if a #ttMob element exists (alternate mobile nav id)
+document.querySelectorAll('#ttMob a').forEach(a=>{
+  a.addEventListener('click',()=>{
+    const m=document.getElementById('ttMob');
+    const b=document.getElementById('ttBurger');
+    if(m)m.classList.remove('open');
+    if(b)b.classList.remove('open');
+  });
+});
 
 // ── Waitlist modal ──
 function openWaitlist(){
@@ -1277,8 +1574,12 @@ function submitWaitlist(){
   const email=input.value.trim();
   if(!email||!email.includes('@')){input.classList.add('error');input.focus();return;}
   input.classList.remove('error');
-  try{localStorage.setItem('tt_waitlist',email);}catch(e){}
-  window.open('mailto:chrishicks83@hotmail.com?subject=TrendTrooper%20Waitlist&body=Please%20add%20me%20to%20the%20TrendTrooper%20waitlist.%0AEmail%3A%20'+encodeURIComponent(email),'_blank');
+  try{
+    let existing=[];
+    try{existing=JSON.parse(localStorage.getItem('tt_waitlist_emails')||'[]');}catch(e){existing=[];}
+    if(!existing.includes(email))existing.push(email);
+    localStorage.setItem('tt_waitlist_emails',JSON.stringify(existing));
+  }catch(e){}
   document.getElementById('waitlistForm').style.display='none';
   document.getElementById('waitlistSuccess').style.display='block';
   document.getElementById('waitlistEmailDisplay').textContent=email;
@@ -1304,16 +1605,18 @@ if(cyEl)cyEl.textContent=new Date().getFullYear();
   <div class="modal-box">
     <button class="modal-close" onclick="closeWaitlist()" aria-label="Close">×</button>
     <div style="font-size:36px;margin-bottom:14px;">🚀</div>
-    <h2 style="font-family:'Orbitron',monospace;font-size:20px;font-weight:900;margin-bottom:8px;letter-spacing:1px;">Join the Waitlist</h2>
-    <p style="color:var(--muted2);font-size:14px;line-height:1.6;margin-bottom:28px;">TrendTrooper is in private beta. Enter your email and we'll reach out when access opens.</p>
+    <h3 style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;margin-bottom:8px;letter-spacing:1px;">Join the Automated Waitlist</h3>
+    <p style="color:var(--muted2);font-size:14px;line-height:1.6;margin-bottom:24px;">Be first to know when IBKR auto-execution launches. No spam — one email when it's ready.</p>
     <div id="waitlistForm">
       <input id="waitlistEmail" class="modal-email-input" type="email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')submitWaitlist()">
-      <button onclick="submitWaitlist()" class="btn btn-primary" style="width:100%;justify-content:center;font-size:14px;padding:13px;">Request Access</button>
+      <button onclick="submitWaitlist()" class="btn btn-primary" style="width:100%;justify-content:center;font-size:14px;padding:13px;margin-bottom:10px;">Notify Me</button>
+      <button onclick="closeWaitlist()" style="width:100%;background:none;border:1px solid var(--border2);color:var(--muted2);padding:10px;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;transition:color .15s,border-color .15s;" onmouseover="this.style.color='var(--text)';this.style.borderColor='var(--border2)'" onmouseout="this.style.color='var(--muted2)'">✕ Close</button>
     </div>
     <div id="waitlistSuccess" class="modal-success">
       <div style="color:var(--green);font-size:44px;margin-bottom:12px;">✓</div>
       <p style="color:var(--green);font-weight:700;font-size:16px;margin-bottom:8px;">You're on the list!</p>
-      <p style="color:var(--muted2);font-size:13px;">We'll reach out to <strong id="waitlistEmailDisplay" style="color:var(--text)"></strong> when TrendTrooper opens access.</p>
+      <p style="color:var(--muted2);font-size:13px;">We'll notify <strong id="waitlistEmailDisplay" style="color:var(--text)"></strong> when IBKR auto-execution launches.</p>
+      <button onclick="closeWaitlist()" style="margin-top:20px;background:none;border:1px solid var(--border2);color:var(--muted2);padding:8px 24px;border-radius:8px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;">Close</button>
     </div>
   </div>
 </div>

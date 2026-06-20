@@ -2,7 +2,6 @@
 import LogoutBar from "../components/LogoutBar.astro";
 // TrendTrooper Academy — Cyberpunk Edition
 ---
-import LogoutBar from "../components/LogoutBar.astro";
 <!doctype html>
 <html lang="en">
 <head>
@@ -375,6 +374,135 @@ import LogoutBar from "../components/LogoutBar.astro";
     .fi{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
     .fi.vis{opacity:1;transform:none;}
 
+    /* ── PROGRESS BAR ── */
+    .mod-progress-wrap{margin-bottom:28px;}
+    .mod-progress-label{font-family:var(--mono);font-size:0.65rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+    .mod-progress-bar-bg{height:6px;background:rgba(0,200,255,0.08);border:1px solid var(--border);position:relative;}
+    .mod-progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .5s ease;width:0%;}
+
+    /* ── MARK COMPLETE BUTTON ── */
+    .mark-complete-btn{
+      margin-top:12px;font-family:var(--mono);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;
+      padding:6px 12px;background:transparent;border:1px solid rgba(0,200,255,0.25);
+      color:var(--muted);cursor:pointer;transition:.2s;width:100%;
+    }
+    .mark-complete-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+    .mark-complete-btn.done{border-color:var(--green)!important;color:var(--green)!important;background:rgba(0,255,136,0.06)!important;}
+
+    /* ── LOCK OVERLAY ── */
+    .mod-lock-overlay{
+      position:absolute;inset:0;background:rgba(2,5,20,0.72);
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+      letter-spacing:1px;text-align:center;padding:12px;
+      pointer-events:none;opacity:0;transition:opacity .2s;
+    }
+    .mod.locked{opacity:0.55;}
+    .mod.locked .mod-lock-overlay{opacity:1;}
+
+    /* ── START HERE BUTTON ── */
+    .start-here-btn{
+      display:inline-block;margin-top:14px;font-family:var(--head);font-size:0.65rem;
+      font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      padding:9px 18px;background:linear-gradient(135deg,var(--green),rgba(0,200,255,0.8));
+      color:#000;border:none;cursor:pointer;transition:.2s;
+      clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+    }
+    .start-here-btn:hover{filter:brightness(1.15);box-shadow:0 0 20px rgba(0,255,136,0.4);}
+
+    /* ── RANK LOCKED BADGE ── */
+    .rank-locked-badge{
+      display:inline-block;margin-top:10px;font-family:var(--mono);font-size:0.55rem;
+      letter-spacing:2px;text-transform:uppercase;padding:4px 10px;
+      background:rgba(255,64,96,0.08);color:var(--red);border:1px solid rgba(255,64,96,0.25);
+    }
+
+    /* ── COPY BUTTON ── */
+    .copy-btn{
+      font-family:var(--mono);font-size:0.55rem;letter-spacing:1px;
+      padding:2px 8px;background:rgba(255,208,96,0.06);border:1px solid rgba(255,208,96,0.2);
+      color:var(--yellow);cursor:pointer;transition:.2s;margin-left:8px;white-space:nowrap;
+    }
+    .copy-btn:hover{background:rgba(255,208,96,0.12);border-color:var(--yellow);}
+    .copy-btn.copied{color:var(--green);border-color:var(--green);background:rgba(0,255,136,0.06);}
+    .ind-set-row{display:flex;align-items:center;flex-wrap:wrap;gap:4px;}
+
+    /* ── GLOSSARY SEARCH ── */
+    .glos-search-wrap{margin-bottom:20px;}
+    #glossSearch{
+      width:100%;max-width:420px;background:rgba(0,200,255,0.04);border:1px solid var(--border);
+      color:var(--text);font-family:var(--mono);font-size:0.8rem;
+      padding:10px 16px;outline:none;transition:.2s;
+    }
+    #glossSearch:focus{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,200,255,0.1);}
+    #glossSearch::placeholder{color:var(--muted);}
+    .glos.hidden{display:none;}
+
+    /* ── VIDEO PLACEHOLDER ── */
+    .video-placeholder{
+      background:rgba(0,0,0,0.5);border:1px dashed rgba(0,200,255,0.25);
+      padding:28px 16px;text-align:center;margin-top:14px;
+      font-family:var(--mono);font-size:0.72rem;color:var(--muted);letter-spacing:1px;
+    }
+
+    /* ── CERTIFICATE ── */
+    .cert-section{padding:64px 0;position:relative;z-index:2;}
+    .cert-card{
+      max-width:680px;margin:0 auto;
+      background:var(--card);border:1px solid rgba(255,208,96,0.2);
+      padding:40px;text-align:center;position:relative;overflow:hidden;
+    }
+    .cert-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--yellow),var(--magenta),var(--purple));}
+    .cert-locked-icon{font-size:3rem;margin-bottom:16px;display:block;filter:grayscale(0.5);}
+    .cert-title{font-family:var(--head);font-size:1.3rem;font-weight:900;color:var(--yellow);text-shadow:0 0 20px rgba(255,208,96,0.3);margin-bottom:10px;}
+    .cert-desc{font-size:0.88rem;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+    .cert-unlocked{display:none;}
+    .cert-card.unlocked .cert-locked{display:none;}
+    .cert-card.unlocked .cert-unlocked{display:block;}
+    .cert-dl-btn{
+      font-family:var(--head);font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      padding:12px 28px;background:linear-gradient(135deg,var(--yellow),var(--magenta));
+      color:#000;border:none;cursor:pointer;transition:.2s;
+      clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+    }
+    .cert-dl-btn:hover{filter:brightness(1.1);box-shadow:0 0 30px rgba(255,208,96,0.4);}
+    .cert-progress-wrap{margin:16px 0;}
+    .cert-prog-text{font-family:var(--mono);font-size:0.62rem;color:var(--muted);letter-spacing:2px;margin-bottom:8px;}
+    .cert-prog-bar-bg{height:4px;background:rgba(255,208,96,0.1);border:1px solid rgba(255,208,96,0.15);}
+    .cert-prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--yellow),var(--magenta));transition:width .5s ease;width:0%;}
+
+    /* ── CERT MODAL ── */
+    .cert-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center;}
+    .cert-modal-bg.open{display:flex;}
+    .cert-modal{
+      background:var(--panel);border:2px solid var(--yellow);
+      padding:48px;max-width:600px;width:90%;text-align:center;position:relative;
+      box-shadow:0 0 60px rgba(255,208,96,0.2);
+    }
+    .cert-modal-close{position:absolute;top:12px;right:16px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:2px;}
+    .cert-modal-close:hover{color:var(--cyan);}
+    .cert-modal h2{font-family:var(--head);font-size:1.6rem;font-weight:900;color:var(--yellow);text-shadow:0 0 30px rgba(255,208,96,0.4);margin-bottom:8px;}
+    .cert-modal-sub{font-family:var(--mono);font-size:0.65rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:24px;}
+    .cert-modal-name{font-family:var(--head);font-size:1.1rem;color:var(--cyan);margin-bottom:20px;}
+    .cert-modal-desc{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:28px;}
+    .cert-modal-seal{font-size:3rem;margin-bottom:16px;}
+    .cert-print-btn{
+      font-family:var(--head);font-size:0.65rem;font-weight:700;letter-spacing:2px;
+      padding:10px 24px;background:linear-gradient(135deg,var(--yellow),var(--magenta));
+      color:#000;border:none;cursor:pointer;
+    }
+
+    /* ── PROGRESS RING ── */
+    .hero-ring-wrap{display:flex;justify-content:center;margin-bottom:24px;}
+    .progress-ring-svg{transform:rotate(-90deg);}
+    .progress-ring-bg{fill:none;stroke:rgba(0,200,255,0.1);stroke-width:4;}
+    .progress-ring-fill{fill:none;stroke:url(#ringGrad);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+    .ring-label{font-family:var(--head);font-size:0.65rem;font-weight:700;fill:var(--cyan);text-anchor:middle;dominant-baseline:middle;}
+    .ring-sublabel{font-family:var(--mono);font-size:0.38rem;fill:var(--muted);text-anchor:middle;dominant-baseline:middle;letter-spacing:1px;}
+
+    /* ── QUIZ SCORE ── */
+    .quiz-score-bar{font-family:var(--mono);font-size:0.65rem;color:var(--muted);letter-spacing:2px;text-align:right;margin-bottom:8px;}
+
     /* ── RESPONSIVE ── */
     @media(max-width:900px){
       .path-grid,.mods-grid,.ind-grid,.pat-grid,.res-grid,.glos-grid{grid-template-columns:1fr;}
@@ -449,6 +577,21 @@ import LogoutBar from "../components/LogoutBar.astro";
     <div class="stat"><span class="stat-num" data-target="50">0</span><span class="stat-lbl">Free Resources</span></div>
     <div class="stat"><span class="stat-num" style="font-size:2rem">∞</span><span class="stat-lbl">Free Forever</span></div>
   </div>
+  <div class="hero-ring-wrap">
+    <svg class="progress-ring-svg" width="90" height="90" viewBox="0 0 90 90">
+      <defs>
+        <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:var(--cyan)"/>
+          <stop offset="100%" style="stop-color:var(--purple)"/>
+        </linearGradient>
+      </defs>
+      <circle class="progress-ring-bg" cx="45" cy="45" r="38"/>
+      <circle class="progress-ring-fill" id="heroRingFill" cx="45" cy="45" r="38"
+        stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
+      <text class="ring-label" id="heroRingPct" x="45" y="41" transform="rotate(90,45,45)">0%</text>
+      <text class="ring-sublabel" x="45" y="52" transform="rotate(90,45,45)">COMPLETE</text>
+    </svg>
+  </div>
   <div class="hero-btns">
     <a href="#path" class="btn btn-primary">Begin Training</a>
     <a href="#resources" class="btn btn-outline">View Resources</a>
@@ -475,9 +618,10 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>How markets work</li><li>Reading candlestick charts</li><li>Support &amp; resistance basics</li>
           <li>Risk management fundamentals</li><li>Order types &amp; execution</li><li>Paper trading practice</li>
         </ul>
+        <button class="start-here-btn" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})">→ Start Here</button>
       </div>
 
-      <div class="path-card r2 fi">
+      <div class="path-card r2 fi" id="rankCard2">
         <div class="rank-tag">Rank 02</div>
         <div class="rank-name">OPERATOR</div>
         <div class="rank-time">// Intermediate · 6–18 months</div>
@@ -485,9 +629,10 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>Technical indicators &amp; setups</li><li>Trend analysis &amp; structure</li><li>Position sizing &amp; drawdown</li>
           <li>Strategy development &amp; testing</li><li>Trading journal discipline</li><li>Multi-timeframe analysis</li>
         </ul>
+        <span class="rank-locked-badge" id="rankLock2" style="display:none">🔒 Complete Rank 01 first</span>
       </div>
 
-      <div class="path-card r3 fi">
+      <div class="path-card r3 fi" id="rankCard3">
         <div class="rank-tag">Rank 03</div>
         <div class="rank-name">GHOST</div>
         <div class="rank-time">// Advanced · 18 months–3 years</div>
@@ -495,9 +640,10 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>Options &amp; derivatives</li><li>Order flow &amp; volume analysis</li><li>Backtesting &amp; system design</li>
           <li>Algorithmic signal systems</li><li>Psychology &amp; discipline mastery</li><li>Portfolio management</li>
         </ul>
+        <span class="rank-locked-badge" id="rankLock3" style="display:none">🔒 Complete Rank 02 first</span>
       </div>
 
-      <div class="path-card r4 fi">
+      <div class="path-card r4 fi" id="rankCard4">
         <div class="rank-tag">Rank 04</div>
         <div class="rank-name">LEGEND</div>
         <div class="rank-time">// Elite · 3+ years</div>
@@ -505,6 +651,7 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>Full automation &amp; quant methods</li><li>Institutional order flow</li><li>Fund-level risk models</li>
           <li>Macro &amp; cross-asset trading</li><li>System optimization &amp; AI</li><li>Teaching &amp; mentoring others</li>
         </ul>
+        <span class="rank-locked-badge" id="rankLock4" style="display:none">🔒 Complete Rank 03 first</span>
       </div>
 
     </div>
@@ -530,9 +677,15 @@ import LogoutBar from "../components/LogoutBar.astro";
       </div>
     </div>
 
+    <div class="mod-progress-wrap fi">
+      <div class="mod-progress-label" id="modProgressLabel">0 of 7 modules completed</div>
+      <div class="mod-progress-bar-bg"><div class="mod-progress-bar-fill" id="modProgressFill"></div></div>
+    </div>
+
     <div class="mods-grid">
 
-      <div class="mod beg fi">
+      <div class="mod beg fi" id="mod-1">
+        <div class="mod-lock-overlay">🔒 Complete earlier modules first</div>
         <div class="mod-top">
           <div class="mod-n">01</div>
           <div><span class="mod-badge">Beginner</span><h3>Market Structure Basics</h3></div>
@@ -542,10 +695,16 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>How price discovers value (auction theory)</li><li>Bulls vs bears: order flow dynamics</li>
           <li>Support, resistance &amp; key levels</li><li>Trend structure: HH, HL, LH, LL</li>
           <li>Liquidity zones &amp; stop hunts</li><li>Market sessions &amp; volatility windows</li>
+          <li>Bid/ask spread: the hidden cost of every trade</li>
+          <li>Market orders vs limit orders — when to use each</li>
+          <li>After-hours trading: lower liquidity, wider spreads, higher risk</li>
         </ul>
+        <div class="video-placeholder">🎬 Video lesson coming soon</div>
+        <button class="mark-complete-btn" data-mod="1" onclick="toggleComplete(1)">Mark Complete ✓</button>
       </div>
 
-      <div class="mod beg fi">
+      <div class="mod beg fi" id="mod-2">
+        <div class="mod-lock-overlay">🔒 Complete earlier modules first</div>
         <div class="mod-top">
           <div class="mod-n">02</div>
           <div><span class="mod-badge">Beginner</span><h3>Technical Analysis</h3></div>
@@ -555,10 +714,16 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>Candlestick anatomy &amp; reading</li><li>Key reversal candles: doji, hammer, engulfing</li>
           <li>Chart types: line, bar, candle, Heikin-Ashi</li><li>Trendlines, channels &amp; wedges</li>
           <li>Volume analysis &amp; confirmation</li><li>Breakouts vs fakeouts</li>
+          <li>Timeframe selection: 1D for swing trades, 1H for day trading</li>
+          <li>Volume spikes signal conviction — no volume = suspect move</li>
+          <li>Multi-timeframe alignment: higher TF sets bias, lower TF finds entry</li>
         </ul>
+        <div class="video-placeholder">🎬 Video lesson coming soon</div>
+        <button class="mark-complete-btn" data-mod="2" onclick="toggleComplete(2)">Mark Complete ✓</button>
       </div>
 
-      <div class="mod int fi">
+      <div class="mod int fi" id="mod-3">
+        <div class="mod-lock-overlay">🔒 Complete earlier modules first</div>
         <div class="mod-top">
           <div class="mod-n">03</div>
           <div><span class="mod-badge">Intermediate</span><h3>Risk &amp; Money Management</h3></div>
@@ -568,10 +733,15 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>The 1–2% rule &amp; why it works</li><li>Position sizing formulas</li>
           <li>Stop-loss placement logic</li><li>Reward-to-risk ratios (&gt;1:2)</li>
           <li>Drawdown recovery math</li><li>Expectancy &amp; win-rate balance</li>
+          <li>Kelly Criterion: mathematical optimal bet sizing for long-run growth</li>
+          <li>Max drawdown limit: define your hard stop (e.g., 20% account drawdown = stand down)</li>
+          <li>Daily loss limit: set a kill switch — stop trading after losing X% in one day</li>
         </ul>
+        <button class="mark-complete-btn" data-mod="3" onclick="toggleComplete(3)">Mark Complete ✓</button>
       </div>
 
-      <div class="mod int fi">
+      <div class="mod int fi" id="mod-4">
+        <div class="mod-lock-overlay">🔒 Complete earlier modules first</div>
         <div class="mod-top">
           <div class="mod-n">04</div>
           <div><span class="mod-badge">Intermediate</span><h3>Strategy Development</h3></div>
@@ -581,10 +751,16 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>Defining a trading setup precisely</li><li>Entry triggers &amp; confirmation</li>
           <li>Backtesting methodology</li><li>TradingView strategy testing</li>
           <li>Building a rules-based system</li><li>Optimizing without overfitting</li>
+          <li>Trade journaling: your data beats anyone else's advice</li>
+          <li>Backtesting minimum: 100+ trades across multiple market conditions</li>
+          <li>Forward testing in paper: validate before risking live capital</li>
         </ul>
+        <div class="video-placeholder">🎬 Video lesson coming soon</div>
+        <button class="mark-complete-btn" data-mod="4" onclick="toggleComplete(4)">Mark Complete ✓</button>
       </div>
 
-      <div class="mod int fi">
+      <div class="mod int fi" id="mod-5">
+        <div class="mod-lock-overlay">🔒 Complete earlier modules first</div>
         <div class="mod-top">
           <div class="mod-n">05</div>
           <div><span class="mod-badge">Intermediate</span><h3>Trader Psychology</h3></div>
@@ -594,10 +770,15 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>Thinking in probabilities (Mark Douglas)</li><li>The psychology of losses</li>
           <li>Revenge trading &amp; overtrading</li><li>Process over outcome focus</li>
           <li>Pre-market routine &amp; mental state</li><li>Journaling for self-improvement</li>
+          <li>Indicator confluence: 2–3 signals agreeing beats any single signal alone</li>
+          <li>Avoiding indicator overload: more indicators = more noise, not more edge</li>
+          <li>The one-page trading plan: rules so clear a stranger could trade your system</li>
         </ul>
+        <button class="mark-complete-btn" data-mod="5" onclick="toggleComplete(5)">Mark Complete ✓</button>
       </div>
 
-      <div class="mod adv fi">
+      <div class="mod adv fi" id="mod-6">
+        <div class="mod-lock-overlay">🔒 Complete earlier modules first</div>
         <div class="mod-top">
           <div class="mod-n">06</div>
           <div><span class="mod-badge">Advanced</span><h3>Automation &amp; Signals</h3></div>
@@ -607,23 +788,32 @@ import LogoutBar from "../components/LogoutBar.astro";
           <li>TradingView Pine Script basics</li><li>Setting up alert webhooks</li>
           <li>Connecting to broker APIs</li><li>Building automated alert systems</li>
           <li>3Commas, Alertatron &amp; similar tools</li><li>System monitoring &amp; failsafes</li>
+          <li>Pattern failure modes: breakout traps, measured-move misses, whipsaws</li>
+          <li>Volume confirmation: a pattern without volume is a hypothesis, not a signal</li>
+          <li>False breakout defense: wait for candle close above level before entering</li>
         </ul>
+        <button class="mark-complete-btn" data-mod="6" onclick="toggleComplete(6)">Mark Complete ✓</button>
       </div>
 
-      <div class="mod beg mod-wide fi">
+      <div class="mod adv mod-wide fi" id="mod-7">
+        <div class="mod-lock-overlay">🔒 Complete earlier modules first</div>
         <div class="mod-top">
           <div class="mod-n">07</div>
           <div>
-            <span class="mod-badge" style="background:rgba(0,200,255,0.08);color:var(--cyan);border:1px solid rgba(0,200,255,0.25)">All Levels</span>
-            <h3>Tips from Systematic Traders</h3>
+            <span class="mod-badge" style="background:rgba(255,0,128,0.08);color:var(--magenta);border:1px solid rgba(255,0,128,0.25)">Advanced</span>
+            <h3>Advanced Market Intelligence</h3>
           </div>
         </div>
-        <p>Lessons from real systematic traders — distilled from decades of losses, wins, and hard-won clarity. No fluff, no social media hype. Trade the system, not the emotion.</p>
+        <p>Institutional-grade signals most retail traders never see. Options flow, dark pools, and level 2 data give you a window into where smart money is positioned — before it shows on the chart.</p>
         <ul class="mod-topics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0 2rem">
           <li>Trade the system, not the emotion</li><li>Why simple beats complex</li>
           <li>The importance of consistency</li><li>When to break rules (and when not to)</li>
           <li>Lessons from Market Wizards</li><li>Building a sustainable edge</li>
+          <li>Options flow: unusual call/put sweeps signal institutional positioning</li>
+          <li>Dark pool prints: large off-exchange blocks often precede directional moves</li>
+          <li>Level 2 quotes: bid/ask depth reveals hidden supply and demand walls</li>
         </ul>
+        <button class="mark-complete-btn" data-mod="7" onclick="toggleComplete(7)">Mark Complete ✓</button>
       </div>
 
     </div>
@@ -645,55 +835,55 @@ import LogoutBar from "../components/LogoutBar.astro";
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">EMA</div><div class="ind-type">Trend</div></div>
         <p class="ind-desc">Exponential Moving Average weights recent price heavier. Reacts faster than SMA. The backbone of most trend-following systems globally.</p>
-        <div class="ind-set">Settings: 9 / 20 / 50 / 200 | Use: Trend direction, dynamic S&amp;R, crossovers</div>
+        <div class="ind-set-row"><div class="ind-set">Settings: 9 / 20 / 50 / 200 | Use: Trend direction, dynamic S&amp;R, crossovers</div><button class="copy-btn" onclick="copyIndSetting(this,'9 / 20 / 50 / 200')">📋 Copy</button></div>
       </div>
 
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">RSI</div><div class="ind-type">Oscillator</div></div>
         <p class="ind-desc">Relative Strength Index oscillates 0–100. Measures momentum speed. Best used for divergence signals — not just overbought/oversold readings.</p>
-        <div class="ind-set">Period: 14 | OB: &gt;70 | OS: &lt;30 | Divergence is the real signal</div>
+        <div class="ind-set-row"><div class="ind-set">Period: 14 | OB: &gt;70 | OS: &lt;30 | Divergence is the real signal</div><button class="copy-btn" onclick="copyIndSetting(this,'RSI Period: 14, OB: 70, OS: 30')">📋 Copy</button></div>
       </div>
 
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">VWAP</div><div class="ind-type">Intraday</div></div>
         <p class="ind-desc">Volume Weighted Average Price — the institutional benchmark. Institutions judge their fills against it. Above = bullish bias. Resets daily.</p>
-        <div class="ind-set">Resets daily | Use: Intraday bias, institutional entries, mean reversion</div>
+        <div class="ind-set-row"><div class="ind-set">Resets daily | Use: Intraday bias, institutional entries, mean reversion</div><button class="copy-btn" onclick="copyIndSetting(this,'VWAP: Daily reset, intraday bias')">📋 Copy</button></div>
       </div>
 
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">ATR</div><div class="ind-type">Volatility</div></div>
         <p class="ind-desc">Average True Range measures volatility — not direction. Sets stops that adapt to current conditions, not arbitrary fixed amounts.</p>
-        <div class="ind-set">Period: 14 | Stop: 1.5–2.5× ATR | Adapts to volatility regime</div>
+        <div class="ind-set-row"><div class="ind-set">Period: 14 | Stop: 1.5–2.5× ATR | Adapts to volatility regime</div><button class="copy-btn" onclick="copyIndSetting(this,'ATR Period: 14, Stop: 1.5-2.5x ATR')">📋 Copy</button></div>
       </div>
 
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">MACD</div><div class="ind-type">Momentum</div></div>
         <p class="ind-desc">Measures momentum via EMA relationships. Histogram shows acceleration — the leading signal within MACD that most traders ignore.</p>
-        <div class="ind-set">12/26/9 default | Histogram flip + crossover | Look for divergence</div>
+        <div class="ind-set-row"><div class="ind-set">12/26/9 default | Histogram flip + crossover | Look for divergence</div><button class="copy-btn" onclick="copyIndSetting(this,'MACD: 12/26/9')">📋 Copy</button></div>
       </div>
 
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">BB</div><div class="ind-type">Volatility</div></div>
         <p class="ind-desc">Bollinger Bands: 20-period SMA ± 2 standard deviations. Price visits outer bands 5% of the time. Squeeze = breakout incoming.</p>
-        <div class="ind-set">20 SMA ± 2 StdDev | Squeeze = bands converging | Walk bands in trends</div>
+        <div class="ind-set-row"><div class="ind-set">20 SMA ± 2 StdDev | Squeeze = bands converging | Walk bands in trends</div><button class="copy-btn" onclick="copyIndSetting(this,'BB: 20 SMA, 2 StdDev')">📋 Copy</button></div>
       </div>
 
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">FIBO</div><div class="ind-type">Price Tool</div></div>
         <p class="ind-desc">Fibonacci retracement levels mark potential S/R within pullbacks. The 0.618 (golden ratio) is the most respected level among professional traders.</p>
-        <div class="ind-set">Key: 0.236 / 0.382 / 0.5 / 0.618 / 0.786 | Draw swing high to low</div>
+        <div class="ind-set-row"><div class="ind-set">Key: 0.236 / 0.382 / 0.5 / 0.618 / 0.786 | Draw swing high to low</div><button class="copy-btn" onclick="copyIndSetting(this,'Fib: 0.236 / 0.382 / 0.5 / 0.618 / 0.786')">📋 Copy</button></div>
       </div>
 
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">STOCH</div><div class="ind-type">Oscillator</div></div>
         <p class="ind-desc">Stochastic oscillator compares closing price to range over a period. Works best in ranging markets. Avoid using in strong trends.</p>
-        <div class="ind-set">14,3,3 default | OB: &gt;80 | OS: &lt;20 | Crossovers near extremes</div>
+        <div class="ind-set-row"><div class="ind-set">14,3,3 default | OB: &gt;80 | OS: &lt;20 | Crossovers near extremes</div><button class="copy-btn" onclick="copyIndSetting(this,'Stoch: 14,3,3 | OB:80 OS:20')">📋 Copy</button></div>
       </div>
 
       <div class="ind fi">
         <div class="ind-top"><div class="ind-name">ICHIMOKU</div><div class="ind-type">Multi-Signal</div></div>
         <p class="ind-desc">All-in-one Japanese system: trend, momentum, S/R in one view. The cloud (Kumo) projects future levels. Complex but extremely powerful once mastered.</p>
-        <div class="ind-set">5 components: Tenkan, Kijun, Senkou A&amp;B, Chikou | Cloud = trend bias</div>
+        <div class="ind-set-row"><div class="ind-set">5 components: Tenkan, Kijun, Senkou A&amp;B, Chikou | Cloud = trend bias</div><button class="copy-btn" onclick="copyIndSetting(this,'Ichimoku: 9,26,52,26')">📋 Copy</button></div>
       </div>
 
     </div>
@@ -1060,10 +1250,11 @@ import LogoutBar from "../components/LogoutBar.astro";
     <div class="sec-head fi" style="text-align:center">
       <span class="sec-tag">// 07 / knowledge check</span>
       <h2 class="sec-title">TEST YOUR <span class="p">INTEL</span></h2>
-      <p class="sec-desc" style="margin:0 auto">10 questions across all modules. Explained answers. No scores stored.</p>
+      <p class="sec-desc" style="margin:0 auto">10 questions across all modules. Explained answers. Score saved to your profile.</p>
     </div>
     <div class="quiz-wrap fi">
       <div id="quizContainer">
+        <div class="quiz-score-bar" id="quizScoreBar"></div>
         <div class="quiz-q" id="quizQ"></div>
         <div class="quiz-opts" id="quizOpts"></div>
         <div class="qfeed" id="quizFeed"></div>
@@ -1086,7 +1277,10 @@ import LogoutBar from "../components/LogoutBar.astro";
       <h2 class="sec-title">TRADING <span class="y">GLOSSARY</span></h2>
       <p class="sec-desc">The language of markets. Know these terms before you read a chart or place a trade.</p>
     </div>
-    <div class="glos-grid">
+    <div class="glos-search-wrap fi">
+      <input type="text" id="glossSearch" placeholder="Search glossary terms or definitions..." autocomplete="off" />
+    </div>
+    <div class="glos-grid" id="glosGrid">
       <div class="glos fi"><div class="glos-term">Support</div><div class="glos-def">A price level where buying interest prevents further decline. Historical floors where demand exceeds supply.</div></div>
       <div class="glos fi"><div class="glos-term">Resistance</div><div class="glos-def">A price level where selling pressure prevents further advance. Historical ceilings where supply exceeds demand.</div></div>
       <div class="glos fi"><div class="glos-term">Trend</div><div class="glos-def">Uptrend: higher highs &amp; higher lows. Downtrend: lower highs &amp; lower lows. Sideways: no clear direction.</div></div>
@@ -1109,6 +1303,52 @@ import LogoutBar from "../components/LogoutBar.astro";
   </div>
 </section>
 
+<div class="cyber-line"></div>
+
+<!-- CERTIFICATE -->
+<section class="cert-section">
+  <div class="container">
+    <div class="sec-head fi" style="text-align:center">
+      <span class="sec-tag">// 09 / operator certification</span>
+      <h2 class="sec-title">🏆 <span class="y">CERTIFICATE</span></h2>
+      <p class="sec-desc" style="margin:0 auto">Prove your systematic edge. Complete all 7 modules to unlock your TrendTrooper Operator Certificate.</p>
+    </div>
+    <div class="cert-card fi" id="certCard">
+      <div class="cert-locked">
+        <span class="cert-locked-icon">🔒</span>
+        <div class="cert-title">OPERATOR CERTIFICATE LOCKED</div>
+        <div class="cert-desc">Complete all 7 modules to unlock your TrendTrooper Operator Certificate. Prove you trade with structure — not hope.</div>
+        <div class="cert-progress-wrap">
+          <div class="cert-prog-text" id="certProgText">0 / 7 modules complete</div>
+          <div class="cert-prog-bar-bg"><div class="cert-prog-bar-fill" id="certProgFill"></div></div>
+        </div>
+      </div>
+      <div class="cert-unlocked">
+        <span class="cert-locked-icon">🏆</span>
+        <div class="cert-title">TRENDTROOPER OPERATOR</div>
+        <div class="cert-desc">All 7 modules completed. You trade with structure, not hope. Welcome to the operator class.</div>
+        <button class="cert-dl-btn" onclick="openCertModal()">Download Certificate</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERT MODAL -->
+<div class="cert-modal-bg" id="certModalBg" onclick="if(event.target===this)closeCertModal()">
+  <div class="cert-modal">
+    <button class="cert-modal-close" onclick="closeCertModal()">[ CLOSE ]</button>
+    <div class="cert-modal-seal">🏆</div>
+    <h2>TRENDTROOPER OPERATOR</h2>
+    <div class="cert-modal-sub">// Certificate of Completion //</div>
+    <div class="cert-modal-name">This certifies that you have completed</div>
+    <div class="cert-modal-desc">
+      All 7 core modules of the TrendTrooper Academy curriculum — from Market Structure Basics through Advanced Market Intelligence. You now trade with systematic edge, defined risk, and disciplined process.<br><br>
+      <span style="font-family:var(--mono);font-size:0.65rem;color:var(--cyan);letter-spacing:2px;">Date: <span id="certDate"></span></span>
+    </div>
+    <button class="cert-print-btn" onclick="window.print()">🖨 Print Certificate</button>
+  </div>
+</div>
+
 </main>
 
 <!-- FOOTER -->
@@ -1128,133 +1368,288 @@ import LogoutBar from "../components/LogoutBar.astro";
 </footer>
 
 <script>
-document.getElementById('yr').textContent = new Date().getFullYear();
+document.addEventListener('DOMContentLoaded', function() {
 
-function toggleMenu(){
-  document.getElementById('mobileMenu').classList.toggle('open');
-  document.getElementById('hbBtn').classList.toggle('open');
-}
+  // ── YEAR ──
+  document.getElementById('yr').textContent = new Date().getFullYear();
 
-// Tab switcher
-function switchTab(id, btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('on'));
-  document.getElementById('tab-'+id).classList.add('on');
-  btn.classList.add('on');
-}
-
-// Position calculator
-function doCalc(){
-  const acc=parseFloat(document.getElementById('acc').value);
-  const riskPct=parseFloat(document.getElementById('risk').value);
-  const entry=parseFloat(document.getElementById('entry').value);
-  const stop=parseFloat(document.getElementById('stop').value);
-  if(!acc||!riskPct||!entry||!stop){alert('Please fill in all fields.');return;}
-  const riskAmt=acc*(riskPct/100);
-  const dist=Math.abs(entry-stop);
-  if(dist===0){alert('Entry and stop cannot be the same.');return;}
-  const shares=Math.floor(riskAmt/dist);
-  const actualRisk=(shares*dist).toFixed(2);
-  const cost=(shares*entry).toLocaleString('en-US',{style:'currency',currency:'USD'});
-  const el=document.getElementById('calcOut');
-  el.style.display='block';
-  document.getElementById('calcShares').textContent=shares.toLocaleString()+' shares';
-  document.getElementById('calcInfo').textContent=`Dollar risk: $${actualRisk} (${riskPct}%)  |  Position cost: ${cost}  |  Stop distance: $${dist.toFixed(2)}/share`;
-}
-
-// Counter animation
-function animateNum(el){
-  const target=parseInt(el.dataset.target);
-  if(!target)return;
-  let cur=0;const inc=target/50;
-  const t=setInterval(()=>{cur=Math.min(cur+inc,target);el.textContent=Math.round(cur)+(el.textContent.includes('+') ? '+' : '');if(cur>=target)clearInterval(t);},30);
-}
-const heroObs=new IntersectionObserver(entries=>{
-  if(entries[0].isIntersecting)document.querySelectorAll('[data-target]').forEach(animateNum);
-},{threshold:.5});
-const heroStats=document.querySelector('.hero-stats');
-if(heroStats)heroObs.observe(heroStats);
-
-// Fade-in on scroll
-const fadeObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});
-},{threshold:.08});
-document.querySelectorAll('.fi').forEach(el=>fadeObs.observe(el));
-
-// Quiz
-const QS=[
-  {q:"What does a higher high (HH) followed by a higher low (HL) indicate?",opts:["A downtrend","Sideways market","An uptrend","A reversal pattern"],ans:2,ex:"Higher highs and higher lows define an uptrend — buyers are in control and making consistent progress to the upside."},
-  {q:"Account: $10,000. Risk: 1%. Entry: $50. Stop: $48. How many shares?",opts:["50 shares","100 shares","200 shares","500 shares"],ans:0,ex:"1% of $10,000 = $100 risk. Stop distance = $2. Shares = $100 ÷ $2 = 50 shares."},
-  {q:"RSI reading of 28 on a daily chart typically suggests the asset is:",opts:["Overbought — consider shorting","Oversold — look for reversal signals","In a strong uptrend","At fair value"],ans:1,ex:"RSI below 30 = oversold conditions. Look for bullish divergence or reversal candles to confirm a potential bounce."},
-  {q:"What is the primary purpose of the ATR indicator?",opts:["Identify trend direction","Measure momentum","Set dynamic stops based on volatility","Find divergences"],ans:2,ex:"ATR measures volatility. Multiplied by 1.5–2.5× it gives stop distances that adapt to current market conditions."},
-  {q:"VWAP is most useful for which type of trader?",opts:["Long-term position traders","Swing traders holding weeks","Day traders and intraday traders","Crypto investors only"],ans:2,ex:"VWAP resets each day — it's the institutional intraday benchmark. Most relevant for day traders judging intraday bias."},
-  {q:"A Head & Shoulders pattern signals:",opts:["Bullish continuation","Bearish reversal","Breakout to the upside","Neutral consolidation"],ans:1,ex:"Head & Shoulders is a bearish reversal pattern. Neckline break = confirmed reversal. Measure the head for price target."},
-  {q:"Win rate: 45%. Average win: 2× average loss. Your system's expectancy is:",opts:["Negative — stop trading it","Breakeven","Positive — this is a valid edge","Impossible to determine"],ans:2,ex:"Expectancy = (0.45×2) − (0.55×1) = 0.90 − 0.55 = +0.35R. Positive over many trades = real edge."},
-  {q:"'Thinking in probabilities' in trading psychology means:",opts:["Using only probabilistic indicators","Any single trade can lose while the edge plays out over many trades","Predicting direction with statistics","Trading only high-probability setups"],ans:1,ex:"Mark Douglas: even a 70% system loses 3 in 10. You cannot know which trades will win. Execute consistently and let statistics work."},
-  {q:"Bollinger Band 'squeeze' signals:",opts:["A trend is ending","Volatility is contracting — big move incoming","The asset is overbought","Price at fair value"],ans:1,ex:"When bands tighten, volatility is contracting. This often precedes a significant move — though direction is not predetermined."},
-  {q:"A 50% drawdown requires what % gain to return to breakeven?",opts:["50%","75%","100%","150%"],ans:2,ex:"$10,000 drops 50% = $5,000. Need 100% gain on $5,000 to return to $10,000. This is why capital preservation comes first."}
-];
-let curQ=0,answered=false;
-
-function loadQ(){
-  const q=QS[curQ];
-  document.getElementById('quizQ').textContent=`Q${curQ+1}. ${q.q}`;
-  document.getElementById('quizProg').textContent=`${curQ+1} / ${QS.length}`;
-  document.getElementById('quizNext').style.display='none';
-  const feed=document.getElementById('quizFeed');
-  feed.className='qfeed';feed.style.display='none';
-  answered=false;
-  const opts=document.getElementById('quizOpts');
-  opts.innerHTML='';
-  q.opts.forEach((o,i)=>{
-    const btn=document.createElement('button');
-    btn.className='qopt';btn.textContent=o;
-    btn.onclick=()=>selectA(i);
-    opts.appendChild(btn);
+  // ── MOBILE MENU CLOSE ON LINK CLICK ──
+  document.querySelectorAll('#ttMob a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      document.getElementById('ttMob').classList.remove('open');
+      document.getElementById('ttBurger').classList.remove('open');
+    });
   });
-}
 
-function selectA(idx){
-  if(answered)return;
-  answered=true;
-  const q=QS[curQ];
-  const opts=document.querySelectorAll('.qopt');
-  const feed=document.getElementById('quizFeed');
-  opts[q.ans].classList.add('ok');
-  if(idx!==q.ans)opts[idx].classList.add('no');
-  feed.textContent=(idx===q.ans?'✓ Correct! ':'✗ Incorrect. ')+q.ex;
-  feed.className='qfeed show '+(idx===q.ans?'ok':'no');
-  feed.style.display='block';
-  document.getElementById('quizNext').style.display='inline-block';
-}
+  // ── TAB SWITCHER ──
+  window.switchTab = function(id, btn) {
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
+    document.querySelectorAll('.rtab').forEach(function(b){ b.classList.remove('on'); });
+    document.getElementById('tab-'+id).classList.add('on');
+    btn.classList.add('on');
+  };
 
-function nextQ(){
-  curQ++;
-  if(curQ>=QS.length){
-    document.getElementById('quizContainer').innerHTML=`
-      <div style="text-align:center;padding:2rem">
-        <div style="font-family:var(--head);font-size:1.8rem;color:var(--cyan);text-shadow:0 0 20px rgba(0,200,255,0.5);margin-bottom:1rem">DEBRIEF COMPLETE</div>
-        <p style="color:var(--muted);margin-bottom:2rem">All ${QS.length} questions answered. Review weak areas in the modules above.</p>
-        <button class="btn btn-primary" onclick="curQ=0;rebuildQuiz()" style="clip-path:none">RESTART MISSION</button>
-      </div>`;
-    return;
+  // ── POSITION CALCULATOR ──
+  window.doCalc = function() {
+    var acc=parseFloat(document.getElementById('acc').value);
+    var riskPct=parseFloat(document.getElementById('risk').value);
+    var entry=parseFloat(document.getElementById('entry').value);
+    var stop=parseFloat(document.getElementById('stop').value);
+    if(!acc||!riskPct||!entry||!stop){alert('Please fill in all fields.');return;}
+    var riskAmt=acc*(riskPct/100);
+    var dist=Math.abs(entry-stop);
+    if(dist===0){alert('Entry and stop cannot be the same.');return;}
+    var shares=Math.floor(riskAmt/dist);
+    var actualRisk=(shares*dist).toFixed(2);
+    var cost=(shares*entry).toLocaleString('en-US',{style:'currency',currency:'USD'});
+    var el=document.getElementById('calcOut');
+    el.style.display='block';
+    document.getElementById('calcShares').textContent=shares.toLocaleString()+' shares';
+    document.getElementById('calcInfo').textContent='Dollar risk: $'+actualRisk+' ('+riskPct+'%)  |  Position cost: '+cost+'  |  Stop distance: $'+dist.toFixed(2)+'/share';
+  };
+
+  // ── COUNTER ANIMATION ──
+  function animateNum(el) {
+    var target=parseInt(el.dataset.target);
+    if(!target)return;
+    var cur=0;var inc=target/50;
+    var t=setInterval(function(){cur=Math.min(cur+inc,target);el.textContent=Math.round(cur);if(cur>=target)clearInterval(t);},30);
   }
-  loadQ();
-}
+  var heroObs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting)document.querySelectorAll('[data-target]').forEach(animateNum);
+  },{threshold:.5});
+  var heroStats=document.querySelector('.hero-stats');
+  if(heroStats)heroObs.observe(heroStats);
 
-function rebuildQuiz(){
-  document.getElementById('quizContainer').innerHTML=`
-    <div class="quiz-q" id="quizQ"></div>
-    <div class="quiz-opts" id="quizOpts"></div>
-    <div class="qfeed" id="quizFeed"></div>
-    <div class="quiz-nav">
-      <span class="quiz-prog" id="quizProg"></span>
-      <button class="btn btn-primary" id="quizNext" onclick="nextQ()" style="display:none;clip-path:none;padding:10px 24px">NEXT →</button>
-    </div>`;
-  loadQ();
-}
+  // ── FADE-IN ON SCROLL ──
+  var fadeObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('vis');});
+  },{threshold:.08});
+  document.querySelectorAll('.fi').forEach(function(el){fadeObs.observe(el);});
 
-loadQ();
+  // ── COPY INDICATOR SETTINGS ──
+  window.copyIndSetting = function(btn, text) {
+    navigator.clipboard.writeText(text).then(function() {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(function(){ btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 1800);
+    }).catch(function() {
+      btn.textContent = '✓ Copied!';
+      setTimeout(function(){ btn.textContent = '📋 Copy'; }, 1800);
+    });
+  };
+
+  // ── MODULE PROGRESS TRACKING ──
+  var TOTAL_MODS = 7;
+  var completed = [];
+  try { completed = JSON.parse(localStorage.getItem('tt_academy_progress') || '[]'); } catch(e){ completed=[]; }
+
+  function saveProgress() {
+    localStorage.setItem('tt_academy_progress', JSON.stringify(completed));
+  }
+
+  function updateProgressUI() {
+    var n = completed.length;
+    var pct = Math.round((n / TOTAL_MODS) * 100);
+    // progress bar in modules section
+    var lbl = document.getElementById('modProgressLabel');
+    var fill = document.getElementById('modProgressFill');
+    if(lbl) lbl.textContent = n + ' of ' + TOTAL_MODS + ' modules completed';
+    if(fill) fill.style.width = pct + '%';
+    // certificate section
+    var certProg = document.getElementById('certProgText');
+    var certFill = document.getElementById('certProgFill');
+    if(certProg) certProg.textContent = n + ' / ' + TOTAL_MODS + ' modules complete';
+    if(certFill) certFill.style.width = pct + '%';
+    // unlock cert
+    var certCard = document.getElementById('certCard');
+    if(certCard) {
+      if(n >= TOTAL_MODS) certCard.classList.add('unlocked');
+      else certCard.classList.remove('unlocked');
+    }
+    // progress ring
+    updateProgressRing(pct);
+    // rank locked badges
+    updateRankLocks();
+  }
+
+  function updateProgressRing(pct) {
+    var ring = document.getElementById('heroRingFill');
+    var ringPct = document.getElementById('heroRingPct');
+    if(!ring) return;
+    var circumference = 238.76;
+    var offset = circumference - (pct / 100) * circumference;
+    ring.style.strokeDashoffset = offset;
+    if(ringPct) ringPct.textContent = pct + '%';
+  }
+
+  function updateRankLocks() {
+    var n = completed.length;
+    // Rank 2 locked if fewer than 2 completed
+    var l2 = document.getElementById('rankLock2');
+    if(l2) l2.style.display = n < 2 ? 'inline-block' : 'none';
+    // Rank 3 locked if fewer than 4 completed
+    var l3 = document.getElementById('rankLock3');
+    if(l3) l3.style.display = n < 4 ? 'inline-block' : 'none';
+    // Rank 4 locked if fewer than 6 completed
+    var l4 = document.getElementById('rankLock4');
+    if(l4) l4.style.display = n < 6 ? 'inline-block' : 'none';
+  }
+
+  function applyModuleStates() {
+    for(var i = 1; i <= TOTAL_MODS; i++) {
+      var modEl = document.getElementById('mod-'+i);
+      var btn = modEl ? modEl.querySelector('.mark-complete-btn') : null;
+      if(!modEl) continue;
+      var isDone = completed.indexOf(i) !== -1;
+      if(btn) {
+        btn.textContent = isDone ? '✓ Completed' : 'Mark Complete ✓';
+        if(isDone) btn.classList.add('done'); else btn.classList.remove('done');
+      }
+      // prerequisite lock visual (for adv/int modules, dim if fewer than 2 prior done)
+      var badge = modEl.querySelector('.mod-badge');
+      var level = badge ? badge.textContent.trim() : '';
+      var isAdvanced = level === 'Advanced' || level === 'Intermediate';
+      if(isAdvanced && completed.length < 2 && !isDone) {
+        modEl.classList.add('locked');
+      } else {
+        modEl.classList.remove('locked');
+      }
+    }
+  }
+
+  window.toggleComplete = function(modNum) {
+    var idx = completed.indexOf(modNum);
+    if(idx === -1) completed.push(modNum); else completed.splice(idx, 1);
+    saveProgress();
+    applyModuleStates();
+    updateProgressUI();
+  };
+
+  // init
+  applyModuleStates();
+  updateProgressUI();
+
+  // ── GLOSSARY SEARCH ──
+  var glossInput = document.getElementById('glossSearch');
+  if(glossInput) {
+    glossInput.addEventListener('input', function() {
+      var val = this.value.toLowerCase().trim();
+      document.querySelectorAll('#glosGrid .glos').forEach(function(g) {
+        var term = (g.querySelector('.glos-term')||{}).textContent || '';
+        var def  = (g.querySelector('.glos-def')||{}).textContent  || '';
+        if(!val || term.toLowerCase().indexOf(val) !== -1 || def.toLowerCase().indexOf(val) !== -1) {
+          g.classList.remove('hidden');
+        } else {
+          g.classList.add('hidden');
+        }
+      });
+    });
+  }
+
+  // ── CERTIFICATE MODAL ──
+  window.openCertModal = function() {
+    document.getElementById('certDate').textContent = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('certModalBg').classList.add('open');
+  };
+  window.closeCertModal = function() {
+    document.getElementById('certModalBg').classList.remove('open');
+  };
+
+  // ── QUIZ ──
+  var QS=[
+    {q:"What does a higher high (HH) followed by a higher low (HL) indicate?",opts:["A downtrend","Sideways market","An uptrend","A reversal pattern"],ans:2,ex:"Higher highs and higher lows define an uptrend — buyers are in control and making consistent progress to the upside."},
+    {q:"Account: $10,000. Risk: 1%. Entry: $50. Stop: $48. How many shares?",opts:["50 shares","100 shares","200 shares","500 shares"],ans:0,ex:"1% of $10,000 = $100 risk. Stop distance = $2. Shares = $100 ÷ $2 = 50 shares."},
+    {q:"RSI reading of 28 on a daily chart typically suggests the asset is:",opts:["Overbought — consider shorting","Oversold — look for reversal signals","In a strong uptrend","At fair value"],ans:1,ex:"RSI below 30 = oversold conditions. Look for bullish divergence or reversal candles to confirm a potential bounce."},
+    {q:"What is the primary purpose of the ATR indicator?",opts:["Identify trend direction","Measure momentum","Set dynamic stops based on volatility","Find divergences"],ans:2,ex:"ATR measures volatility. Multiplied by 1.5–2.5× it gives stop distances that adapt to current market conditions."},
+    {q:"VWAP is most useful for which type of trader?",opts:["Long-term position traders","Swing traders holding weeks","Day traders and intraday traders","Crypto investors only"],ans:2,ex:"VWAP resets each day — it's the institutional intraday benchmark. Most relevant for day traders judging intraday bias."},
+    {q:"A Head & Shoulders pattern signals:",opts:["Bullish continuation","Bearish reversal","Breakout to the upside","Neutral consolidation"],ans:1,ex:"Head & Shoulders is a bearish reversal pattern. Neckline break = confirmed reversal. Measure the head for price target."},
+    {q:"Win rate: 45%. Average win: 2× average loss. Your system's expectancy is:",opts:["Negative — stop trading it","Breakeven","Positive — this is a valid edge","Impossible to determine"],ans:2,ex:"Expectancy = (0.45×2) − (0.55×1) = 0.90 − 0.55 = +0.35R. Positive over many trades = real edge."},
+    {q:"'Thinking in probabilities' in trading psychology means:",opts:["Using only probabilistic indicators","Any single trade can lose while the edge plays out over many trades","Predicting direction with statistics","Trading only high-probability setups"],ans:1,ex:"Mark Douglas: even a 70% system loses 3 in 10. You cannot know which trades will win. Execute consistently and let statistics work."},
+    {q:"Bollinger Band 'squeeze' signals:",opts:["A trend is ending","Volatility is contracting — big move incoming","The asset is overbought","Price at fair value"],ans:1,ex:"When bands tighten, volatility is contracting. This often precedes a significant move — though direction is not predetermined."},
+    {q:"A 50% drawdown requires what % gain to return to breakeven?",opts:["50%","75%","100%","150%"],ans:2,ex:"$10,000 drops 50% = $5,000. Need 100% gain on $5,000 to return to $10,000. This is why capital preservation comes first."}
+  ];
+
+  var curQ=0, answered=false, quizScore=0;
+  // restore saved score
+  try { quizScore = parseInt(localStorage.getItem('tt_quiz_score')||'0')||0; } catch(e){}
+
+  function updateScoreBar() {
+    var bar = document.getElementById('quizScoreBar');
+    if(bar && curQ > 0) bar.textContent = 'Score: ' + quizScore + ' / ' + curQ + ' correct';
+    else if(bar) bar.textContent = '';
+  }
+
+  function loadQ() {
+    var q=QS[curQ];
+    document.getElementById('quizQ').textContent='Q'+(curQ+1)+'. '+q.q;
+    document.getElementById('quizProg').textContent=(curQ+1)+' / '+QS.length;
+    document.getElementById('quizNext').style.display='none';
+    var feed=document.getElementById('quizFeed');
+    feed.className='qfeed';feed.style.display='none';
+    answered=false;
+    var opts=document.getElementById('quizOpts');
+    opts.innerHTML='';
+    q.opts.forEach(function(o,i){
+      var btn=document.createElement('button');
+      btn.className='qopt';btn.textContent=o;
+      btn.onclick=function(){selectA(i);};
+      opts.appendChild(btn);
+    });
+    updateScoreBar();
+  }
+
+  function selectA(idx) {
+    if(answered)return;
+    answered=true;
+    var q=QS[curQ];
+    var opts=document.querySelectorAll('.qopt');
+    var feed=document.getElementById('quizFeed');
+    var correct = idx===q.ans;
+    if(correct) quizScore++;
+    opts[q.ans].classList.add('ok');
+    if(!correct)opts[idx].classList.add('no');
+    feed.textContent=(correct?'✓ Correct! ':'✗ Incorrect. ')+q.ex;
+    feed.className='qfeed show '+(correct?'ok':'no');
+    feed.style.display='block';
+    document.getElementById('quizNext').style.display='inline-block';
+    updateScoreBar();
+    localStorage.setItem('tt_quiz_score', quizScore);
+  }
+
+  window.nextQ = function() {
+    curQ++;
+    if(curQ>=QS.length){
+      localStorage.setItem('tt_quiz_score', quizScore);
+      document.getElementById('quizContainer').innerHTML=
+        '<div style="text-align:center;padding:2rem">'+
+        '<div style="font-family:var(--head);font-size:1.8rem;color:var(--cyan);text-shadow:0 0 20px rgba(0,200,255,0.5);margin-bottom:1rem">DEBRIEF COMPLETE</div>'+
+        '<div style="font-family:var(--mono);font-size:1rem;color:var(--green);margin-bottom:1rem">Score: '+quizScore+' / '+QS.length+' correct</div>'+
+        '<p style="color:var(--muted);margin-bottom:2rem">Review weak areas in the modules above, then retake to sharpen your edge.</p>'+
+        '<button class="btn btn-primary" onclick="window._quizRestart()" style="clip-path:none">🔁 Retake Quiz</button>'+
+        '</div>';
+      return;
+    }
+    loadQ();
+  };
+
+  window._quizRestart = function() {
+    curQ=0; quizScore=0;
+    document.getElementById('quizContainer').innerHTML=
+      '<div class="quiz-score-bar" id="quizScoreBar"></div>'+
+      '<div class="quiz-q" id="quizQ"></div>'+
+      '<div class="quiz-opts" id="quizOpts"></div>'+
+      '<div class="qfeed" id="quizFeed"></div>'+
+      '<div class="quiz-nav">'+
+      '<span class="quiz-prog" id="quizProg"></span>'+
+      '<button class="btn btn-primary" id="quizNext" onclick="nextQ()" style="display:none;clip-path:none;padding:10px 24px">NEXT →</button>'+
+      '</div>';
+    loadQ();
+  };
+
+  loadQ();
+
+}); // end DOMContentLoaded
 </script>
 <script>
   (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();

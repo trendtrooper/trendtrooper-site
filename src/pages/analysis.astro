@@ -47,6 +47,7 @@ import LogoutBar from "../components/LogoutBar.astro";
     .tt-mob.open{display:flex;}
     .tt-mob a{color:rgba(180,210,255,.65);padding:10px 0;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.04);}
     .tt-mob a:hover{color:#e8eeff;}
+    /* CHANGE 1: breakpoint from 900px nav collapse */
     @media(max-width:900px){.tt-nav{display:none;}.tt-burger{display:flex;}}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:12px;font-weight:600;font-size:13.5px;border:1px solid var(--border2);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;transition:.15s;font-family:var(--sans)}
     .btn:hover{background:rgba(255,255,255,.08)}
@@ -68,9 +69,12 @@ import LogoutBar from "../components/LogoutBar.astro";
     .qp.active{background:linear-gradient(135deg,var(--accent2),#7c3aed);border-color:transparent;color:#fff}
     .qp.tf.active{background:linear-gradient(135deg,var(--accent2),#7c3aed);border-color:transparent;color:#fff}
 
-    /* LAYOUT */
+    /* LAYOUT — CHANGE 1: breakpoint 1100px -> 900px, sidebar full-width on mobile */
     .wrap{max-width:var(--max);margin:0 auto;padding:24px 24px 40px;display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
-    @media(max-width:1100px){.wrap{grid-template-columns:1fr}}
+    @media(max-width:900px){
+      .wrap{grid-template-columns:1fr}
+      .sidebar{width:100%}
+    }
 
     /* CHART PANEL */
     .chart-card{background:transparent;border-radius:var(--r);border:1px solid rgba(255,255,255,.08);overflow:hidden}
@@ -85,6 +89,18 @@ import LogoutBar from "../components/LogoutBar.astro";
     .chart-loading{display:flex;align-items:center;justify-content:center;height:420px;color:var(--muted);font-size:14px;gap:10px}
     .spinner{width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--accent2);border-radius:50%;animation:spin .7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* CHANGE 2: error card style */
+    .error-card{display:flex;flex-direction:column;align-items:center;justify-content:center;height:420px;gap:14px;color:var(--muted);text-align:center;padding:20px}
+    .error-card h3{font-size:16px;color:var(--red)}
+    .error-card p{font-size:13px;color:var(--muted);max-width:320px;line-height:1.6}
+    .btn-retry{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:10px;font-weight:700;font-size:13px;border:1px solid rgba(255,92,106,.4);background:rgba(255,92,106,.08);color:var(--red);cursor:pointer;transition:.15s;font-family:var(--sans)}
+    .btn-retry:hover{background:rgba(255,92,106,.16)}
+
+    /* CHANGE 14: full-chart link */
+    .chart-footer{padding:8px 16px;border-top:1px solid rgba(255,255,255,.05);text-align:right}
+    .chart-footer a{font-size:12px;color:var(--muted2);text-decoration:none;transition:color .15s}
+    .chart-footer a:hover{color:var(--accent)}
 
     /* SIDEBAR */
     .sidebar{display:flex;flex-direction:column;gap:16px}
@@ -103,12 +119,15 @@ import LogoutBar from "../components/LogoutBar.astro";
     .dir-bearish .dir-text{color:var(--red)}
     .dir-bullish .dir-text{color:var(--green)}
     .dir-neutral .dir-text{color:var(--amber)}
+
     /* TRADE FORCE */
     .force-wrap{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border2);margin-top:10px}
     .force-label{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.8px;white-space:nowrap}
     .force-track{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden}
     .force-fill{height:100%;border-radius:3px;transition:.4s}
     .force-val{font-family:var(--mono);font-size:16px;font-weight:900;min-width:36px;text-align:right}
+    /* CHANGE 4: Trade Force explanation */
+    .tf-explain{font-size:12px;color:var(--muted2);line-height:1.5;margin-top:8px;padding:0 2px}
 
     /* LEVELS TABLE */
     .levels-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -117,26 +136,33 @@ import LogoutBar from "../components/LogoutBar.astro";
     .res-label{color:var(--red)}
     .sup-label{color:var(--green)}
     .level-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.025)}
-    .level-tag{font-size:10px;color:var(--muted2);font-weight:600}
+    .level-tag{font-size:12px;color:var(--muted2);font-weight:600}
     .level-val{font-family:var(--mono);font-size:13px;font-weight:700}
     .level-res{color:var(--red)}
     .level-sup{color:var(--green)}
+    /* CHANGE 5: S/R note */
+    .sr-note{font-size:12px;color:var(--muted2);margin-top:10px;line-height:1.5;font-style:italic}
 
     /* MA TABLE */
     .ma-table{width:100%;border-collapse:collapse}
-    .ma-table td{padding:6px 4px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,.03)}
+    .ma-table td{padding:6px 4px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.03)}
     .ma-table tr:last-child td{border-bottom:none}
-    .ma-name{color:var(--muted2);font-size:11px;font-weight:700}
+    .ma-name{color:var(--muted2);font-size:12px;font-weight:700}
     .ma-val{font-family:var(--mono);font-weight:700;text-align:right}
     .above-ma{color:var(--green)}
     .below-ma{color:var(--red)}
-    .ma-arrow{font-size:10px;text-align:center;width:20px}
+    .ma-arrow{font-size:12px;text-align:center;width:20px}
+    /* CHANGE 12: MA legend */
+    .ma-legend{margin-top:10px;display:flex;flex-direction:column;gap:3px;border-top:1px solid rgba(255,255,255,.05);padding-top:10px}
+    .ma-legend-row{font-size:12px;color:var(--muted2);line-height:1.4}
+    .ma-legend-key{font-family:var(--mono);font-weight:700;color:var(--muted)}
 
     /* PATTERNS */
+    .pat-summary{font-size:12px;color:var(--muted2);margin-bottom:10px;font-weight:600}
     .pat-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
     .pat-item:last-child{border-bottom:none}
     .pat-name{font-size:13px;font-weight:600;color:var(--text)}
-    .pat-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.5px;text-transform:uppercase}
+    .pat-badge{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.5px;text-transform:uppercase}
     .pat-bull{background:rgba(34,214,115,.12);color:#22d673;border:1px solid rgba(34,214,115,.25)}
     .pat-bear{background:rgba(255,92,106,.12);color:#ff5c6a;border:1px solid rgba(255,92,106,.25)}
     .pat-neutral{background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.25)}
@@ -145,25 +171,50 @@ import LogoutBar from "../components/LogoutBar.astro";
     /* INDICATORS */
     .ind-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03)}
     .ind-row:last-child{border-bottom:none}
-    .ind-label{font-size:12px;color:var(--muted2);font-weight:600}
+    .ind-label{font-size:12px;color:var(--muted2);font-weight:600;display:flex;align-items:center;gap:4px;position:relative}
     .ind-val{font-family:var(--mono);font-size:13px;font-weight:700}
     .ind-bar-wrap{flex:1;margin:0 10px;height:4px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden}
     .ind-bar{height:100%;border-radius:2px;transition:.3s}
+
+    /* CHANGE 3: Indicator tooltips */
+    .info-icon{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:rgba(122,150,187,.15);color:var(--muted2);font-size:10px;cursor:pointer;flex-shrink:0;border:1px solid rgba(122,150,187,.25);font-style:normal;line-height:1;transition:background .15s}
+    .info-icon:hover{background:rgba(110,231,255,.15);color:var(--accent)}
+    .tooltip-wrap{position:relative;display:inline-flex;align-items:center}
+    .tooltip-box{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0a1628;border:1px solid rgba(110,231,255,.2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text2);line-height:1.5;white-space:normal;width:220px;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.5);pointer-events:none}
+    .tooltip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0a1628}
+    .tooltip-wrap:hover .tooltip-box,
+    .tooltip-wrap.active .tooltip-box{display:block}
 
     /* NARRATIVE */
     .narrative{font-size:13px;line-height:1.7;color:var(--text2)}
 
     /* 52W RANGE */
     .range-wrap{margin-top:12px}
-    .range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px}
+    .range-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:6px}
     .range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.07);position:relative}
     .range-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--muted2),var(--accent2))}
     .range-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:var(--text);border:2px solid var(--bg);box-shadow:0 0 8px rgba(255,255,255,.2)}
+    /* CHANGE 11: 52W end labels */
+    .range-end-labels{display:flex;justify-content:space-between;margin-top:5px}
+    .range-end-label{font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:.5px;text-transform:uppercase}
+    .range-cur-label{font-size:12px;color:var(--text2);font-family:var(--mono);font-weight:700;position:absolute;bottom:18px;transform:translateX(-50%)}
 
     /* EMPTY / ERROR */
     .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:420px;gap:12px;color:var(--muted)}
     .empty-state h3{font-size:16px;color:var(--text2)}
     .error-msg{color:var(--red);font-size:13px}
+
+    /* CHANGE 7: Risk Calculator */
+    .risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+    .risk-field{display:flex;flex-direction:column;gap:4px}
+    .risk-field label{font-size:12px;color:var(--muted2);font-weight:600;letter-spacing:.4px}
+    .risk-field input{padding:7px 10px;border-radius:8px;border:1px solid var(--border2);background:rgba(255,255,255,.04);color:var(--text);font-size:12px;font-family:var(--mono);font-weight:700;outline:none;transition:.15s;width:100%}
+    .risk-field input:focus{border-color:rgba(167,139,250,.5);background:rgba(167,139,250,.04)}
+    .risk-divider{height:1px;background:rgba(255,255,255,.07);margin:10px 0}
+    .risk-results{display:flex;flex-direction:column;gap:6px}
+    .risk-result-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0}
+    .risk-result-label{font-size:12px;color:var(--muted2);font-weight:600}
+    .risk-result-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text)}
 
     footer{max-width:var(--max);margin:0 auto 0;padding:24px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted2);font-size:13px}
     .foot-links{display:flex;gap:18px}.foot-links a:hover{color:var(--muted)}
@@ -246,6 +297,10 @@ import LogoutBar from "../components/LogoutBar.astro";
         <p style="font-size:13px">Try FTS, NVDA, TQQQ, or any stock symbol</p>
       </div>
     </div>
+    <!-- CHANGE 14: Full chart link footer -->
+    <div class="chart-footer">
+      <a id="fullChartLink" href="/chart">Open in Full Chart →</a>
+    </div>
   </div>
 
   <!-- SIDEBAR -->
@@ -266,6 +321,8 @@ import LogoutBar from "../components/LogoutBar.astro";
         <div class="force-track"><div class="force-fill" id="forceFill" style="width:0%"></div></div>
         <span class="force-val" id="forceVal">—</span>
       </div>
+      <!-- CHANGE 4: Trade Force explanation -->
+      <div class="tf-explain">Score 0–10 measuring directional conviction. 7+ = strong signal, &lt;4 = weak/choppy</div>
       <div class="narrative" id="narrative" style="margin-top:12px">Run an analysis to see the directional breakdown.</div>
     </div>
 
@@ -282,17 +339,26 @@ import LogoutBar from "../components/LogoutBar.astro";
           <div id="supLevels"><div style="color:var(--muted);font-size:12px">—</div></div>
         </div>
       </div>
+      <!-- CHANGE 5: S/R note -->
+      <p class="sr-note">Levels calculated from recent swing highs/lows over 50 periods</p>
       <div class="range-wrap" id="rangeWrap" style="display:none">
+        <!-- CHANGE 11: 52W end labels -->
+        <div class="range-end-labels">
+          <span class="range-end-label">52W LOW</span>
+          <span class="range-end-label">52W HIGH</span>
+        </div>
         <div class="range-labels">
           <span id="rangeLow">—</span>
           <span style="color:var(--text);font-weight:700" id="rangeCur">—</span>
           <span id="rangeHigh">—</span>
         </div>
-        <div class="range-track">
+        <div class="range-track" style="position:relative">
           <div class="range-fill" id="rangeFill" style="width:0%"></div>
           <div class="range-dot" id="rangeDot" style="left:0%"></div>
+          <!-- CURRENT label positioned dynamically by JS -->
+          <div id="rangeCurLabel" class="range-cur-label" style="left:0%">CURRENT</div>
         </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:6px">52-Week Range</div>
+        <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:18px">52-Week Range</div>
       </div>
     </div>
 
@@ -302,6 +368,13 @@ import LogoutBar from "../components/LogoutBar.astro";
       <table class="ma-table" id="maTable">
         <tr><td colspan="3" style="color:var(--muted);font-size:12px">—</td></tr>
       </table>
+      <!-- CHANGE 12: MA legend -->
+      <div class="ma-legend">
+        <div class="ma-legend-row"><span class="ma-legend-key">MA5</span> — Short-term momentum (day traders)</div>
+        <div class="ma-legend-row"><span class="ma-legend-key">MA20</span> — Monthly trend (swing traders)</div>
+        <div class="ma-legend-row"><span class="ma-legend-key">MA50</span> — Medium-term bias (position traders)</div>
+        <div class="ma-legend-row"><span class="ma-legend-key">MA200</span> — Long-term trend (investors)</div>
+      </div>
     </div>
 
     <!-- INDICATORS -->
@@ -315,8 +388,48 @@ import LogoutBar from "../components/LogoutBar.astro";
     <!-- PATTERNS -->
     <div class="card">
       <div class="card-title">Candlestick Patterns</div>
+      <!-- CHANGE 6: Pattern count summary -->
+      <div class="pat-summary" id="patSummary" style="display:none"></div>
       <div id="patternsList">
         <div class="no-patterns">Run an analysis to detect patterns.</div>
+      </div>
+    </div>
+
+    <!-- CHANGE 7: Risk Calculator card -->
+    <div class="card">
+      <div class="card-title">Risk Calculator</div>
+      <div class="risk-grid">
+        <div class="risk-field">
+          <label for="rcEntry">Entry Price</label>
+          <input type="number" id="rcEntry" placeholder="0.00" step="0.01" min="0" />
+        </div>
+        <div class="risk-field">
+          <label for="rcStop">Stop Loss</label>
+          <input type="number" id="rcStop" placeholder="Auto from S1" step="0.01" min="0" />
+        </div>
+        <div class="risk-field">
+          <label for="rcAccount">Account Size</label>
+          <input type="number" id="rcAccount" placeholder="10000" value="10000" step="100" min="0" />
+        </div>
+        <div class="risk-field">
+          <label for="rcRisk">Risk %</label>
+          <input type="number" id="rcRisk" placeholder="2" value="2" step="0.1" min="0.1" max="100" />
+        </div>
+      </div>
+      <div class="risk-divider"></div>
+      <div class="risk-results">
+        <div class="risk-result-row">
+          <span class="risk-result-label">Position Size</span>
+          <span class="risk-result-val" id="rcPosSize">—</span>
+        </div>
+        <div class="risk-result-row">
+          <span class="risk-result-label">Max Loss</span>
+          <span class="risk-result-val" id="rcMaxLoss">—</span>
+        </div>
+        <div class="risk-result-row">
+          <span class="risk-result-label">R:R Ratio</span>
+          <span class="risk-result-val" id="rcRR">—</span>
+        </div>
       </div>
     </div>
 
@@ -331,13 +444,29 @@ import LogoutBar from "../components/LogoutBar.astro";
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <script is:inline>
 document.getElementById('yr').textContent = new Date().getFullYear();
-function toggleMenu(){
-  document.getElementById('mobileMenu').classList.toggle('open');
-  document.getElementById('hamburgerBtn').classList.toggle('open');
-}
+
+// CHANGE 10: Burger menu close on link click
+document.querySelectorAll('#ttMob a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('ttMob').classList.remove('open');
+    document.getElementById('ttBurger').classList.remove('open');
+  });
+});
 
 const BOT = 'https://bot.trendtrooper.com';
 let chart, candleSeries, srLines = [], currentTF = '1d', chartCandles = [];
+let currentTicker = 'SPY';
+let currentSupportLevel = null; // CHANGE 7: store support level for risk calc
+
+// CHANGE 8: Debounce helper
+function debounce(fn, ms) {
+  let timer;
+  return function() {
+    clearTimeout(timer);
+    var args = arguments;
+    timer = setTimeout(function() { fn.apply(this, args); }, ms);
+  };
+}
 
 function initChart() {
   const el = document.getElementById('chartDiv');
@@ -357,7 +486,7 @@ function initChart() {
     borderUpColor: '#22d673', borderDownColor: '#ff5c6a',
     wickUpColor: '#22d673', wickDownColor: '#ff5c6a',
   });
-  window.addEventListener('resize', () => { if(chart) chart.applyOptions({width: el.clientWidth}); });
+  window.addEventListener('resize', function() { if(chart) chart.applyOptions({width: el.clientWidth}); });
   return { chart, candleSeries };
 }
 
@@ -384,7 +513,7 @@ function addSRLine(price, color, label) {
 }
 
 function clearSRLines() {
-  srLines.forEach(l => { try { chart.removeSeries(l); } catch(e){} });
+  srLines.forEach(function(l) { try { chart.removeSeries(l); } catch(e){} });
   srLines = [];
 }
 
@@ -425,11 +554,21 @@ function renderLevels(data) {
   const res = data.resistance || [];
   const sup = data.support || [];
   document.getElementById('resLevels').innerHTML = res.length
-    ? res.map((v,i) => `<div class="level-row"><span class="level-tag">R${i+1}</span><span class="level-val level-res">$${v.toFixed(2)}</span></div>`).join('')
+    ? res.map(function(v,i){ return '<div class="level-row"><span class="level-tag">R'+(i+1)+'</span><span class="level-val level-res">$'+v.toFixed(2)+'</span></div>'; }).join('')
     : '<div style="color:var(--muted);font-size:12px">None above</div>';
   document.getElementById('supLevels').innerHTML = sup.length
-    ? sup.map((v,i) => `<div class="level-row"><span class="level-tag">S${i+1}</span><span class="level-val level-sup">$${v.toFixed(2)}</span></div>`).join('')
+    ? sup.map(function(v,i){ return '<div class="level-row"><span class="level-tag">S'+(i+1)+'</span><span class="level-val level-sup">$'+v.toFixed(2)+'</span></div>'; }).join('')
     : '<div style="color:var(--muted);font-size:12px">None below</div>';
+
+  // CHANGE 7: Store nearest support for risk calc pre-fill
+  if (sup.length > 0) {
+    currentSupportLevel = sup[0];
+    const stopInput = document.getElementById('rcStop');
+    if (stopInput && !stopInput.dataset.userEdited) {
+      stopInput.value = sup[0].toFixed(2);
+      calcRisk();
+    }
+  }
 
   // 52W range bar
   const lo = data.low_52, hi = data.high_52, pr = data.price;
@@ -439,6 +578,9 @@ function renderLevels(data) {
   document.getElementById('rangeCur').textContent  = '$' + pr;
   document.getElementById('rangeFill').style.width = pct + '%';
   document.getElementById('rangeDot').style.left   = pct + '%';
+  // CHANGE 11: update CURRENT label position
+  var curLabel = document.getElementById('rangeCurLabel');
+  if (curLabel) curLabel.style.left = pct + '%';
   document.getElementById('rangeWrap').style.display = 'block';
 }
 
@@ -452,28 +594,44 @@ function renderMAs(data) {
     ['100-Day',mas.ma100],
     ['200-Day',mas.ma200],
   ];
-  document.getElementById('maTable').innerHTML = rows.map(([name, val]) => {
-    if (!val) return `<tr><td class="ma-name">${name}</td><td class="ma-arrow">—</td><td class="ma-val" style="color:var(--muted)">—</td></tr>`;
+  document.getElementById('maTable').innerHTML = rows.map(function(row) {
+    var name = row[0], val = row[1];
+    if (!val) return '<tr><td class="ma-name">'+name+'</td><td class="ma-arrow">—</td><td class="ma-val" style="color:var(--muted)">—</td></tr>';
     const above = price >= val;
     const arrow = above ? '↑' : '↓';
     const cls   = above ? 'above-ma' : 'below-ma';
-    return `<tr>
-      <td class="ma-name">${name}</td>
-      <td class="ma-arrow ${cls}">${arrow}</td>
-      <td class="ma-val ${cls}">$${val.toFixed(2)}</td>
-    </tr>`;
+    return '<tr><td class="ma-name">'+name+'</td><td class="ma-arrow '+cls+'">'+arrow+'</td><td class="ma-val '+cls+'">$'+val.toFixed(2)+'</td></tr>';
   }).join('');
+}
+
+// CHANGE 3: Indicator tooltip data
+var IND_TOOLTIPS = {
+  'RSI (14)':  'Relative Strength Index. &gt;70 = Overbought (bearish), &lt;30 = Oversold (bullish), 30–70 = Neutral',
+  'MACD':      'Moving Average Convergence Divergence. Positive histogram = bullish momentum',
+  'ATR (14)':  'Average True Range. Higher = more volatile. Use for stop-loss sizing',
+  'Stoch %K':  '&gt;80 = Overbought, &lt;20 = Oversold',
+  'ADX (14)':  '&lt;20 = Weak trend, 20–40 = Moderate trend, &gt;40 = Strong trend',
+};
+
+function makeTooltipIcon(label) {
+  var tip = IND_TOOLTIPS[label] || '';
+  if (!tip) return '';
+  return '<span class="tooltip-wrap"><span class="info-icon" onclick="this.parentNode.classList.toggle(\'active\')">i</span><span class="tooltip-box">'+tip+'</span></span>';
 }
 
 function renderIndicators(data) {
   const ind = data.indicators;
   const rows = [
-    { label: 'RSI (14)',     val: ind.rsi,    min:0, max:100, warn:[30,70] },
-    { label: 'Stoch %K',    val: ind.stoch_k, min:0, max:100, warn:[20,80] },
-    { label: 'ADX (14)',    val: ind.adx,     min:0, max:100, warn:[20,40] },
-    { label: 'ATR (14)',    val: ind.atr,     min:null },
+    { label: 'RSI (14)',  val: ind.rsi,    min:0, max:100, warn:[30,70] },
+    { label: 'Stoch %K', val: ind.stoch_k, min:0, max:100, warn:[20,80] },
+    { label: 'ADX (14)', val: ind.adx,     min:0, max:100, warn:[20,40] },
+    { label: 'ATR (14)', val: ind.atr,     min:null },
   ];
-  document.getElementById('indicators').innerHTML = rows.map(r => {
+  // Also add MACD if present
+  if (ind.macd !== undefined && ind.macd !== null) {
+    rows.push({ label: 'MACD', val: ind.macd, min:null });
+  }
+  document.getElementById('indicators').innerHTML = rows.map(function(r) {
     if (!r.val && r.val !== 0) return '';
     let barHtml = '';
     let valColor = 'var(--text)';
@@ -488,48 +646,105 @@ function renderIndicators(data) {
           else if (r.val < r.warn[0]) valColor = 'var(--green)';
         }
       }
-      barHtml = `<div class="ind-bar-wrap"><div class="ind-bar" style="width:${pct}%;background:${barColor}"></div></div>`;
+      barHtml = '<div class="ind-bar-wrap"><div class="ind-bar" style="width:'+pct+'%;background:'+barColor+'"></div></div>';
     }
-    return `<div class="ind-row">
-      <span class="ind-label">${r.label}</span>
-      ${barHtml}
-      <span class="ind-val" style="color:${valColor}">${r.val.toFixed(2)}</span>
-    </div>`;
+    return '<div class="ind-row"><span class="ind-label">'+r.label+' '+makeTooltipIcon(r.label)+'</span>'+barHtml+'<span class="ind-val" style="color:'+valColor+'">'+r.val.toFixed(2)+'</span></div>';
   }).join('');
 }
 
 function renderPatterns(data) {
   const list = data.patterns || [];
   const el = document.getElementById('patternsList');
+  // CHANGE 6: pattern count summary
+  const summaryEl = document.getElementById('patSummary');
+  if (list.length > 0) {
+    summaryEl.textContent = list.length + ' pattern' + (list.length !== 1 ? 's' : '') + ' detected in last 20 candles';
+    summaryEl.style.display = 'block';
+  } else {
+    summaryEl.style.display = 'none';
+  }
+
   if (!list.length) {
     el.innerHTML = '<div class="no-patterns">No patterns detected in recent candles.</div>';
     candleSeries.setMarkers([]);
     return;
   }
-  el.innerHTML = list.map(p => {
+  el.innerHTML = list.map(function(p) {
     const cls = p.signal === 'bullish' ? 'pat-bull' : p.signal === 'bearish' ? 'pat-bear' : 'pat-neutral';
-    return `<div class="pat-item">
-      <span class="pat-name">${p.name}</span>
-      <span class="pat-badge ${cls}">${p.signal}</span>
-    </div>`;
+    return '<div class="pat-item"><span class="pat-name">'+p.name+'</span><span class="pat-badge '+cls+'">'+p.signal+'</span></div>';
   }).join('');
 
   // Chart markers
-  const markers = list.map(p => ({
-    time: p.time,
-    position: p.signal === 'bearish' ? 'aboveBar' : 'belowBar',
-    color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
-    shape:  p.signal === 'bearish' ? 'arrowDown' : 'arrowUp',
-    text:   p.name,
-    size:   4,
-  }));
-  markers.sort((a, b) => a.time - b.time);
+  const markers = list.map(function(p) {
+    return {
+      time: p.time,
+      position: p.signal === 'bearish' ? 'aboveBar' : 'belowBar',
+      color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
+      shape:  p.signal === 'bearish' ? 'arrowDown' : 'arrowUp',
+      text:   p.name,
+      size:   4,
+    };
+  });
+  markers.sort(function(a, b) { return a.time - b.time; });
   candleSeries.setMarkers(markers);
+}
+
+// CHANGE 7: Risk calculator logic
+function calcRisk() {
+  var entry   = parseFloat(document.getElementById('rcEntry').value);
+  var stop    = parseFloat(document.getElementById('rcStop').value);
+  var account = parseFloat(document.getElementById('rcAccount').value) || 10000;
+  var riskPct = parseFloat(document.getElementById('rcRisk').value) || 2;
+
+  if (!entry || !stop || entry <= 0 || stop <= 0 || entry === stop) {
+    document.getElementById('rcPosSize').textContent = '—';
+    document.getElementById('rcMaxLoss').textContent = '—';
+    document.getElementById('rcRR').textContent = '—';
+    return;
+  }
+
+  var riskPerShare = Math.abs(entry - stop);
+  var maxLossDollar = account * (riskPct / 100);
+  var shares = maxLossDollar / riskPerShare;
+  var posSize = shares * entry;
+
+  // R:R: assume target = entry + (entry - stop) * 2 for a 1:2 default display
+  var reward = Math.abs(entry - stop) * 2;
+  var rrRatio = (reward / riskPerShare).toFixed(1);
+
+  document.getElementById('rcPosSize').textContent = '$' + posSize.toFixed(0) + ' (' + Math.floor(shares) + ' shares)';
+  document.getElementById('rcMaxLoss').textContent = '$' + maxLossDollar.toFixed(0);
+  document.getElementById('rcRR').textContent = '1:' + rrRatio;
+}
+
+// Mark stop loss as user-edited so auto-fill from API doesn't overwrite it
+document.getElementById('rcStop').addEventListener('input', function() {
+  this.dataset.userEdited = '1';
+  calcRisk();
+});
+['rcEntry','rcAccount','rcRisk'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', calcRisk);
+});
+
+// CHANGE 2 & 9: showError helper with retry button
+function showError(ticker, message) {
+  document.getElementById('chartDiv').innerHTML =
+    '<div class="error-card">' +
+    '<div style="font-size:32px">⚠</div>' +
+    '<h3>Analysis server offline</h3>' +
+    '<p>' + (message || 'Check bot.trendtrooper.com or retry.') + '</p>' +
+    '<button class="btn-retry" onclick="runAnalysis(\'' + ticker.replace(/'/g, "\\'") + '\')">↺ Retry</button>' +
+    '</div>';
 }
 
 async function runAnalysis(ticker) {
   ticker = ticker.trim().toUpperCase();
   if (!ticker) return;
+  currentTicker = ticker;
+
+  // CHANGE 14: update full-chart link dynamically
+  var fcLink = document.getElementById('fullChartLink');
+  if (fcLink) fcLink.href = '/chart?symbol=' + encodeURIComponent(ticker);
 
   // Update URL
   const url = new URL(window.location.href);
@@ -537,31 +752,50 @@ async function runAnalysis(ticker) {
   window.history.replaceState({}, '', url.toString());
 
   // Update quick picks
-  document.querySelectorAll('.qp:not(.tf)').forEach(b => b.classList.toggle('active', b.dataset.t === ticker || b.dataset.t === ticker + '.TO'));
+  document.querySelectorAll('.qp:not(.tf)').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.t === ticker || b.dataset.t === ticker + '.TO');
+  });
 
   // Show loading state
   document.getElementById('chartDiv').innerHTML = '<div class="chart-loading"><div class="spinner"></div> Loading ' + ticker + '…</div>';
   document.getElementById('hTicker').textContent = ticker;
   document.getElementById('hPrice').textContent = '—';
 
+  // CHANGE 2 & 9: fetch with timeout (10s / 12s)
+  var aborted = false;
+  var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var timeoutId = setTimeout(function() {
+    aborted = true;
+    if (controller) controller.abort();
+    showError(ticker, 'Request timed out after 12 seconds. Check bot.trendtrooper.com or retry.');
+  }, 12000);
+
   try {
-    const res = await fetch(`${BOT}/analyze/${encodeURIComponent(ticker)}?interval=${currentTF}`);
+    var fetchOpts = controller ? { signal: controller.signal } : {};
+    const res = await fetch(BOT + '/analyze/' + encodeURIComponent(ticker) + '?interval=' + currentTF, fetchOpts);
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      showError(ticker, 'Server returned ' + res.status + '. The bot may be offline.');
+      return;
+    }
+
     const data = await res.json();
 
     if (data.error) {
-      document.getElementById('chartDiv').innerHTML = `<div class="empty-state"><div style="font-size:32px">⚠️</div><h3>Could not load ${ticker}</h3><p class="error-msg">${data.error}</p></div>`;
+      document.getElementById('chartDiv').innerHTML = '<div class="empty-state"><div style="font-size:32px">⚠️</div><h3>Could not load '+ticker+'</h3><p class="error-msg">'+data.error+'</p></div>';
       return;
     }
 
     // Render chart
     initChart();
-    chartCandles = data.candles.map(c => ({ time: c.time, open: c.open, high: c.high, low: c.low, close: c.close }));
+    chartCandles = data.candles.map(function(c) { return { time: c.time, open: c.open, high: c.high, low: c.low, close: c.close }; });
     candleSeries.setData(chartCandles);
 
     // Add S/R lines BEFORE fitContent so future points are included in the view
     clearSRLines();
-    (data.resistance || []).forEach((v, i) => addSRLine(v, '#ff5c6a', `R${i+1}`));
-    (data.support    || []).forEach((v, i) => addSRLine(v, '#22d673', `S${i+1}`));
+    (data.resistance || []).forEach(function(v, i) { addSRLine(v, '#ff5c6a', 'R'+(i+1)); });
+    (data.support    || []).forEach(function(v, i) { addSRLine(v, '#22d673', 'S'+(i+1)); });
 
     chart.timeScale().fitContent();
 
@@ -574,28 +808,35 @@ async function runAnalysis(ticker) {
     renderPatterns(data);
 
   } catch (err) {
-    document.getElementById('chartDiv').innerHTML = `<div class="empty-state"><div style="font-size:32px">⚠️</div><h3>Error</h3><p class="error-msg">${err.message}</p></div>`;
+    clearTimeout(timeoutId);
+    if (aborted) return; // timeout already showed error
+    showError(ticker, err.message || 'Analysis server offline. Check bot.trendtrooper.com or retry.');
   }
 }
 
+// CHANGE 8: Debounced TF button handler (500ms)
+var debouncedTFAnalysis = debounce(function(ticker) {
+  if (ticker) runAnalysis(ticker);
+}, 500);
+
 // Event listeners
-document.getElementById('analyzeBtn').addEventListener('click', () => {
+document.getElementById('analyzeBtn').addEventListener('click', function() {
   runAnalysis(document.getElementById('tickerInput').value);
 });
-document.getElementById('tickerInput').addEventListener('keydown', e => {
+document.getElementById('tickerInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') runAnalysis(e.target.value);
 });
-document.querySelectorAll('.qp.tf').forEach(b => {
-  b.addEventListener('click', () => {
+document.querySelectorAll('.qp.tf').forEach(function(b) {
+  b.addEventListener('click', function() {
     currentTF = b.dataset.tf;
-    document.querySelectorAll('.qp.tf').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.qp.tf').forEach(function(x) { x.classList.remove('active'); });
     b.classList.add('active');
     const t = document.getElementById('tickerInput').value.trim().toUpperCase();
-    if (t) runAnalysis(t);
+    debouncedTFAnalysis(t);
   });
 });
-document.querySelectorAll('.qp:not(.tf)').forEach(b => {
-  b.addEventListener('click', () => {
+document.querySelectorAll('.qp:not(.tf)').forEach(function(b) {
+  b.addEventListener('click', function() {
     document.getElementById('tickerInput').value = b.dataset.t;
     runAnalysis(b.dataset.t);
   });
