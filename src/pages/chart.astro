@@ -15,6 +15,7 @@ import LogoutBar from "../components/LogoutBar.astro";
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TrendTrooper — Full Chart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -40,15 +41,37 @@ import LogoutBar from "../components/LogoutBar.astro";
       flex-direction: column;
     }
 
-    /* ── HEADER ── */
-    header {
-      height: 60px;
+    /* ── STANDARD HEADER ── */
+    header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,.1);display:flex;align-items:center;justify-content:space-between;padding:0 32px;flex-shrink:0;}
+    .tt-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#e8eeff;}
+    .tt-logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#7040ff,#00cfff);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;box-shadow:0 0 20px rgba(112,64,255,.4);}
+    .tt-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#fff,#00cfff,#7040ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .tt-tag{font-size:9px;color:#00cfff;font-weight:600;letter-spacing:3px;text-transform:uppercase;display:block;opacity:.8;}
+    .tt-nav{display:flex;align-items:center;gap:1px;white-space:nowrap;}
+    .tt-nav a{color:#c8d8f0;padding:6px 9px;border-radius:8px;text-decoration:none;font-weight:800;font-size:11.5px;letter-spacing:.8px;text-transform:uppercase;transition:color .15s,background .15s;}
+    .tt-nav a:hover{color:#e8eeff;background:rgba(0,200,255,.06);}
+    .tt-nav a.cur{color:#00cfff;}
+    .tt-cta{background:linear-gradient(135deg,#00cfff,#7040ff)!important;color:#fff!important;font-weight:800!important;padding:8px 14px!important;border-radius:8px!important;box-shadow:0 0 20px rgba(0,200,255,.2)!important;}
+    .tt-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
+    .tt-burger span{width:22px;height:2px;background:#e8eeff;border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
+    .tt-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .tt-burger.open span:nth-child(2){opacity:0;}
+    .tt-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .tt-mob{display:none;flex-direction:column;position:sticky;top:70px;z-index:99;background:rgba(2,5,20,.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,.1);padding:8px 24px 16px;}
+    .tt-mob.open{display:flex;}
+    .tt-mob a{color:#c8d8f0;padding:10px 0;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.04);}
+    .tt-mob a:hover{color:#e8eeff;}
+    @media(max-width:900px){.tt-nav{display:none;}.tt-burger{display:flex;}}
+
+    /* ── CHART TOOLBAR ── */
+    .chart-toolbar {
       background: var(--bg2);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       gap: 12px;
       padding: 0 16px;
+      height: 54px;
       flex-shrink: 0;
       flex-wrap: wrap;
     }
@@ -258,8 +281,7 @@ import LogoutBar from "../components/LogoutBar.astro";
     }
 
     @media (max-width: 600px) {
-      header { height: auto; padding: 10px 12px; }
-      .brand { display: none; }
+      .chart-toolbar { height: auto; padding: 8px 12px; }
       .quickpicks { gap: 4px; }
     }
   </style>
@@ -269,10 +291,37 @@ import LogoutBar from "../components/LogoutBar.astro";
 
 <!-- HEADER -->
 <header>
-  <a class="back-link" href="/">← Home</a>
-  <div class="logo">TT</div>
-  <span class="brand">TrendTrooper</span>
+  <a class="tt-brand" href="/">
+    <div class="tt-logo">TT</div>
+    <div><div class="tt-name">TRENDTROOPER</div><span class="tt-tag">Signal Service</span></div>
+  </a>
+  <nav class="tt-nav">
+    <a href="/#features">Features</a>
+    <a href="/chart" class="cur">Live Chart</a>
+    <a href="/#markets">Markets</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/chart" class="cur">Full Chart</a>
+    <a href="/analysis">Analysis</a>
+    <a href="/academy">Academy</a>
+    <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+    <a href="/#pricing" class="tt-cta">Get Started</a>
+  </nav>
+  <button class="tt-burger" id="ttBurger" onclick="this.classList.toggle('open');document.getElementById('ttMob').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+<div class="tt-mob" id="ttMob">
+  <a href="/#features">Features</a>
+  <a href="/chart">Live Chart</a>
+  <a href="/#markets">Markets</a>
+  <a href="/#pricing">Pricing</a>
+  <a href="/chart">Full Chart</a>
+  <a href="/analysis">Analysis</a>
+  <a href="/academy">Academy</a>
+  <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+  <a href="/#pricing">Get Started</a>
+</div>
 
+<!-- CHART TOOLBAR -->
+<div class="chart-toolbar">
   <div class="search-wrap">
     <select class="exchange-select" id="exchangeSelect">
       <option value="">Auto</option>
@@ -300,7 +349,7 @@ import LogoutBar from "../components/LogoutBar.astro";
 
     <button class="go-btn" id="goBtn">Go</button>
   </div>
-</header>
+</div>
 
 <!-- QUICK PICKS -->
 <div class="quickpicks">
