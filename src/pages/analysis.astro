@@ -517,11 +517,11 @@ function renderPatterns(data) {
   // Chart markers
   const markers = list.map(p => ({
     time: p.time,
-    position: p.signal === 'bullish' ? 'belowBar' : p.signal === 'bearish' ? 'aboveBar' : 'inBar',
+    position: p.signal === 'bearish' ? 'aboveBar' : 'belowBar',
     color:  p.signal === 'bullish' ? '#22d673' : p.signal === 'bearish' ? '#ff5c6a' : '#a78bfa',
-    shape:  p.signal === 'bullish' ? 'arrowUp'  : p.signal === 'bearish' ? 'arrowDown' : 'circle',
+    shape:  p.signal === 'bearish' ? 'arrowDown' : 'arrowUp',
     text:   p.name,
-    size:   2,
+    size:   4,
   }));
   markers.sort((a, b) => a.time - b.time);
   candleSeries.setMarkers(markers);
