@@ -537,7 +537,7 @@ async function runAnalysis(ticker) {
   window.history.replaceState({}, '', url.toString());
 
   // Update quick picks
-  document.querySelectorAll('.qp').forEach(b => b.classList.toggle('active', b.dataset.t === ticker || b.dataset.t === ticker + '.TO'));
+  document.querySelectorAll('.qp:not(.tf)').forEach(b => b.classList.toggle('active', b.dataset.t === ticker || b.dataset.t === ticker + '.TO'));
 
   // Show loading state
   document.getElementById('chartDiv').innerHTML = '<div class="chart-loading"><div class="spinner"></div> Loading ' + ticker + '…</div>';
