@@ -79,41 +79,10 @@ header{
   z-index:100;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  text-decoration:none;
-  color:var(--text);
-}
-
-.logo{
-  width:42px;height:42px;
-  border-radius:10px;
-  background:linear-gradient(135deg,var(--purple),var(--cyan));
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Orbitron',monospace;
-  font-weight:900;font-size:14px;
-  color:#fff;
-  flex-shrink:0;
-  box-shadow:0 0 20px rgba(112,64,255,0.4);
-}
-
-.brand-name{
-  font-family:'Orbitron',monospace;
-  font-size:18px;font-weight:900;
-  letter-spacing:2px;
-  background:linear-gradient(90deg,#fff,var(--cyan),var(--purple));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.brand-tag{
-  font-size:9px;color:var(--cyan);
-  font-weight:600;letter-spacing:3px;
-  text-transform:uppercase;display:block;
-  opacity:0.8;
-}
+.tt-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#e8eeff;}
+.tt-logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#7040ff,#00cfff);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;box-shadow:0 0 20px rgba(112,64,255,.4);}
+.tt-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#fff,#00cfff,#7040ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tt-tag{font-size:9px;color:#00cfff;font-weight:600;letter-spacing:3px;text-transform:uppercase;display:block;opacity:.8;}
 
 nav{display:flex;align-items:center;gap:4px;}
 
@@ -661,7 +630,7 @@ footer{
   gap:48px;margin-bottom:40px;
 }
 
-.footer-brand .brand-name{
+.footer-brand .tt-name{
   font-family:'Orbitron',monospace;
   font-size:16px;font-weight:900;margin-bottom:10px;
   letter-spacing:2px;
@@ -792,12 +761,9 @@ footer{
 
 <!-- HEADER -->
 <header>
-  <a class="brand" href="/">
-    <div class="logo">TT</div>
-    <div>
-      <div class="brand-name">TRENDTROOPER</div>
-      <span class="brand-tag">Signal Service</span>
-    </div>
+  <a class="tt-brand" href="/">
+    <div class="tt-logo">TT</div>
+    <div><div class="tt-name">TRENDTROOPER</div><span class="tt-tag">Signal Service</span></div>
   </a>
 
   <nav>
@@ -1179,8 +1145,8 @@ footer{
   <div class="footer-inner">
     <div class="footer-brand">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <div class="logo" style="width:36px;height:36px;font-size:12px;">TT</div>
-        <div class="brand-name">TRENDTROOPER</div>
+        <div class="tt-logo" style="width:36px;height:36px;font-size:12px;">TT</div>
+        <div class="tt-name">TRENDTROOPER</div>
       </div>
       <p>Algorithmic trading signals for Canadian and US markets. Built for traders who want precision without the noise.</p>
     </div>
