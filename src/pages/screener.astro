@@ -26,7 +26,7 @@ import LogoutBar from "../components/LogoutBar.astro";
     a{color:inherit;text-decoration:none}
     header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,.1);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
     .tt-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#e8eeff;}
-    .tt-logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#7040ff,#00cfff);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;box-shadow:0 0 20px rgba(112,64,255,.4);}
+    .tt-logo{flex-shrink:0;}
     .tt-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#fff,#00cfff,#7040ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .tt-tag{font-size:9px;color:#00cfff;font-weight:600;letter-spacing:3px;text-transform:uppercase;display:block;opacity:.8;}
     .tt-nav{display:flex;align-items:center;gap:1px;white-space:nowrap;}
@@ -133,7 +133,7 @@ import LogoutBar from "../components/LogoutBar.astro";
 
 <header>
   <a class="tt-brand" href="/">
-    <div class="tt-logo">TT</div>
+    <svg class="tt-logo" width="44" height="50" viewBox="0 0 52 58"><defs><linearGradient id="shG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6644ff"/><stop offset="100%" stop-color="#00aaff"/></linearGradient></defs><path d="M26 2 L50 12 L50 32 Q50 48 26 56 Q2 48 2 32 L2 12 Z" fill="url(#shG)" stroke="rgba(100,160,255,0.6)" stroke-width="1.5"/><text x="26" y="36" text-anchor="middle" font-family="Orbitron,monospace" font-weight="900" font-size="16" fill="#ffffff" letter-spacing="1">TT</text><text x="26" y="17" text-anchor="middle" font-size="10" fill="rgba(255,220,100,0.9)">*</text></svg>
     <div><div class="tt-name">TRENDTROOPER</div><span class="tt-tag">Signal Service</span></div>
   </a>
   <nav class="tt-nav">
