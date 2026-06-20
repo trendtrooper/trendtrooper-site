@@ -126,9 +126,60 @@ p{color:var(--muted2);font-size:1.05rem;margin-bottom:32px;line-height:1.7;}
   .features{grid-template-columns:1fr;}
   h1{font-size:1.4rem;}
 }
+header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,.1);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
+.tt-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#e8eeff;}
+.tt-logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#7040ff,#00cfff);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;box-shadow:0 0 20px rgba(112,64,255,.4);}
+.tt-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#fff,#00cfff,#7040ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tt-tag{font-size:9px;color:#00cfff;font-weight:600;letter-spacing:3px;text-transform:uppercase;display:block;opacity:.8;}
+.tt-nav{display:flex;align-items:center;gap:1px;white-space:nowrap;}
+.tt-nav a{color:#c8d8f0;padding:6px 9px;border-radius:8px;text-decoration:none;font-weight:800;font-size:11.5px;letter-spacing:.8px;text-transform:uppercase;transition:color .15s,background .15s;}
+.tt-nav a:hover{color:#e8eeff;background:rgba(0,200,255,.06);}
+.tt-nav a.cur{color:#00cfff;}
+.tt-cta{background:linear-gradient(135deg,#00cfff,#7040ff)!important;color:#fff!important;font-weight:800!important;padding:8px 14px!important;border-radius:8px!important;box-shadow:0 0 20px rgba(0,200,255,.2)!important;}
+.tt-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
+.tt-burger span{width:22px;height:2px;background:#e8eeff;border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
+.tt-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.tt-burger.open span:nth-child(2){opacity:0;}
+.tt-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.tt-mob{display:none;flex-direction:column;position:sticky;top:70px;z-index:99;background:rgba(2,5,20,.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,.1);padding:8px 24px 16px;}
+.tt-mob.open{display:flex;}
+.tt-mob a{color:#c8d8f0;padding:10px 0;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.04);}
+.tt-mob a:hover{color:#e8eeff;}
+@media(max-width:900px){.tt-nav{display:none;}.tt-burger{display:flex;}}
+.page-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
 </style>
 </head>
-<body>
+<body style="justify-content:flex-start;align-items:stretch;">
+<header>
+  <a class="tt-brand" href="/">
+    <div class="tt-logo">TT</div>
+    <div><div class="tt-name">TRENDTROOPER</div><span class="tt-tag">Signal Service</span></div>
+  </a>
+  <nav class="tt-nav">
+    <a href="/#features">Features</a>
+    <a href="/chart">Live Chart</a>
+    <a href="/#markets">Markets</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/chart">Full Chart</a>
+    <a href="/analysis">Analysis</a>
+    <a href="/academy">Academy</a>
+    <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+    <a href="/#pricing" class="tt-cta">Get Started</a>
+  </nav>
+  <button class="tt-burger" id="ttBurger" onclick="this.classList.toggle('open');document.getElementById('ttMob').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+<div class="tt-mob" id="ttMob">
+  <a href="/#features">Features</a>
+  <a href="/chart">Live Chart</a>
+  <a href="/#markets">Markets</a>
+  <a href="/#pricing">Pricing</a>
+  <a href="/chart">Full Chart</a>
+  <a href="/analysis">Analysis</a>
+  <a href="/academy">Academy</a>
+  <a href="https://bot.trendtrooper.com/" target="_blank">Bot Status</a>
+  <a href="/#pricing">Get Started</a>
+</div>
+<div class="page-wrap">
 <div class="card">
   <span class="success-icon">⚡</span>
   <div class="label">Access Granted</div>
@@ -154,7 +205,7 @@ p{color:var(--muted2);font-size:1.05rem;margin-bottom:32px;line-height:1.7;}
     <a href="/screener" class="btn-outline">Open Screener</a>
     <a href="/academy" class="btn-outline">Browse Academy</a>
   </div>
-</div>
+</div></div>
 
 <script>
   const params = new URLSearchParams(window.location.search);
