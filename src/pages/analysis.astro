@@ -632,6 +632,7 @@ let chart, candleSeries, srLines = [], currentTF = '1d', chartCandles = [];
 let bullMarkerSeries = null, bearMarkerSeries = null;
 let currentTicker = 'SPY';
 var patternTimesGlobal = {};
+var openLineOverlay = null, openLineDrawFn = null;
 let currentSupportLevel = null; // CHANGE 7: store support level for risk calc
 
 // CHANGE 8: Debounce helper
@@ -644,9 +645,58 @@ function debounce(fn, ms) {
   };
 }
 
+function removeOpenLines() {
+  if (openLineDrawFn && chart) {
+    try { chart.timeScale().unsubscribeVisibleLogicalRangeChange(openLineDrawFn); } catch(e){}
+  }
+  openLineDrawFn = null;
+  if (openLineOverlay && openLineOverlay.parentNode) openLineOverlay.parentNode.removeChild(openLineOverlay);
+  openLineOverlay = null;
+}
+
+function drawOpenLines(openTimes) {
+  if (!openTimes.length || !chart) return;
+  const chartEl = document.getElementById('chartDiv');
+  chartEl.style.position = 'relative';
+
+  openLineOverlay = document.createElement('canvas');
+  openLineOverlay.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:3';
+  openLineOverlay.width  = chartEl.clientWidth;
+  openLineOverlay.height = 420;
+  chartEl.appendChild(openLineOverlay);
+
+  openLineDrawFn = function() {
+    if (!openLineOverlay) return;
+    var ctx = openLineOverlay.getContext('2d');
+    ctx.clearRect(0, 0, openLineOverlay.width, openLineOverlay.height);
+    ctx.strokeStyle = 'rgba(0,200,255,0.45)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 6]);
+    openTimes.forEach(function(t) {
+      var x = chart.timeScale().timeToCoordinate(t);
+      if (x !== null && x >= 0 && x <= openLineOverlay.width - 55) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, openLineOverlay.height - 25);
+        ctx.stroke();
+      }
+    });
+  };
+
+  chart.timeScale().subscribeVisibleLogicalRangeChange(openLineDrawFn);
+  openLineDrawFn();
+
+  window.addEventListener('resize', function() {
+    if (!openLineOverlay) return;
+    openLineOverlay.width = document.getElementById('chartDiv').clientWidth;
+    if (openLineDrawFn) openLineDrawFn();
+  });
+}
+
 function initChart() {
   const el = document.getElementById('chartDiv');
   el.innerHTML = '';
+  removeOpenLines();
   if (chart) { try { chart.remove(); } catch(e){} }
   chart = LightweightCharts.createChart(el, {
     width: el.clientWidth,
@@ -873,6 +923,9 @@ function applyDaySeparators() {
 
   // Clear any stale markers on the candle series (pattern arrows live on separate hidden series)
   candleSeries.setMarkers([]);
+
+  // Draw dashed vertical lines at each market-open timestamp
+  drawOpenLines(Object.keys(dayOpenSet).map(Number));
 }
 
 function renderPatterns(data) {
