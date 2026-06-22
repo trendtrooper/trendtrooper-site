@@ -340,9 +340,10 @@ import LogoutBar from "../components/LogoutBar.astro";
     <button class="btn primary" id="analyzeBtn">Analyze</button>
     <div class="qp-wrap">
       <span class="qp-label">TIMEFRAME</span>
-      <button class="qp tf active" data-tf="1d">1D</button>
-      <button class="qp tf" data-tf="1h">1H</button>
       <button class="qp tf" data-tf="5m">5M</button>
+      <button class="qp tf" data-tf="15m">15M</button>
+      <button class="qp tf" data-tf="1h">1H</button>
+      <button class="qp tf active" data-tf="1d">1D</button>
       <span class="qp-label" style="margin-left:8px">CA</span>
       <button class="qp" data-t="FTS.TO">FTS</button>
       <button class="qp" data-t="ENB.TO">ENB</button>
@@ -893,6 +894,8 @@ function renderPatterns(data) {
   if (!list.length) {
     el.innerHTML = '<div class="no-patterns">No patterns detected in recent candles.</div>';
     if (bar) { bar.style.display = 'none'; bar.innerHTML = ''; }
+    patternTimesGlobal = {};
+    applyDaySeparators();
     return;
   }
 
