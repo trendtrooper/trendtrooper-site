@@ -1011,8 +1011,8 @@ async function runAnalysis(ticker) {
   var timeoutId = setTimeout(function() {
     aborted = true;
     if (controller) controller.abort();
-    showError(ticker, 'Request timed out after 12 seconds. Check bot.trendtrooper.com or retry.');
-  }, 12000);
+    showError(ticker, 'Request timed out after 25 seconds. Check bot.trendtrooper.com or retry.');
+  }, 25000);
 
   try {
     var fetchOpts = controller ? { signal: controller.signal } : {};
