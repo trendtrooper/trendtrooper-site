@@ -870,13 +870,8 @@ function applyDaySeparators() {
   });
   candleSeries.setData(colored);
 
-  // Date label markers on the candleSeries (pattern arrows are on separate hidden series — no conflict)
-  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var dayMarkers = Object.keys(dayOpenSet).map(function(t) {
-    var d = new Date(parseInt(t) * 1000);
-    return { time: parseInt(t), position: 'aboveBar', color: 'rgba(0,200,255,0.8)', shape: 'arrowDown', text: months[d.getUTCMonth()] + ' ' + d.getUTCDate(), size: 0.4 };
-  });
-  candleSeries.setMarkers(dayMarkers.sort(function(a, b) { return a.time - b.time; }));
+  // Clear any stale markers on the candle series (pattern arrows live on separate hidden series)
+  candleSeries.setMarkers([]);
 }
 
 function renderPatterns(data) {
