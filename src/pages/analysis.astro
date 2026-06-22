@@ -630,6 +630,7 @@ const BOT = 'https://bot.trendtrooper.com';
 let chart, candleSeries, srLines = [], currentTF = '1d', chartCandles = [];
 let bullMarkerSeries = null, bearMarkerSeries = null;
 let currentTicker = 'SPY';
+var patternTimesGlobal = {};
 let currentSupportLevel = null; // CHANGE 7: store support level for risk calc
 
 // CHANGE 8: Debounce helper
@@ -842,6 +843,42 @@ function calcATR(candles, period) {
   return atrMap;
 }
 
+function applyDaySeparators() {
+  if (!chartCandles.length || currentTF === '1d') {
+    // For daily charts just apply pattern colors and return
+    var plain = chartCandles.map(function(c) {
+      if (patternTimesGlobal[c.time]) return Object.assign({}, c, { color: '#ffffff', borderColor: '#ffffff', wickColor: '#ffffff' });
+      return c;
+    });
+    candleSeries.setData(plain);
+    return;
+  }
+
+  // Find the first candle of each calendar day (UTC)
+  var seen = {}, dayOpenSet = {};
+  chartCandles.forEach(function(c) {
+    var d = new Date(c.time * 1000);
+    var key = d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate();
+    if (!seen[key]) { seen[key] = true; dayOpenSet[c.time] = key; }
+  });
+
+  // Single setData call: patterns (white) take priority, then day opens (cyan border)
+  var colored = chartCandles.map(function(c) {
+    if (patternTimesGlobal[c.time]) return Object.assign({}, c, { color: '#ffffff', borderColor: '#ffffff', wickColor: '#ffffff' });
+    if (dayOpenSet[c.time]) return Object.assign({}, c, { borderColor: '#00cfff', borderUpColor: '#00cfff', borderDownColor: '#00cfff' });
+    return c;
+  });
+  candleSeries.setData(colored);
+
+  // Date label markers on the candleSeries (pattern arrows are on separate hidden series — no conflict)
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var dayMarkers = Object.keys(dayOpenSet).map(function(t) {
+    var d = new Date(parseInt(t) * 1000);
+    return { time: parseInt(t), position: 'aboveBar', color: 'rgba(0,200,255,0.8)', shape: 'arrowDown', text: months[d.getUTCMonth()] + ' ' + d.getUTCDate(), size: 0.4 };
+  });
+  candleSeries.setMarkers(dayMarkers.sort(function(a, b) { return a.time - b.time; }));
+}
+
 function renderPatterns(data) {
   const list = data.patterns || [];
   const el = document.getElementById('patternsList');
@@ -869,16 +906,11 @@ function renderPatterns(data) {
     return '<div class="pat-item"><span class="pat-name">'+p.name+'</span><span class="pat-badge '+cls+'">'+p.signal+'</span></div>';
   }).join('');
 
-  // Color pattern candles white
+  // Color pattern candles white — stored globally so applyDaySeparators can merge
   var patternTimes = {};
   list.forEach(function(p) { patternTimes[p.time] = p.signal; });
-  var coloredCandles = chartCandles.map(function(c) {
-    if (patternTimes[c.time]) {
-      return Object.assign({}, c, { color: '#ffffff', borderColor: '#ffffff', wickColor: '#ffffff' });
-    }
-    return c;
-  });
-  candleSeries.setData(coloredCandles);
+  patternTimesGlobal = patternTimes;
+  applyDaySeparators();
 
   // ATR-based marker positions (3 ATR offset from bar)
   var atrMap = calcATR(chartCandles, 14);
