@@ -225,6 +225,60 @@ import LogoutBar from "../components/LogoutBar.astro";
     footer{max-width:var(--max);margin:0 auto 0;padding:24px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted2);font-size:13px}
     .foot-links{display:flex;gap:18px}.foot-links a:hover{color:var(--muted)}
 
+    /* EXPANDED ANALYSIS SECTIONS */
+    .exp-wrap{max-width:var(--max);margin:0 auto;padding:0 24px 40px;display:flex;flex-direction:column;gap:16px}
+    body.wide .exp-wrap{max-width:100%;padding:0 32px 40px}
+    .exp-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+    .exp-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:900px){.exp-grid-3,.exp-grid-2{grid-template-columns:1fr}}
+
+    /* Summary strip */
+    .sig-gauge{display:flex;flex-direction:column;align-items:center;gap:6px}
+    .gauge-donut{position:relative;width:80px;height:80px}
+    .gauge-donut svg{transform:rotate(-90deg)}
+    .gauge-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:900}
+    .gauge-sub{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+    .ind-breakdown{display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;margin-top:6px}
+    .ind-seg{height:100%;border-radius:2px;transition:.4s}
+    .ind-breakdown-labels{display:flex;justify-content:space-between;font-size:11px;font-family:var(--mono);font-weight:700;margin-top:4px}
+
+    /* Day range */
+    .day-range-wrap{margin-top:4px}
+    .day-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.07);position:relative;margin:8px 0}
+    .day-range-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--green))}
+    .day-range-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:var(--text);border:2px solid var(--bg);box-shadow:0 0 8px rgba(255,255,255,.2)}
+    .day-range-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-family:var(--mono)}
+
+    /* Returns */
+    .returns-bars{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:8px}
+    .ret-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+    .ret-bar-track{width:100%;flex:1;display:flex;align-items:flex-end;justify-content:center}
+    .ret-bar{width:100%;border-radius:3px 3px 0 0;min-height:4px;transition:.4s}
+    .ret-label{font-size:10px;color:var(--muted2);font-weight:700;letter-spacing:.5px}
+    .ret-pct{font-size:11px;font-family:var(--mono);font-weight:700}
+
+    /* Indicator + MA detail tables */
+    .detail-table{width:100%;border-collapse:collapse}
+    .detail-table td{padding:5px 4px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.03)}
+    .detail-table tr:last-child td{border-bottom:none}
+    .det-label{color:var(--muted2);font-weight:600}
+    .det-val{font-family:var(--mono);font-weight:700;text-align:right}
+    .det-arrow{text-align:center;width:18px;font-size:11px}
+    .det-pct{font-family:var(--mono);font-size:11px;text-align:right;color:var(--muted)}
+    .det-bull{color:var(--green)}.det-bear{color:var(--red)}.det-neutral{color:var(--muted)}
+
+    /* Pivot points */
+    .pivot-tabs{display:flex;gap:6px;margin-bottom:14px}
+    .pivot-tab{padding:5px 14px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--sans);transition:.15s}
+    .pivot-tab.active{background:linear-gradient(135deg,var(--accent2),#7c3aed);border-color:transparent;color:#fff}
+    .pivot-method-label{font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;padding:8px 0 4px}
+    .pivot-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+    .pivot-col-head{font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:.5px;padding:4px 2px}
+    .pivot-cell{font-family:var(--mono);font-size:12px;font-weight:700;padding:5px 2px;border-radius:5px}
+    .pivot-pp{background:rgba(167,139,250,.1);color:var(--accent2)}
+    .pivot-s{color:var(--green)}.pivot-r{color:var(--red)}
+    .pivot-divider{height:1px;background:rgba(255,255,255,.05);margin:10px 0}
+
     /* WIDESCREEN TOGGLE */
     .wide-btn{display:flex;align-items:center;gap:7px;cursor:pointer;flex-shrink:0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:8px;padding:7px 14px;font-size:10px;font-weight:700;color:rgba(150,180,220,.55);letter-spacing:2px;text-transform:uppercase;font-family:'Orbitron',monospace;transition:all .2s;user-select:none;}
     .wide-btn:hover{color:#00cfff;border-color:rgba(0,200,255,.35);background:rgba(0,200,255,.07);}
@@ -463,6 +517,77 @@ import LogoutBar from "../components/LogoutBar.astro";
     </div>
 
   </div>
+</div>
+
+<!-- EXPANDED ANALYSIS — hidden until data loads -->
+<div class="exp-wrap" id="expWrap" style="display:none">
+
+  <!-- ROW 1: Indicator gauge + MA gauge + Trend summary -->
+  <div class="exp-grid-3">
+    <div class="card">
+      <div class="card-title">Technical Indicators</div>
+      <div class="sig-gauge" id="expIndGauge">
+        <div class="gauge-donut"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/><circle id="gIndBear" cx="40" cy="40" r="32" fill="none" stroke="var(--red)" stroke-width="10" stroke-dasharray="0 201"/><circle id="gIndBull" cx="40" cy="40" r="32" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="0 201" stroke-dashoffset="0"/></svg><div class="gauge-label"><span id="gIndScore" style="color:var(--muted)">—</span><span class="gauge-sub" id="gIndLabel">—</span></div></div>
+        <div class="ind-breakdown" id="expIndBreak" style="width:100%"></div>
+        <div class="ind-breakdown-labels" style="width:100%"><span style="color:var(--green)" id="expIndBull">—</span><span style="color:var(--muted)">neutral</span><span style="color:var(--red)" id="expIndBear">—</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Moving Averages</div>
+      <div class="sig-gauge" id="expMAGauge">
+        <div class="gauge-donut"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/><circle id="gMABear" cx="40" cy="40" r="32" fill="none" stroke="var(--red)" stroke-width="10" stroke-dasharray="0 201"/><circle id="gMABull" cx="40" cy="40" r="32" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="0 201" stroke-dashoffset="0"/></svg><div class="gauge-label"><span id="gMAScore" style="color:var(--muted)">—</span><span class="gauge-sub" id="gMALabel">—</span></div></div>
+        <div class="ind-breakdown" id="expMABreak" style="width:100%"></div>
+        <div class="ind-breakdown-labels" style="width:100%"><span style="color:var(--green)" id="expMABull">—</span><span style="color:var(--muted)"></span><span style="color:var(--red)" id="expMABear">—</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Trend Breakdown</div>
+      <div style="font-size:11px;color:var(--muted2);font-weight:700;letter-spacing:.5px;margin-bottom:6px">SHORT-TERM</div>
+      <div id="expTrendShort" style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;margin-bottom:12px;color:var(--muted)">—</div>
+      <div style="font-size:11px;color:var(--muted2);font-weight:700;letter-spacing:.5px;margin-bottom:6px">UNDERLYING (MA200)</div>
+      <div id="expTrendLong" style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--muted)">—</div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Day range + Historical returns -->
+  <div class="exp-grid-2">
+    <div class="card">
+      <div class="card-title">Today's Range</div>
+      <div class="day-range-wrap">
+        <div class="day-range-labels"><span id="drLow">—</span><span id="drCur" style="color:var(--text);font-weight:700">—</span><span id="drHigh">—</span></div>
+        <div class="day-range-track"><div class="day-range-fill" id="drFill" style="width:0%"></div><div class="day-range-dot" id="drDot" style="left:0%"></div></div>
+        <div class="day-range-labels"><span style="color:var(--muted2);font-size:11px">DAY LOW</span><span id="drPct" style="color:var(--muted2);font-size:11px">—% from low</span><span style="color:var(--muted2);font-size:11px">DAY HIGH</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Historical Returns</div>
+      <div class="returns-bars" id="expReturns"></div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Indicator detail + MA detail -->
+  <div class="exp-grid-2">
+    <div class="card">
+      <div class="card-title">Indicator Values</div>
+      <table class="detail-table" id="expIndTable"><tr><td colspan="3" style="color:var(--muted)">—</td></tr></table>
+    </div>
+    <div class="card">
+      <div class="card-title">Moving Average Values</div>
+      <table class="detail-table" id="expMATable"><tr><td colspan="4" style="color:var(--muted)">—</td></tr></table>
+    </div>
+  </div>
+
+  <!-- ROW 4: Pivot points -->
+  <div class="card">
+    <div class="card-title">Pivot Points</div>
+    <div class="pivot-tabs">
+      <button class="pivot-tab active" id="ptDaily"  onclick="showPivot('daily')">Daily</button>
+      <button class="pivot-tab"        id="ptWeekly" onclick="showPivot('weekly')">Weekly</button>
+      <button class="pivot-tab"        id="ptMonthly" onclick="showPivot('monthly')">Monthly</button>
+    </div>
+    <div id="expPivots"><div style="color:var(--muted);font-size:12px">—</div></div>
+  </div>
+
 </div>
 
 <footer>
@@ -925,6 +1050,7 @@ async function runAnalysis(ticker) {
     renderMAs(data);
     renderIndicators(data);
     renderPatterns(data);
+    renderExpanded(data);
 
   } catch (err) {
     clearTimeout(timeoutId);
@@ -960,6 +1086,183 @@ document.querySelectorAll('.qp:not(.tf)').forEach(function(b) {
     runAnalysis(b.dataset.t);
   });
 });
+
+// ── EXPANDED PANEL RENDERERS ──────────────────────────────────
+
+var pivotData = {};
+
+function renderDonut(bearId, bullId, scoreId, labelId, bull, bear, total) {
+  var circ = 201;
+  var bullPct = total ? bull / total : 0;
+  var bearPct = total ? bear / total : 0;
+  var bullDash = bullPct * circ;
+  var bearDash = bearPct * circ;
+  document.getElementById(bearId).setAttribute('stroke-dasharray', bearDash + ' ' + circ);
+  document.getElementById(bearId).setAttribute('stroke-dashoffset', -bullDash);
+  document.getElementById(bullId).setAttribute('stroke-dasharray', bullDash + ' ' + circ);
+  var dominant = bull > bear ? 'BUY' : bear > bull ? 'SELL' : 'NEUTRAL';
+  var domCount = bull > bear ? bull : bear;
+  var color = bull > bear ? 'var(--green)' : bear > bull ? 'var(--red)' : 'var(--amber)';
+  document.getElementById(scoreId).textContent = dominant;
+  document.getElementById(scoreId).style.color = color;
+  document.getElementById(labelId).textContent = domCount + '/' + total;
+}
+
+function renderBreakdownBar(barId, bull, neutral, bear, total) {
+  var el = document.getElementById(barId);
+  if (!el || !total) return;
+  var bPct = (bull / total * 100).toFixed(1);
+  var nPct = (neutral / total * 100).toFixed(1);
+  var rPct = (bear / total * 100).toFixed(1);
+  el.innerHTML =
+    '<div class="ind-seg" style="width:'+bPct+'%;background:var(--green)"></div>' +
+    '<div class="ind-seg" style="width:'+nPct+'%;background:var(--muted2)"></div>' +
+    '<div class="ind-seg" style="width:'+rPct+'%;background:var(--red)"></div>';
+}
+
+function renderExpandedSummary(data) {
+  var ind = data.ind_summary || {};
+  var ma  = data.ma_summary  || {};
+  var indTotal = ind.total || 1;
+  var maTotal  = ma.total  || 1;
+  renderDonut('gIndBear','gIndBull','gIndScore','gIndLabel', ind.bull||0, ind.bear||0, indTotal);
+  renderDonut('gMABear', 'gMABull', 'gMAScore', 'gMALabel',  ma.bull||0,  ma.bear||0,  maTotal);
+  renderBreakdownBar('expIndBreak', ind.bull||0, ind.neutral||0, ind.bear||0, indTotal);
+  renderBreakdownBar('expMABreak',  ma.bull||0,  0,              ma.bear||0,  maTotal);
+  var ib = document.getElementById('expIndBull'); if(ib) ib.textContent = (ind.bull||0) + ' bull';
+  var ir = document.getElementById('expIndBear'); if(ir) ir.textContent = (ind.bear||0) + ' bear';
+  var mb = document.getElementById('expMABull');  if(mb) mb.textContent = (ma.bull||0)  + ' bull';
+  var mr = document.getElementById('expMABear');  if(mr) mr.textContent = (ma.bear||0)  + ' bear';
+  var price = data.price;
+  var mas = data.moving_averages || {};
+  var stColor = data.direction === 'bullish' ? 'var(--green)' : data.direction === 'bearish' ? 'var(--red)' : 'var(--amber)';
+  var stEl = document.getElementById('expTrendShort');
+  if(stEl){ stEl.textContent = data.direction.toUpperCase(); stEl.style.color = stColor; }
+  var ltEl = document.getElementById('expTrendLong');
+  if(ltEl){
+    var lt = mas.ma200 ? (price > mas.ma200 ? 'BULLISH' : 'BEARISH') : '—';
+    ltEl.textContent = lt;
+    ltEl.style.color = mas.ma200 ? (price > mas.ma200 ? 'var(--green)' : 'var(--red)') : 'var(--muted)';
+  }
+}
+
+function renderDayRange(data) {
+  var lo = data.day_low, hi = data.day_high, pr = data.price;
+  if (!lo || !hi) return;
+  var pct = ((pr - lo) / (hi - lo) * 100).toFixed(1);
+  document.getElementById('drLow').textContent  = '$' + lo;
+  document.getElementById('drHigh').textContent = '$' + hi;
+  document.getElementById('drCur').textContent  = '$' + pr;
+  document.getElementById('drFill').style.width = pct + '%';
+  document.getElementById('drDot').style.left   = pct + '%';
+  var fromLow = ((pr - lo) / lo * 100).toFixed(2);
+  document.getElementById('drPct').textContent  = '+' + fromLow + '% from low';
+}
+
+function renderReturns(data) {
+  var r = data.returns || {};
+  var el = document.getElementById('expReturns');
+  if (!el) return;
+  var entries = [
+    {label:'1D',val:r.d1},{label:'1W',val:r.w1},{label:'1M',val:r.m1},
+    {label:'3M',val:r.m3},{label:'6M',val:r.m6},{label:'1Y',val:r.y1},
+  ];
+  var maxAbs = Math.max.apply(null, entries.filter(function(e){return e.val!=null;}).map(function(e){return Math.abs(e.val);})) || 1;
+  el.innerHTML = entries.map(function(e) {
+    if (e.val == null) return '<div class="ret-bar-wrap"><div class="ret-pct" style="color:var(--muted)">—</div><div class="ret-bar-track"><div class="ret-bar" style="height:4px;background:rgba(255,255,255,.1)"></div></div><div class="ret-label">'+e.label+'</div></div>';
+    var bull = e.val >= 0;
+    var h = Math.max(4, Math.abs(e.val) / maxAbs * 72);
+    var col = bull ? 'var(--green)' : 'var(--red)';
+    return '<div class="ret-bar-wrap"><div class="ret-pct" style="color:'+col+'">'+(bull?'+':'')+e.val+'%</div><div class="ret-bar-track"><div class="ret-bar" style="height:'+h+'px;background:'+col+'"></div></div><div class="ret-label">'+e.label+'</div></div>';
+  }).join('');
+}
+
+function renderIndTable(data) {
+  var ind = data.indicators || {};
+  var price = data.price;
+  var rows = [
+    {label:'RSI (14)',    val:ind.rsi,        bull:ind.rsi&&ind.rsi<30,              bear:ind.rsi&&ind.rsi>70},
+    {label:'MACD Hist',  val:ind.macd_hist,   bull:ind.macd_hist&&ind.macd_hist>0,   bear:ind.macd_hist&&ind.macd_hist<0},
+    {label:'MACD',       val:ind.macd,        bull:ind.macd&&ind.macd>0,             bear:ind.macd&&ind.macd<0},
+    {label:'Williams %R',val:ind.williams_r,  bull:ind.williams_r&&ind.williams_r<-80, bear:ind.williams_r&&ind.williams_r>-20},
+    {label:'CCI (20)',   val:ind.cci,         bull:ind.cci&&ind.cci<-100,            bear:ind.cci&&ind.cci>100},
+    {label:'Stoch %K',   val:ind.stoch_k,     bull:ind.stoch_k&&ind.stoch_k<20,     bear:ind.stoch_k&&ind.stoch_k>80},
+    {label:'ADX (14)',   val:ind.adx,         bull:false,                            bear:false},
+    {label:'ATR (14)',   val:ind.atr,         bull:false,                            bear:false},
+    {label:'PSAR',       val:ind.psar,        bull:ind.psar&&price>ind.psar,         bear:ind.psar&&price<ind.psar, dollar:true},
+  ];
+  document.getElementById('expIndTable').innerHTML = rows.filter(function(r){return r.val!=null;}).map(function(r) {
+    var cls   = r.bull ? 'det-bull' : r.bear ? 'det-bear' : 'det-neutral';
+    var arrow = r.bull ? '↑' : r.bear ? '↓' : '→';
+    var disp  = r.dollar ? '$'+r.val.toFixed(2) : r.val.toFixed(2);
+    return '<tr><td class="det-label">'+r.label+'</td><td class="det-arrow '+cls+'">'+arrow+'</td><td class="det-val '+cls+'">'+disp+'</td></tr>';
+  }).join('');
+}
+
+function renderMATable(data) {
+  var mas = data.moving_averages || {};
+  var price = data.price;
+  var rows = [
+    {label:'SMA 5',  val:mas.ma5},  {label:'SMA 20', val:mas.ma20},
+    {label:'SMA 50', val:mas.ma50}, {label:'SMA 100',val:mas.ma100},
+    {label:'SMA 200',val:mas.ma200},{label:'EMA 7',  val:mas.ema7},
+    {label:'EMA 20', val:mas.ema20},{label:'EMA 50', val:mas.ema50},
+    {label:'EMA 100',val:mas.ema100},
+  ];
+  document.getElementById('expMATable').innerHTML = rows.filter(function(r){return r.val!=null;}).map(function(r) {
+    var above   = price >= r.val;
+    var cls     = above ? 'det-bull' : 'det-bear';
+    var arrow   = above ? '↑' : '↓';
+    var pctDiff = ((price - r.val) / r.val * 100).toFixed(2);
+    var pctCol  = above ? 'var(--green)' : 'var(--red)';
+    return '<tr><td class="det-label">'+r.label+'</td><td class="det-arrow '+cls+'">'+arrow+'</td><td class="det-val '+cls+'">$'+r.val.toFixed(2)+'</td><td class="det-pct" style="color:'+pctCol+'">'+(above?'+':'')+pctDiff+'%</td></tr>';
+  }).join('');
+}
+
+function pivotTable(methods) {
+  var cols = ['S3','S2','S1','PP','R1','R2','R3'];
+  var keys = ['s3','s2','s1','pp','r1','r2','r3'];
+  var names = ['Standard','Camarilla','Woodie','Fibonacci'];
+  var mkeys = ['standard','camarilla','woodie','fibonacci'];
+  var html = '<div class="pivot-grid">';
+  html += cols.map(function(c){ return '<div class="pivot-col-head '+(c==='PP'?'pivot-pp':c[0]==='S'?'pivot-s':'pivot-r')+'">'+c+'</div>'; }).join('');
+  html += '</div>';
+  names.forEach(function(name, ni) {
+    var m = methods && methods[mkeys[ni]];
+    if (!m) return;
+    html += '<div class="pivot-method-label">'+name+'</div><div class="pivot-grid">';
+    html += keys.map(function(k) {
+      var cls = k==='pp' ? 'pivot-pp' : k[0]==='s' ? 'pivot-s' : 'pivot-r';
+      return '<div class="pivot-cell '+cls+'">'+(m[k]!=null ? '$'+m[k] : '—')+'</div>';
+    }).join('');
+    html += '</div>';
+    if (ni < names.length - 1) html += '<div class="pivot-divider"></div>';
+  });
+  return html;
+}
+
+function showPivot(tf) {
+  ['daily','weekly','monthly'].forEach(function(t) {
+    document.getElementById('pt'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', t===tf);
+  });
+  var el = document.getElementById('expPivots');
+  if (!el) return;
+  var d = pivotData[tf];
+  el.innerHTML = d ? pivotTable(d) : '<div style="color:var(--muted);font-size:12px">No data for this timeframe.</div>';
+}
+
+function renderExpanded(data) {
+  document.getElementById('expWrap').style.display = 'flex';
+  pivotData = data.pivot_points || {};
+  renderExpandedSummary(data);
+  renderDayRange(data);
+  renderReturns(data);
+  renderIndTable(data);
+  renderMATable(data);
+  showPivot('daily');
+}
+
+// ──────────────────────────────────────────────────────────────
 
 // Auto-load from URL param, default to SPY
 const initTicker = new URLSearchParams(window.location.search).get('t') || 'SPY';
