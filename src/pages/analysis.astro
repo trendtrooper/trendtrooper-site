@@ -363,7 +363,8 @@ import LogoutBar from "../components/LogoutBar.astro";
 <!-- MAIN LAYOUT -->
 <div class="wrap">
 
-  <!-- CHART PANEL -->
+  <!-- LEFT COLUMN: chart + expanded panels -->
+  <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
   <div class="chart-card">
     <div class="chart-header" id="chartHeader">
       <span class="ticker-badge" id="hTicker">—</span>
@@ -384,7 +385,80 @@ import LogoutBar from "../components/LogoutBar.astro";
     <div class="chart-footer">
       <a id="fullChartLink" href="/chart">Open in Full Chart →</a>
     </div>
-  </div>
+  </div><!-- end chart-card -->
+
+  <!-- EXPANDED ANALYSIS — inside left column, directly below chart -->
+  <div id="expWrap" style="display:none;flex-direction:column;gap:16px">
+
+    <!-- ROW 1: Indicator gauge + MA gauge + Trend summary -->
+    <div class="exp-grid-3">
+      <div class="card">
+        <div class="card-title">Technical Indicators</div>
+        <div class="sig-gauge" id="expIndGauge">
+          <div class="gauge-donut"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/><circle id="gIndBear" cx="40" cy="40" r="32" fill="none" stroke="var(--red)" stroke-width="10" stroke-dasharray="0 201"/><circle id="gIndBull" cx="40" cy="40" r="32" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="0 201" stroke-dashoffset="0"/></svg><div class="gauge-label"><span id="gIndScore" style="color:var(--muted)">—</span><span class="gauge-sub" id="gIndLabel">—</span></div></div>
+          <div class="ind-breakdown" id="expIndBreak" style="width:100%"></div>
+          <div class="ind-breakdown-labels" style="width:100%"><span style="color:var(--green)" id="expIndBull">—</span><span style="color:var(--muted)">neutral</span><span style="color:var(--red)" id="expIndBear">—</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Moving Averages</div>
+        <div class="sig-gauge" id="expMAGauge">
+          <div class="gauge-donut"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/><circle id="gMABear" cx="40" cy="40" r="32" fill="none" stroke="var(--red)" stroke-width="10" stroke-dasharray="0 201"/><circle id="gMABull" cx="40" cy="40" r="32" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="0 201" stroke-dashoffset="0"/></svg><div class="gauge-label"><span id="gMAScore" style="color:var(--muted)">—</span><span class="gauge-sub" id="gMALabel">—</span></div></div>
+          <div class="ind-breakdown" id="expMABreak" style="width:100%"></div>
+          <div class="ind-breakdown-labels" style="width:100%"><span style="color:var(--green)" id="expMABull">—</span><span style="color:var(--muted)"></span><span style="color:var(--red)" id="expMABear">—</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Trend Breakdown</div>
+        <div style="font-size:11px;color:var(--muted2);font-weight:700;letter-spacing:.5px;margin-bottom:6px">SHORT-TERM</div>
+        <div id="expTrendShort" style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;margin-bottom:12px;color:var(--muted)">—</div>
+        <div style="font-size:11px;color:var(--muted2);font-weight:700;letter-spacing:.5px;margin-bottom:6px">UNDERLYING (MA200)</div>
+        <div id="expTrendLong" style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--muted)">—</div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Day range + Historical returns -->
+    <div class="exp-grid-2">
+      <div class="card">
+        <div class="card-title">Today's Range</div>
+        <div class="day-range-wrap">
+          <div class="day-range-labels"><span id="drLow">—</span><span id="drCur" style="color:var(--text);font-weight:700">—</span><span id="drHigh">—</span></div>
+          <div class="day-range-track"><div class="day-range-fill" id="drFill" style="width:0%"></div><div class="day-range-dot" id="drDot" style="left:0%"></div></div>
+          <div class="day-range-labels"><span style="color:var(--muted2);font-size:11px">DAY LOW</span><span id="drPct" style="color:var(--muted2);font-size:11px">—% from low</span><span style="color:var(--muted2);font-size:11px">DAY HIGH</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Historical Returns</div>
+        <div class="returns-bars" id="expReturns"></div>
+      </div>
+    </div>
+
+    <!-- ROW 3: Indicator detail + MA detail -->
+    <div class="exp-grid-2">
+      <div class="card">
+        <div class="card-title">Indicator Values</div>
+        <table class="detail-table" id="expIndTable"><tr><td colspan="3" style="color:var(--muted)">—</td></tr></table>
+      </div>
+      <div class="card">
+        <div class="card-title">Moving Average Values</div>
+        <table class="detail-table" id="expMATable"><tr><td colspan="4" style="color:var(--muted)">—</td></tr></table>
+      </div>
+    </div>
+
+    <!-- ROW 4: Pivot points -->
+    <div class="card">
+      <div class="card-title">Pivot Points</div>
+      <div class="pivot-tabs">
+        <button class="pivot-tab active" id="ptDaily"  onclick="showPivot('daily')">Daily</button>
+        <button class="pivot-tab"        id="ptWeekly" onclick="showPivot('weekly')">Weekly</button>
+        <button class="pivot-tab"        id="ptMonthly" onclick="showPivot('monthly')">Monthly</button>
+      </div>
+      <div id="expPivots"><div style="color:var(--muted);font-size:12px">—</div></div>
+    </div>
+
+  </div><!-- end expWrap -->
+
+  </div><!-- end left column -->
 
   <!-- SIDEBAR -->
   <div class="sidebar">
@@ -517,77 +591,6 @@ import LogoutBar from "../components/LogoutBar.astro";
     </div>
 
   </div>
-</div>
-
-<!-- EXPANDED ANALYSIS — hidden until data loads -->
-<div class="exp-wrap" id="expWrap" style="display:none">
-
-  <!-- ROW 1: Indicator gauge + MA gauge + Trend summary -->
-  <div class="exp-grid-3">
-    <div class="card">
-      <div class="card-title">Technical Indicators</div>
-      <div class="sig-gauge" id="expIndGauge">
-        <div class="gauge-donut"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/><circle id="gIndBear" cx="40" cy="40" r="32" fill="none" stroke="var(--red)" stroke-width="10" stroke-dasharray="0 201"/><circle id="gIndBull" cx="40" cy="40" r="32" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="0 201" stroke-dashoffset="0"/></svg><div class="gauge-label"><span id="gIndScore" style="color:var(--muted)">—</span><span class="gauge-sub" id="gIndLabel">—</span></div></div>
-        <div class="ind-breakdown" id="expIndBreak" style="width:100%"></div>
-        <div class="ind-breakdown-labels" style="width:100%"><span style="color:var(--green)" id="expIndBull">—</span><span style="color:var(--muted)">neutral</span><span style="color:var(--red)" id="expIndBear">—</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Moving Averages</div>
-      <div class="sig-gauge" id="expMAGauge">
-        <div class="gauge-donut"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/><circle id="gMABear" cx="40" cy="40" r="32" fill="none" stroke="var(--red)" stroke-width="10" stroke-dasharray="0 201"/><circle id="gMABull" cx="40" cy="40" r="32" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="0 201" stroke-dashoffset="0"/></svg><div class="gauge-label"><span id="gMAScore" style="color:var(--muted)">—</span><span class="gauge-sub" id="gMALabel">—</span></div></div>
-        <div class="ind-breakdown" id="expMABreak" style="width:100%"></div>
-        <div class="ind-breakdown-labels" style="width:100%"><span style="color:var(--green)" id="expMABull">—</span><span style="color:var(--muted)"></span><span style="color:var(--red)" id="expMABear">—</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Trend Breakdown</div>
-      <div style="font-size:11px;color:var(--muted2);font-weight:700;letter-spacing:.5px;margin-bottom:6px">SHORT-TERM</div>
-      <div id="expTrendShort" style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;margin-bottom:12px;color:var(--muted)">—</div>
-      <div style="font-size:11px;color:var(--muted2);font-weight:700;letter-spacing:.5px;margin-bottom:6px">UNDERLYING (MA200)</div>
-      <div id="expTrendLong" style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--muted)">—</div>
-    </div>
-  </div>
-
-  <!-- ROW 2: Day range + Historical returns -->
-  <div class="exp-grid-2">
-    <div class="card">
-      <div class="card-title">Today's Range</div>
-      <div class="day-range-wrap">
-        <div class="day-range-labels"><span id="drLow">—</span><span id="drCur" style="color:var(--text);font-weight:700">—</span><span id="drHigh">—</span></div>
-        <div class="day-range-track"><div class="day-range-fill" id="drFill" style="width:0%"></div><div class="day-range-dot" id="drDot" style="left:0%"></div></div>
-        <div class="day-range-labels"><span style="color:var(--muted2);font-size:11px">DAY LOW</span><span id="drPct" style="color:var(--muted2);font-size:11px">—% from low</span><span style="color:var(--muted2);font-size:11px">DAY HIGH</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Historical Returns</div>
-      <div class="returns-bars" id="expReturns"></div>
-    </div>
-  </div>
-
-  <!-- ROW 3: Indicator detail + MA detail -->
-  <div class="exp-grid-2">
-    <div class="card">
-      <div class="card-title">Indicator Values</div>
-      <table class="detail-table" id="expIndTable"><tr><td colspan="3" style="color:var(--muted)">—</td></tr></table>
-    </div>
-    <div class="card">
-      <div class="card-title">Moving Average Values</div>
-      <table class="detail-table" id="expMATable"><tr><td colspan="4" style="color:var(--muted)">—</td></tr></table>
-    </div>
-  </div>
-
-  <!-- ROW 4: Pivot points -->
-  <div class="card">
-    <div class="card-title">Pivot Points</div>
-    <div class="pivot-tabs">
-      <button class="pivot-tab active" id="ptDaily"  onclick="showPivot('daily')">Daily</button>
-      <button class="pivot-tab"        id="ptWeekly" onclick="showPivot('weekly')">Weekly</button>
-      <button class="pivot-tab"        id="ptMonthly" onclick="showPivot('monthly')">Monthly</button>
-    </div>
-    <div id="expPivots"><div style="color:var(--muted);font-size:12px">—</div></div>
-  </div>
-
 </div>
 
 <footer>
