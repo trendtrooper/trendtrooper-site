@@ -288,8 +288,8 @@ import LogoutBar from "../components/LogoutBar.astro";
     body.wide footer{max-width:100%;}
 
     /* LIVE CLOCK */
-    #liveClock{position:fixed;bottom:24%;right:13%;z-index:50;pointer-events:none;text-align:center;user-select:none;display:flex;flex-direction:column;align-items:center;gap:3px;}
-    #clockCity{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:rgba(0,220,255,.7);letter-spacing:3px;text-transform:uppercase;}
+    #liveClock{position:fixed;z-index:50;pointer-events:none;text-align:center;user-select:none;display:flex;flex-direction:column;align-items:center;gap:3px;transform:translate(-50%,-50%);transition:left .1s,top .1s;}
+    #clockCity{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:rgba(0,220,255,.75);letter-spacing:3px;text-transform:uppercase;}
     #clockTime{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:#00e5ff;letter-spacing:2px;text-shadow:0 0 10px rgba(0,229,255,.8),0 0 22px rgba(0,229,255,.4);line-height:1;}
     #clockStatus{font-family:'Orbitron',monospace;font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,200,255,.6);}
     @media(max-width:900px){#liveClock{display:none;}}
@@ -1375,26 +1375,55 @@ runAnalysis(initTicker);
 </div>
 <script>
 (function(){
+  // Fractional position of the desk clock inside trading-bg.png
+  var CLOCK_REL_X = 0.868;
+  var CLOCK_REL_Y = 0.76;
+
+  function positionClock(imgW, imgH){
+    var vpW = window.innerWidth;
+    var vpH = window.innerHeight;
+    // Replicate CSS background-size:cover, background-position:center center
+    var scale = Math.max(vpW / imgW, vpH / imgH);
+    var scaledW = imgW * scale;
+    var scaledH = imgH * scale;
+    var offX = (vpW - scaledW) / 2;
+    var offY = (vpH - scaledH) / 2;
+    var sx = offX + CLOCK_REL_X * scaledW;
+    var sy = offY + CLOCK_REL_Y * scaledH;
+    var el = document.getElementById('liveClock');
+    el.style.left = sx + 'px';
+    el.style.top  = sy + 'px';
+  }
+
+  var imgW = 0, imgH = 0;
+  var img = new Image();
+  img.onload = function(){
+    imgW = img.naturalWidth;
+    imgH = img.naturalHeight;
+    positionClock(imgW, imgH);
+  };
+  img.src = '/trading-bg.png';
+  window.addEventListener('resize', function(){ if(imgW) positionClock(imgW, imgH); });
+
   function tick(){
-    var now=new Date();
-    var et=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
-    var h=et.getHours(),m=et.getMinutes(),s=et.getSeconds();
-    var ampm=h>=12?'PM':'AM';
-    var h12=h%12||12;
-    document.getElementById('clockTime').textContent=
+    var now = new Date();
+    var et  = new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+    var h=et.getHours(), m=et.getMinutes(), s=et.getSeconds();
+    var ampm = h>=12?'PM':'AM';
+    var h12  = h%12||12;
+    document.getElementById('clockTime').textContent =
       (h12<10?'0':'')+h12+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s+' '+ampm;
-    var isWeekday=et.getDay()>0&&et.getDay()<6;
-    var isOpen=isWeekday&&(h>9||(h===9&&m>=30))&&h<16;
-    var statusEl=document.getElementById('clockStatus');
-    var timeEl=document.getElementById('clockTime');
+    var isOpen = et.getDay()>0 && et.getDay()<6 && (h>9||(h===9&&m>=30)) && h<16;
+    var statusEl = document.getElementById('clockStatus');
+    var timeEl   = document.getElementById('clockTime');
     if(isOpen){
       statusEl.textContent='▶ MARKET OPEN';
-      statusEl.style.color='rgba(0,255,136,.8)';
+      statusEl.style.color='rgba(0,255,136,.85)';
       timeEl.style.color='#00ff88';
       timeEl.style.textShadow='0 0 10px rgba(0,255,136,.8),0 0 22px rgba(0,255,136,.4)';
     } else {
       statusEl.textContent='● MARKET CLOSED';
-      statusEl.style.color='rgba(0,200,255,.6)';
+      statusEl.style.color='rgba(0,200,255,.65)';
       timeEl.style.color='#00e5ff';
       timeEl.style.textShadow='0 0 10px rgba(0,229,255,.8),0 0 22px rgba(0,229,255,.4)';
     }
