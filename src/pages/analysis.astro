@@ -700,16 +700,16 @@ function initChart() {
   chart = LightweightCharts.createChart(el, {
     width: el.clientWidth,
     height: 420,
-    layout: { background: { type: 'solid', color: 'transparent' }, textColor: '#ddeeff' },
-    grid: { vertLines: { color: 'rgba(255,255,255,.06)' }, horzLines: { color: 'rgba(255,255,255,.06)' } },
+    layout: { background: { type: 'solid', color: '#020c1e' }, textColor: '#a8d0ff' },
+    grid: { vertLines: { color: 'rgba(0,180,255,.07)' }, horzLines: { color: 'rgba(0,180,255,.07)' } },
     crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-    rightPriceScale: { borderColor: 'rgba(255,255,255,.08)' },
-    timeScale: { borderColor: 'rgba(255,255,255,.08)', timeVisible: true },
+    rightPriceScale: { borderColor: 'rgba(0,200,255,.25)' },
+    timeScale: { borderColor: 'rgba(0,200,255,.25)', timeVisible: true },
   });
   candleSeries = chart.addCandlestickSeries({
-    upColor: '#22d673', downColor: '#ff5c6a',
-    borderUpColor: '#22d673', borderDownColor: '#ff5c6a',
-    wickUpColor: '#22d673', wickDownColor: '#ff5c6a',
+    upColor: '#00e676', downColor: '#ff1744',
+    borderUpColor: '#00e676', borderDownColor: '#ff1744',
+    wickUpColor: '#00e676', wickDownColor: '#ff1744',
   });
   window.addEventListener('resize', function() { if(chart) chart.applyOptions({width: el.clientWidth}); });
   return { chart, candleSeries };
