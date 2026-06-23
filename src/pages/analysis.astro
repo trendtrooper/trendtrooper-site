@@ -288,11 +288,11 @@ import LogoutBar from "../components/LogoutBar.astro";
     body.wide footer{max-width:100%;}
 
     /* LIVE CLOCK */
-    #liveClock{position:fixed;bottom:22px;right:22px;z-index:50;pointer-events:none;text-align:right;user-select:none;}
-    #clockTime{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:#00e5ff;letter-spacing:3px;text-shadow:0 0 14px rgba(0,229,255,.7),0 0 30px rgba(0,229,255,.35);line-height:1;}
-    #clockDate{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:rgba(0,200,255,.55);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
-    #clockTZ{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:rgba(0,200,255,.4);letter-spacing:2px;margin-top:2px;}
-    @media(max-width:600px){#liveClock{display:none;}}
+    #liveClock{position:fixed;bottom:24%;right:13%;z-index:50;pointer-events:none;text-align:center;user-select:none;display:flex;flex-direction:column;align-items:center;gap:3px;}
+    #clockCity{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:rgba(0,220,255,.7);letter-spacing:3px;text-transform:uppercase;}
+    #clockTime{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:#00e5ff;letter-spacing:2px;text-shadow:0 0 10px rgba(0,229,255,.8),0 0 22px rgba(0,229,255,.4);line-height:1;}
+    #clockStatus{font-family:'Orbitron',monospace;font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,200,255,.6);}
+    @media(max-width:900px){#liveClock{display:none;}}
   </style>
 </head>
 <body>
@@ -1367,36 +1367,37 @@ runAnalysis(initTicker);
 </script>
 <LogoutBar />
 
-<!-- LIVE CLOCK -->
+<!-- LIVE CLOCK — overlays the desk clock in the background image -->
 <div id="liveClock">
+  <div id="clockCity">NEW YORK</div>
   <div id="clockTime">00:00:00</div>
-  <div id="clockDate"></div>
-  <div id="clockTZ">NEW YORK ET</div>
+  <div id="clockStatus">MARKET CLOSED</div>
 </div>
 <script>
 (function(){
-  var days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  var months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
   function tick(){
     var now=new Date();
     var et=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
     var h=et.getHours(),m=et.getMinutes(),s=et.getSeconds();
     var ampm=h>=12?'PM':'AM';
-    h=h%12||12;
+    var h12=h%12||12;
     document.getElementById('clockTime').textContent=
-      (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s+' '+ampm;
-    document.getElementById('clockDate').textContent=
-      days[et.getDay()]+' '+months[et.getMonth()]+' '+et.getDate()+' '+et.getFullYear();
-    var open=et.getHours()>=9&&(et.getHours()>9||et.getMinutes()>=30)&&et.getHours()<16;
+      (h12<10?'0':'')+h12+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s+' '+ampm;
     var isWeekday=et.getDay()>0&&et.getDay()<6;
-    document.getElementById('clockTZ').textContent=
-      (isWeekday&&open?'▶ MARKET OPEN':'● MARKET CLOSED')+' · ET';
-    document.getElementById('clockTime').style.color=
-      (isWeekday&&open)?'#00ff88':'#00e5ff';
-    document.getElementById('clockTime').style.textShadow=
-      (isWeekday&&open)?
-        '0 0 14px rgba(0,255,136,.7),0 0 30px rgba(0,255,136,.35)':
-        '0 0 14px rgba(0,229,255,.7),0 0 30px rgba(0,229,255,.35)';
+    var isOpen=isWeekday&&(h>9||(h===9&&m>=30))&&h<16;
+    var statusEl=document.getElementById('clockStatus');
+    var timeEl=document.getElementById('clockTime');
+    if(isOpen){
+      statusEl.textContent='▶ MARKET OPEN';
+      statusEl.style.color='rgba(0,255,136,.8)';
+      timeEl.style.color='#00ff88';
+      timeEl.style.textShadow='0 0 10px rgba(0,255,136,.8),0 0 22px rgba(0,255,136,.4)';
+    } else {
+      statusEl.textContent='● MARKET CLOSED';
+      statusEl.style.color='rgba(0,200,255,.6)';
+      timeEl.style.color='#00e5ff';
+      timeEl.style.textShadow='0 0 10px rgba(0,229,255,.8),0 0 22px rgba(0,229,255,.4)';
+    }
   }
   tick();
   setInterval(tick,1000);
