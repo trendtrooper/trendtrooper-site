@@ -16,7 +16,7 @@ import LogoutBar from "../components/LogoutBar.astro";
       --bg:#070e1c;--card:#0f1b33;--card2:#111e38;
       --muted:#7a96bb;--muted2:#4a6490;
       --text:#ddeeff;--text2:#b8d0ee;
-      --accent:#6ee7ff;--accent2:#a78bfa;
+      --accent:#6ee7ff;--accent2:#6ee7ff;
       --green:#22d673;--red:#ff5c6a;--amber:#f59e0b;
       --border2:rgba(255,255,255,.06);--r:16px;--max:1160px;
       --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
@@ -28,13 +28,13 @@ import LogoutBar from "../components/LogoutBar.astro";
     header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,.1);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
     .tt-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#e8eeff;}
     .tt-logo{flex-shrink:0;}
-    .tt-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#fff,#00cfff,#7040ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .tt-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#fff,#00cfff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .tt-tag{font-size:9px;color:#00cfff;font-weight:600;letter-spacing:3px;text-transform:uppercase;display:block;opacity:.8;}
     .tt-nav{display:flex;align-items:center;gap:1px;white-space:nowrap;}
     .tt-nav a{color:#c8d8f0;padding:6px 9px;border-radius:8px;text-decoration:none;font-weight:800;font-size:11.5px;letter-spacing:.8px;text-transform:uppercase;transition:color .15s,background .15s;}
     .tt-nav a:hover{color:#e8eeff;background:rgba(0,200,255,.06);}
     .tt-nav a.cur{color:#00cfff;}
-    .tt-cta{background:linear-gradient(135deg,#00cfff,#7040ff)!important;color:#fff!important;font-weight:800!important;padding:8px 14px!important;border-radius:8px!important;box-shadow:0 0 20px rgba(0,200,255,.2)!important;}
+    .tt-cta{background:linear-gradient(135deg,#00cfff,#0090cc)!important;color:#fff!important;font-weight:800!important;padding:8px 14px!important;border-radius:8px!important;box-shadow:0 0 16px rgba(0,200,255,.18)!important;}
     .tt-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
     .tt-burger span{width:22px;height:2px;background:#e8eeff;border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
     .tt-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
@@ -131,8 +131,8 @@ import LogoutBar from "../components/LogoutBar.astro";
     tr.sig-row{cursor:pointer;}
     tr.sig-row:hover td{background:rgba(110,231,255,.04);}
     .td-sym{font-family:var(--mono);font-weight:700;color:var(--accent)}
-    .view-analysis{font-size:10px;font-weight:700;font-family:var(--mono);color:var(--accent2);text-decoration:none;padding:2px 7px;border-radius:5px;border:1px solid rgba(167,139,250,.25);background:rgba(167,139,250,.07);white-space:nowrap;}
-    .view-analysis:hover{background:rgba(167,139,250,.15);}
+    .view-analysis{font-size:10px;font-weight:700;font-family:var(--mono);color:var(--accent2);text-decoration:none;padding:2px 7px;border-radius:5px;border:1px solid rgba(110,231,255,.25);background:rgba(110,231,255,.07);white-space:nowrap;}
+    .view-analysis:hover{background:rgba(110,231,255,.15);}
     /* FEAR GREED */
     .fg-wrap{border-radius:var(--r);border:1px solid var(--border2);background:var(--card);padding:20px}
     .fg-meter{position:relative;height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column}
@@ -259,7 +259,7 @@ import LogoutBar from "../components/LogoutBar.astro";
             <div style="background:#f59e0b"></div>
             <div style="background:#6ee7ff"></div>
             <div style="background:#22d673"></div>
-            <div style="background:#a78bfa"></div>
+            <div style="background:#15803d"></div>
           </div>
           <div class="fg-marker-row">
             <div class="fg-marker" id="fgMarker">&#9650;</div>
@@ -602,7 +602,7 @@ function seededFg(seed){ var x=Math.sin(seed+1)*10000; return x-(Math.floor(x));
 var fg = Math.round(25 + seededFg(_fgSeed) * 55);
 document.getElementById('fgNum').textContent = fg;
 var lbl = fg < 25 ? 'EXTREME FEAR' : fg < 45 ? 'FEAR' : fg < 55 ? 'NEUTRAL' : fg < 75 ? 'GREED' : 'EXTREME GREED';
-var col = fg < 25 ? '#ff5c6a' : fg < 45 ? '#f59e0b' : fg < 55 ? '#6ee7ff' : fg < 75 ? '#22d673' : '#a78bfa';
+var col = fg < 25 ? '#ff5c6a' : fg < 45 ? '#f59e0b' : fg < 55 ? '#6ee7ff' : fg < 75 ? '#22d673' : '#15803d';
 document.getElementById('fgNum').style.color = col;
 document.getElementById('fgLbl').textContent = lbl;
 document.getElementById('fgLbl').style.color = col;
