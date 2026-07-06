@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.16.16"
+    "astro": "^5.16.16",
+    "@anthropic-ai/sdk": "^0.110.0"
   }
 }

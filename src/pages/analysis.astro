@@ -221,6 +221,33 @@ import LogoutBar from "../components/LogoutBar.astro";
     .risk-result-label{font-size:12px;color:var(--muted2);font-weight:600}
     .risk-result-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text)}
 
+    /* AI RESEARCH ANALYSIS */
+    .ai-wrap{max-width:var(--max);margin:0 auto;padding:0 24px 24px}
+    body.wide .ai-wrap{max-width:100%;padding:0 32px 24px}
+    .ai-card-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px}
+    .ai-search{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .ai-search input{padding:8px 14px;border-radius:10px;border:1px solid rgba(0,200,255,.18);background:rgba(0,10,40,.4);color:var(--text);font-size:13px;font-family:var(--mono);font-weight:700;outline:none;width:170px;transition:.15s}
+    .ai-search input:focus{border-color:rgba(0,200,255,.5);background:rgba(0,10,50,.5);box-shadow:0 0 10px rgba(0,200,255,.08)}
+    .ai-search input::placeholder{color:var(--muted2);font-weight:400}
+    .ai-results{margin-top:14px;font-size:13px;line-height:1.7;color:var(--text2)}
+    .ai-placeholder{color:var(--muted);font-size:13px}
+    .ai-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding:16px 0}
+    .ai-loading .spinner{width:16px;height:16px;border-width:2px}
+    .ai-error{color:var(--red);font-size:13px;padding:10px 0}
+    .ai-results h1,.ai-results h2,.ai-results h3{color:var(--text);margin:16px 0 8px;font-family:'Orbitron',monospace;letter-spacing:.5px}
+    .ai-results h1{font-size:18px}
+    .ai-results h2{font-size:16px;color:var(--accent2)}
+    .ai-results h3{font-size:14px;color:var(--accent)}
+    .ai-results p{margin-bottom:10px}
+    .ai-results strong{color:var(--text)}
+    .ai-results ul,.ai-results ol{margin:8px 0 10px 20px}
+    .ai-results li{margin-bottom:4px}
+    .ai-results table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px}
+    .ai-results th{background:rgba(0,200,255,.08);color:var(--accent);padding:8px 10px;text-align:left;border:1px solid rgba(0,200,255,.15);font-weight:700}
+    .ai-results td{padding:8px 10px;border:1px solid rgba(255,255,255,.06)}
+    .ai-results a{color:var(--accent);text-decoration:underline}
+    .ai-results hr{border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0}
+
     footer{max-width:var(--max);margin:0 auto 0;padding:24px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted2);font-size:13px}
     .foot-links{display:flex;gap:18px}.foot-links a:hover{color:var(--muted)}
 
@@ -601,12 +628,29 @@ import LogoutBar from "../components/LogoutBar.astro";
   </div>
 </div>
 
+<!-- AI RESEARCH ANALYSIS -->
+<div class="ai-wrap">
+  <div class="card">
+    <div class="ai-card-head">
+      <div class="card-title" style="margin-bottom:0;">AI Research Analysis</div>
+      <div class="ai-search">
+        <input id="aiTickerInput" type="text" placeholder="Enter ticker: NVDA, TQQQ…" autocomplete="off" spellcheck="false" onfocus="this.select()" />
+        <button class="btn primary" id="aiAnalyzeBtn">Analyze</button>
+      </div>
+    </div>
+    <div id="aiResults" class="ai-results">
+      <div class="ai-placeholder">Enter a ticker above and click Analyze for a full AI-generated research report — fundamentals, technicals, sentiment, seasonality, sector peer comparison, insider activity, short interest, and a directional bias table.</div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div>TrendTrooper Analysis &nbsp;•&nbsp; © <span id="yr"></span> &nbsp;•&nbsp; Data via Yahoo Finance</div>
   <div class="foot-links"><a href="/">Home</a><a href="/dashboard">Dashboard</a><a href="/screener">Screener</a><a href="/chart">Chart</a></div>
 </footer>
 
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script is:inline>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
@@ -1079,6 +1123,10 @@ async function runAnalysis(ticker) {
   if (!ticker) return;
   currentTicker = ticker;
 
+  // Keep the AI Research Analysis box's ticker input in sync
+  var aiInput = document.getElementById('aiTickerInput');
+  if (aiInput) aiInput.value = ticker;
+
   // CHANGE 14: update full-chart link dynamically
   var fcLink = document.getElementById('fullChartLink');
   if (fcLink) fcLink.href = '/chart?symbol=' + encodeURIComponent(ticker);
@@ -1361,6 +1409,53 @@ function renderExpanded(data) {
 const initTicker = new URLSearchParams(window.location.search).get('t') || 'SPY';
 document.getElementById('tickerInput').value = initTicker;
 runAnalysis(initTicker);
+</script>
+<script is:inline>
+// ── AI RESEARCH ANALYSIS ─────────────────────────────────────────
+async function runAiAnalysis(ticker) {
+  ticker = (ticker || '').trim().toUpperCase();
+  var resultsEl = document.getElementById('aiResults');
+  if (!ticker) return;
+
+  resultsEl.innerHTML = '<div class="ai-loading"><div class="spinner"></div> Researching ' + ticker + '… this can take up to 30 seconds.</div>';
+
+  var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var timeoutId = setTimeout(function() {
+    if (controller) controller.abort();
+  }, 45000);
+
+  try {
+    var fetchOpts = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticker: ticker }),
+    };
+    if (controller) fetchOpts.signal = controller.signal;
+
+    const res = await fetch('/api/ticker-analysis', fetchOpts);
+    clearTimeout(timeoutId);
+
+    const data = await res.json().catch(function() { return {}; });
+
+    if (!res.ok || data.error) {
+      resultsEl.innerHTML = '<div class="ai-error">⚠ ' + (data.error || ('Server returned ' + res.status)) + '</div>';
+      return;
+    }
+
+    resultsEl.innerHTML = (typeof marked !== 'undefined') ? marked.parse(data.analysis || '') : (data.analysis || '');
+  } catch (err) {
+    clearTimeout(timeoutId);
+    var msg = (err && err.name === 'AbortError') ? 'Request timed out after 45 seconds. Try again.' : ((err && err.message) || 'Request failed. Try again.');
+    resultsEl.innerHTML = '<div class="ai-error">⚠ ' + msg + '</div>';
+  }
+}
+
+document.getElementById('aiAnalyzeBtn').addEventListener('click', function() {
+  runAiAnalysis(document.getElementById('aiTickerInput').value);
+});
+document.getElementById('aiTickerInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') runAiAnalysis(e.target.value);
+});
 </script>
 <script>
   (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
