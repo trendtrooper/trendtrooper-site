@@ -33,11 +33,22 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
+// Feature paused — flip to false to re-enable. While true, no Anthropic API
+// call is ever made, so no credits/charges are incurred.
+const FEATURE_PAUSED = true;
+
 export async function onRequestPost(context: {
   request: Request;
   env: Env;
 }): Promise<Response> {
   const { request, env } = context;
+
+  if (FEATURE_PAUSED) {
+    return jsonResponse(
+      { error: "AI ticker analysis is temporarily paused. Check back soon." },
+      503,
+    );
+  }
 
   if (!env.ANTHROPIC_API_KEY) {
     return jsonResponse(
