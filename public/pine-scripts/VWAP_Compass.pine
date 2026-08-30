@@ -1,0 +1,65 @@
+//@version=6
+indicator("VWAP Compass", overlay = true)
+
+// ============================================================================
+// VWAP COMPASS
+// Based on Humbled Trader — "VWAP Trading Strategy Crash Course"
+// Her rules implemented here:
+//  • VWAP is the only price indicator she keeps on the chart (plus volume).
+//  • Above VWAP = bullish (buyers control), below = bearish (sellers control).
+//  • VWAP RECLAIM LONG: stock breaks below VWAP, then reclaims it midday
+//    (~10:30–13:00) while printing higher lows with increasing buy volume.
+//  • VWAP REJECTION SHORT: stock keeps retesting VWAP from below and failing,
+//    with increasing sell volume — likely to fade all day.
+//  • SHORT-TRAP WARNING: higher lows forming BELOW VWAP around lunch on LOW
+//    volume — algos shaking out longs before a squeeze through VWAP.
+//  • Never place stops right at VWAP — give it room (she warns a single wick
+//    can take you out).
+// ============================================================================
+
+showReclaim = input.bool(true,  "Show VWAP reclaim longs")
+showReject  = input.bool(true,  "Show VWAP rejection shorts")
+showTrap    = input.bool(true,  "Show short-trap warnings")
+volLen      = input.int(13,     "Volume MA length", minval = 2)
+minBarsBelow= input.int(4,      "Min bars below VWAP before a reclaim", minval = 1)
+tzNY        = "America/New_York"
+
+vwapLine = ta.vwap(hlc3)
+volMa    = ta.sma(volume, volLen)
+
+inSession = not na(time(timeframe.period, "0930-1600", tzNY))
+inMidday  = not na(time(timeframe.period, "1030-1300", tzNY))
+
+above = close > vwapLine
+below = close < vwapLine
+
+var int belowCount = 0
+belowCount := above ? 0 : belowCount + 1
+
+// --- VWAP reclaim long: was below for a while, crosses and holds above with volume
+higherLow  = low > low[1]
+reclaimSig = showReclaim and inSession and above and not above[1] and belowCount[1] >= minBarsBelow and volume > volMa and higherLow
+
+// --- VWAP rejection short: tags VWAP from below, closes red below it, sell volume expanding
+rejectSig = showReject and inSession and below and below[1] and high >= vwapLine and close < open and volume > volMa
+
+// --- Short-trap warning: higher pivot lows below VWAP, midday, volume drying up
+pl        = ta.pivotlow(low, 2, 2)
+var float lastPl  = na
+var float prevPl  = na
+if not na(pl)
+    prevPl := lastPl
+    lastPl := pl
+trapSig = showTrap and inMidday and below and not na(lastPl) and not na(prevPl) and lastPl > prevPl and volume < volMa
+
+plot(vwapLine, "VWAP", color = color.new(color.blue, 0), linewidth = 2)
+
+plotshape(reclaimSig, "VWAP Reclaim Long", shape.triangleup,   location.belowbar, color.new(color.green,  0), text = "RECLAIM", textcolor = color.green,  size = size.small)
+plotshape(rejectSig,  "VWAP Reject Short", shape.triangledown, location.abovebar, color.new(color.red,    0), text = "REJECT",  textcolor = color.red,    size = size.small)
+plotshape(trapSig,    "Short Trap Risk",   shape.xcross,       location.belowbar, color.new(color.orange, 0), text = "TRAP?",   textcolor = color.orange, size = size.tiny)
+
+bgcolor(above ? color.new(color.green, 96) : color.new(color.red, 96))
+
+alertcondition(reclaimSig, "VWAP Reclaim Long",  "VWAP Compass: midday VWAP reclaim with higher lows + volume — long setup")
+alertcondition(rejectSig,  "VWAP Rejection Short","VWAP Compass: failed VWAP retest with sell volume — short setup")
+alertcondition(trapSig,    "Short Trap Warning", "VWAP Compass: higher lows below VWAP on low midday volume — possible short trap / squeeze")

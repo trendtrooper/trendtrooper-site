@@ -1,0 +1,69 @@
+//@version=6
+indicator("Golden Window Reversal", overlay = true)
+
+// ============================================================================
+// GOLDEN WINDOW REVERSAL
+// Based on Humbled Trader — "Price Action Trading Strategy Extended Crash Course"
+// Her rules implemented here:
+//  • Zoom out first: the DAILY trend is your best friend. Above the daily
+//    200 SMA = bullish big picture; below = bearish.
+//  • Her "golden reversal time frame": 10:30–11:00 AM ET is when morning
+//    sell-offs on strong stocks tend to reverse (v-shape recovery).
+//  • Entry: first red day / morning sell-off on an uptrending large cap with
+//    no bearish news → wait for the 5-min downtrend to break with a higher
+//    low inside the golden window, then trade the reversal long.
+//  • Long wicks at highs = sellers stepping in (resistance); long wicks at
+//    lows = dip buyers (support).
+//  • Front side vs back side: above the daily key level + VWAP = front side
+//    (don't short); below both = back side (don't buy breakouts).
+// ============================================================================
+
+tzNY     = "America/New_York"
+wickMult = input.float(2.0, "Wick vs body multiple for wick signals", step = 0.25)
+useTrend = input.bool(true, "Require daily 200 SMA uptrend for longs")
+
+daily200 = request.security(syminfo.tickerid, "D", ta.sma(close, 200))
+vwapLine = ta.vwap(hlc3)
+
+inGolden  = not na(time(timeframe.period, "1030-1100", tzNY))
+inSession = not na(time(timeframe.period, "0930-1600", tzNY))
+
+dailyBull = close > daily200
+
+// --- Morning downtrend into the window: lower lows since the open
+var float openPx   = na
+var bool  soldOff  = false
+newDay = ta.change(time("D")) != 0
+if newDay
+    openPx  := open
+    soldOff := false
+if inSession and close < openPx * 0.995
+    soldOff := true
+
+// --- Golden-window reversal: higher low + close over prior bar high inside window
+higherLow   = low > low[1] and low[1] <= low[2]
+reversalSig = inGolden and soldOff and higherLow and close > high[1] and close > vwapLine and (not useTrend or dailyBull)
+
+// --- Wick reads
+body      = math.abs(close - open)
+upWick    = high - math.max(close, open)
+dnWick    = math.min(close, open) - low
+sellWick  = inSession and upWick > body * wickMult and volume > ta.sma(volume, 13)
+buyWick   = inSession and dnWick > body * wickMult and volume > ta.sma(volume, 13)
+
+// --- Front side / back side vs VWAP
+frontSide = close > vwapLine and dailyBull
+backSide  = close < vwapLine and not dailyBull
+
+plot(vwapLine, "VWAP", color.new(color.blue, 0), 2)
+plot(daily200, "Daily 200 SMA", color.new(color.orange, 0), 2)
+
+plotshape(reversalSig, "Golden Window Reversal", shape.labelup, location.belowbar, color.new(color.green, 0), text = "GOLDEN\nREV", textcolor = color.white, size = size.small)
+plotshape(sellWick, "Seller Wick", shape.triangledown, location.abovebar, color.new(color.red,   40), size = size.tiny)
+plotshape(buyWick,  "Buyer Wick",  shape.triangleup,   location.belowbar, color.new(color.green, 40), size = size.tiny)
+
+bgcolor(inGolden ? color.new(color.yellow, 88) : na, title = "Golden reversal window")
+bgcolor(backSide ? color.new(color.red, 95) : frontSide ? color.new(color.green, 97) : na)
+
+alertcondition(reversalSig, "Golden Window Reversal", "Golden Window Reversal: 10:30–11:00 higher-low reversal over VWAP on a daily-uptrend stock")
+alertcondition(sellWick, "Seller Wick at Highs", "Golden Window Reversal: heavy upper wick — sellers stepping in")

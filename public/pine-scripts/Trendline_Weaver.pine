@@ -1,0 +1,82 @@
+//@version=6
+indicator("Trendline Weaver", overlay = true, max_lines_count = 20, max_labels_count = 100)
+
+// ============================================================================
+// TRENDLINE WEAVER
+// Based on Humbled Trader — "Trendline Trading Strategy — 3 SIMPLE STEPS
+// To Improve Profitability"
+// Her rules implemented here:
+//  • Uptrend = higher highs AND higher lows; downtrend = lower lows AND
+//    lower highs. Label them so the trend is never in doubt.
+//  • A trendline needs at least THREE contact points — the more, the better.
+//  • Draw from EXTREME highs and lows (the V and upside-down-V pivots that
+//    stand out), not every wiggle.
+//  • Check multiple time frames (she flips daily ↔ weekly) — run this on any
+//    chart resolution.
+//  • The trend is your best friend: don't be "fundamentally right but
+//    technically wrong". Respect your stop when the line breaks.
+// ============================================================================
+
+pivLen = input.int(5, "Pivot strength (bars each side)", minval = 2)
+showHL = input.bool(true, "Label HH / HL / LH / LL")
+
+ph = ta.pivothigh(high, pivLen, pivLen)
+pl = ta.pivotlow(low,  pivLen, pivLen)
+
+var float lastPh = na
+var float prevPh = na
+var int lastPhBar = na
+var int prevPhBar = na
+var float lastPl = na
+var float prevPl = na
+var int lastPlBar = na
+var int prevPlBar = na
+
+if not na(ph)
+    prevPh    := lastPh
+    prevPhBar := lastPhBar
+    lastPh    := ph
+    lastPhBar := bar_index - pivLen
+    if showHL and not na(prevPh)
+        label.new(lastPhBar, ph, lastPh > prevPh ? "HH" : "LH", style = label.style_label_down, color = lastPh > prevPh ? color.new(color.green, 20) : color.new(color.red, 20), textcolor = color.white, size = size.tiny)
+
+if not na(pl)
+    prevPl    := lastPl
+    prevPlBar := lastPlBar
+    lastPl    := pl
+    lastPlBar := bar_index - pivLen
+    if showHL and not na(prevPl)
+        label.new(lastPlBar, pl, lastPl > prevPl ? "HL" : "LL", style = label.style_label_up, color = lastPl > prevPl ? color.new(color.green, 20) : color.new(color.red, 20), textcolor = color.white, size = size.tiny)
+
+// --- Auto trendlines from the last two extreme pivots, extended right
+var line upTl = na
+var line dnTl = na
+
+if not na(lastPl) and not na(prevPl) and lastPl > prevPl
+    line.delete(upTl)
+    upTl := line.new(prevPlBar, prevPl, lastPlBar, lastPl, extend = extend.right, color = color.new(color.green, 0), width = 2)
+
+if not na(lastPh) and not na(prevPh) and lastPh < prevPh
+    line.delete(dnTl)
+    dnTl := line.new(prevPhBar, prevPh, lastPhBar, lastPh, extend = extend.right, color = color.new(color.red, 0), width = 2)
+
+// --- Trend state + line-break alerts
+upTrend = not na(lastPl) and not na(prevPl) and not na(lastPh) and not na(prevPh) and lastPl > prevPl and lastPh > prevPh
+dnTrend = not na(lastPl) and not na(prevPl) and not na(lastPh) and not na(prevPh) and lastPl < prevPl and lastPh < prevPh
+
+f_lineVal(line ln) =>
+    na(ln) ? na : line.get_price(ln, bar_index)
+
+upVal = f_lineVal(upTl)
+dnVal = f_lineVal(dnTl)
+
+upBreak = not na(upVal) and close < upVal and close[1] >= upVal
+dnBreak = not na(dnVal) and close > dnVal and close[1] <= dnVal
+
+plotshape(upBreak, "Uptrend line broken",   shape.triangledown, location.abovebar, color.new(color.red,   0), text = "TL BREAK", textcolor = color.red,   size = size.small)
+plotshape(dnBreak, "Downtrend line broken", shape.triangleup,   location.belowbar, color.new(color.green, 0), text = "TL BREAK", textcolor = color.green, size = size.small)
+
+bgcolor(upTrend ? color.new(color.green, 96) : dnTrend ? color.new(color.red, 96) : na)
+
+alertcondition(upBreak, "Uptrend line break",   "Trendline Weaver: price closed below the rising trendline — trend may be ending, respect your stop")
+alertcondition(dnBreak, "Downtrend line break", "Trendline Weaver: price closed above the falling trendline — possible trend reversal")

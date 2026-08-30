@@ -1,0 +1,70 @@
+//@version=6
+indicator("Scalp Sentinel", overlay = true)
+
+// ============================================================================
+// SCALP SENTINEL
+// Based on Humbled Trader — "Scalping Trading Strategy — Secrets to
+// Increase Daily Profits" (the "technical bounce / failed breakout" scalp)
+// Her three golden criteria implemented here:
+//  1. Above-average trading volume, intraday AND on the daily.
+//  2. A breakout or breakdown at a KEY daily level.
+//  3. Intraday price action that CONFIRMS the break or rejection.
+//  • Chart setup she uses: VWAP + volume bars with a 13-period volume moving
+//    average. 5-min for consolidation, 2-min for fast movers.
+//  • Short entry: a FAILED breakout at the key level → short the small
+//    bounces back toward the level / VWAP (never short into weakness at
+//    support). Risk = key level + slippage; targets = prior intraday supports.
+//  • Long side is the mirror image: a failed breakdown.
+// ============================================================================
+
+volLen   = input.int(13, "Volume MA length", minval = 2)
+keyLook  = input.int(30, "Key-level lookback (bars)", minval = 10)
+rvolMin  = input.float(1.5, "Min relative volume on trigger bars", step = 0.1)
+tzNY     = "America/New_York"
+
+vwapLine = ta.vwap(hlc3)
+volMa    = ta.sma(volume, volLen)
+rvol     = volume / volMa
+
+inSession = not na(time(timeframe.period, "0930-1600", tzNY))
+
+// Key intraday levels: highest high / lowest low of the lookback (excluding current bar)
+keyHi = ta.highest(high[1], keyLook)
+keyLo = ta.lowest(low[1],  keyLook)
+
+// --- Failed breakout: pokes above key high, closes back below it, red, on volume
+failedBreakout  = inSession and high > keyHi and close < keyHi and close < open and rvol >= rvolMin
+
+// --- Failed breakdown: pokes below key low, closes back above it, green, on volume
+failedBreakdown = inSession and low < keyLo and close > keyLo and close > open and rvol >= rvolMin
+
+// --- Bounce-short entry: after a failed breakout, price bounces back toward VWAP and stalls
+var bool shortBias = false
+var bool longBias  = false
+if failedBreakout
+    shortBias := true
+    longBias  := false
+if failedBreakdown
+    longBias  := true
+    shortBias := false
+if close > keyHi
+    shortBias := false
+if close < keyLo
+    longBias := false
+
+bounceShort = inSession and shortBias and close < vwapLine and high >= vwapLine * 0.999 and close < open
+bounceLong  = inSession and longBias  and close > vwapLine and low  <= vwapLine * 1.001 and close > open
+
+plot(vwapLine, "VWAP", color.new(color.blue, 0), 2)
+plot(keyHi, "Key high", color.new(color.red,   50), 1, plot.style_linebr)
+plot(keyLo, "Key low",  color.new(color.green, 50), 1, plot.style_linebr)
+
+plotshape(failedBreakout,  "Failed Breakout",  shape.xcross, location.abovebar, color.new(color.red,   0), text = "FAIL", textcolor = color.red,   size = size.tiny)
+plotshape(failedBreakdown, "Failed Breakdown", shape.xcross, location.belowbar, color.new(color.green, 0), text = "FAIL", textcolor = color.green, size = size.tiny)
+plotshape(bounceShort, "Scalp Short (bounce)", shape.triangledown, location.abovebar, color.new(color.red,   0), text = "SCALP", textcolor = color.red,   size = size.small)
+plotshape(bounceLong,  "Scalp Long (bounce)",  shape.triangleup,   location.belowbar, color.new(color.green, 0), text = "SCALP", textcolor = color.green, size = size.small)
+
+alertcondition(failedBreakout,  "Failed breakout",  "Scalp Sentinel: failed breakout at key level on volume — watch for bounce shorts toward VWAP")
+alertcondition(failedBreakdown, "Failed breakdown", "Scalp Sentinel: failed breakdown at key level on volume — watch for bounce longs toward VWAP")
+alertcondition(bounceShort, "Scalp short entry", "Scalp Sentinel: bounce toward VWAP stalling after failed breakout — scalp short setup")
+alertcondition(bounceLong,  "Scalp long entry",  "Scalp Sentinel: dip toward VWAP holding after failed breakdown — scalp long setup")

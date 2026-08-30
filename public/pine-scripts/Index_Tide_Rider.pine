@@ -1,0 +1,73 @@
+//@version=6
+indicator("Index Tide Rider", overlay = true)
+
+// ============================================================================
+// INDEX TIDE RIDER
+// Based on Humbled Trader — "Best Futures Trading Strategy for Beginners"
+// (SPY / QQQ / ES / NQ and the large caps that follow them)
+// Two setups implemented here:
+//  1. DAILY SUPPORT DIP-BUY (panic gap-down reversal):
+//     • Market-wide gap down to a key daily support (macro panic, no
+//       stock-specific bad news), after MULTIPLE down days.
+//     • Do NOT catch the falling knife: wait for price to hold/reclaim the
+//       key level, reclaim VWAP with higher lows and a volume surge —
+//       reversals cluster in her 10:00–11:00 "golden reversal period".
+//  2. TREND-JOIN LONG (continuation):
+//     • Market breaking out (not chopping sideways), instrument holding
+//       ABOVE PREMARKET HIGHS after 10:00 AM, riding VWAP / 8 EMA, with
+//       room to the next daily resistance. Trail rather than top-tick.
+// Requires an intraday chart with Extended Hours ON.
+// ============================================================================
+
+tzNY   = "America/New_York"
+gapPct = input.float(0.75, "Min gap down for dip-buy setup (%)", step = 0.25)
+
+prevClose = request.security(syminfo.tickerid, "D", close[1])
+vwapLine  = ta.vwap(hlc3)
+ema8      = ta.ema(close, 8)
+volMa     = ta.sma(volume, 13)
+
+newDay = ta.change(time("D")) != 0
+
+var float pmHigh = na
+var float pmLow  = na
+var bool  gapDn  = false
+if newDay
+    pmHigh := na
+    pmLow  := na
+    gapDn  := false
+if session.ispremarket
+    pmHigh := na(pmHigh) ? high : math.max(pmHigh, high)
+    pmLow  := na(pmLow)  ? low  : math.min(pmLow, low)
+
+firstRTH = session.ismarket and (session.ispremarket[1] or newDay)
+if firstRTH
+    gapDn := open <= prevClose * (1 - gapPct / 100)
+
+inGolden = not na(time(timeframe.period, "1000-1100", tzNY))
+after10  = not na(time(timeframe.period, "1000-1600", tzNY))
+
+// --- Setup 1: dip-buy reversal — VWAP reclaim with higher low + volume in the window
+higherLow = low > low[1]
+dipBuy = session.ismarket and gapDn and inGolden and close > vwapLine and close[1] <= vwapLine and higherLow and volume > volMa
+
+// --- Setup 2: trend-join long — holding above premarket high after 10:00, riding VWAP/8EMA
+trendJoin = session.ismarket and after10 and not na(pmHigh) and close > pmHigh and close > vwapLine and close > ema8 and low <= ema8 * 1.001 and close > open
+
+// --- Trail warning
+trailWarn = session.ismarket and close < vwapLine and close[1] >= vwapLine
+
+plot(vwapLine, "VWAP",  color.new(color.blue,   0), 2)
+plot(ema8,     "8 EMA", color.new(color.purple, 0), 1)
+plot(pmHigh,   "Premarket high", color.new(color.green, 40), 1, plot.style_linebr)
+plot(pmLow,    "Premarket low",  color.new(color.red,   40), 1, plot.style_linebr)
+
+plotshape(dipBuy,    "Dip-Buy Reversal", shape.labelup,    location.belowbar, color.new(color.green, 0), text = "DIP\nBUY",  textcolor = color.white, size = size.small)
+plotshape(trendJoin, "Trend-Join Long",  shape.triangleup, location.belowbar, color.new(color.teal,  0), text = "JOIN",      textcolor = color.teal,  size = size.small)
+plotshape(trailWarn, "VWAP lost",        shape.xcross,     location.abovebar, color.new(color.orange,0), size = size.tiny)
+
+bgcolor(inGolden ? color.new(color.yellow, 92) : na, title = "Golden reversal period")
+
+alertcondition(dipBuy,    "Dip-buy reversal",  "Index Tide Rider: gap-down day VWAP reclaim with higher low + volume in the golden window — dip-buy setup")
+alertcondition(trendJoin, "Trend-join long",   "Index Tide Rider: holding above premarket highs after 10:00, riding VWAP/8EMA — trend-join entry")
+alertcondition(trailWarn, "VWAP lost",         "Index Tide Rider: VWAP breakdown — tighten or exit")

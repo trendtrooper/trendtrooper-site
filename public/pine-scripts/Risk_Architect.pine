@@ -1,0 +1,76 @@
+//@version=6
+indicator("Risk Architect", overlay = true)
+
+// ============================================================================
+// RISK ARCHITECT
+// Based on Humbled Trader — "Risk Management & Position Sizing Strategy
+// for Trading" (+ the risk calculator from her swing-trading video)
+// Her rules implemented here:
+//  • Risk a FIXED slice of the account per trade: ~1% (conservative) up to
+//    3–5% only for experienced aggressive swing trades.
+//  • Shares = (account × risk%) ÷ (entry − stop). Keep risk constant on
+//    every ticker — never "1,000 shares of everything".
+//  • Minimum reward-to-risk of 1:2; aim for 1:3+ to be profitable even at a
+//    40% win rate.
+//  • Stops go at technical daily key levels (not right at VWAP), targets at
+//    the next daily resistance/support.
+//  • Her discipline rules: stop trading after ~11:30 AM if that's where you
+//    bleed, and stop the day if you give back 30% of your profits.
+// Set your entry & stop below; the table sizes the trade and draws 1R/2R/3R.
+// ============================================================================
+
+acctSize = input.float(10000, "Account size ($)", minval = 100, step = 500)
+riskPct  = input.float(1.0,   "Risk per trade (%)", minval = 0.1, maxval = 10, step = 0.25)
+entryPx  = input.price(0.0,   "Entry price (0 = use current close)")
+stopPx   = input.price(0.0,   "Stop price (0 = 2% under entry)")
+isLong   = input.bool(true,   "Long trade? (off = short)")
+
+eff_entry = entryPx > 0 ? entryPx : close
+eff_stop  = stopPx  > 0 ? stopPx  : (isLong ? eff_entry * 0.98 : eff_entry * 1.02)
+
+riskPerShare = math.abs(eff_entry - eff_stop)
+maxRiskUsd   = acctSize * riskPct / 100
+shares       = riskPerShare > 0 ? math.floor(maxRiskUsd / riskPerShare) : 0
+
+dir = isLong ? 1 : -1
+t1  = eff_entry + dir * riskPerShare        // 1R
+t2  = eff_entry + dir * riskPerShare * 2    // 2R
+t3  = eff_entry + dir * riskPerShare * 3    // 3R
+
+// --- Lines
+var line eLn = na
+var line sLn = na
+var line t2Ln = na
+var line t3Ln = na
+if barstate.islast
+    line.delete(eLn)
+    line.delete(sLn)
+    line.delete(t2Ln)
+    line.delete(t3Ln)
+    eLn  := line.new(bar_index - 30, eff_entry, bar_index + 10, eff_entry, color = color.new(color.blue,  0), width = 2)
+    sLn  := line.new(bar_index - 30, eff_stop,  bar_index + 10, eff_stop,  color = color.new(color.red,   0), width = 2, style = line.style_dashed)
+    t2Ln := line.new(bar_index - 30, t2,        bar_index + 10, t2,        color = color.new(color.green,30), width = 1, style = line.style_dashed)
+    t3Ln := line.new(bar_index - 30, t3,        bar_index + 10, t3,        color = color.new(color.green, 0), width = 2, style = line.style_dashed)
+
+// --- Table
+var table t = table.new(position.top_right, 2, 7, border_width = 1)
+
+f_row(int r, string k, string v, color bg) =>
+    table.cell(t, 0, r, k, text_color = color.white, bgcolor = color.new(color.black, 20), text_halign = text.align_left)
+    table.cell(t, 1, r, v, text_color = color.white, bgcolor = bg, text_halign = text.align_right)
+
+if barstate.islast
+    f_row(0, "Max risk",      "$" + str.tostring(maxRiskUsd, "#.##") + " (" + str.tostring(riskPct, "#.#") + "%)", color.new(color.red, 30))
+    f_row(1, "Risk / share",  "$" + str.tostring(riskPerShare, "#.##"), color.new(color.gray, 30))
+    f_row(2, "Position size", str.tostring(shares) + " sh", color.new(color.blue, 20))
+    f_row(3, "Entry",         str.tostring(eff_entry, format.mintick), color.new(color.blue, 40))
+    f_row(4, "Stop",          str.tostring(eff_stop, format.mintick), color.new(color.red, 40))
+    f_row(5, "2R target",     str.tostring(t2, format.mintick) + "  (+$" + str.tostring(maxRiskUsd * 2, "#") + ")", color.new(color.green, 40))
+    f_row(6, "3R target",     str.tostring(t3, format.mintick) + "  (+$" + str.tostring(maxRiskUsd * 3, "#") + ")", color.new(color.green, 20))
+
+// --- 11:30 AM discipline reminder
+tzNY = "America/New_York"
+lateWindow = not na(time(timeframe.period, "1130-1135", tzNY))
+plotshape(lateWindow and not lateWindow[1], "11:30 discipline check", shape.flag, location.abovebar, color.new(color.orange, 0), text = "11:30", textcolor = color.orange, size = size.tiny)
+
+alertcondition(lateWindow and not lateWindow[1], "11:30 AM check-in", "Risk Architect: it's 11:30 ET — her rule: if this is where you give profits back, you're done for the day")

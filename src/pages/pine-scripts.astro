@@ -1,0 +1,211 @@
+---
+// TrendTrooper — Pine Scripts Library
+import fs from 'node:fs';
+import path from 'node:path';
+
+const SCRIPTS = [
+  { file: 'VWAP_Compass.pine', title: 'VWAP Compass', tag: 'VWAP', desc: 'VWAP reclaim longs, rejection shorts, and a short-trap warning for stocks faking out below VWAP on low volume.' },
+  { file: 'Golden_Window_Reversal.pine', title: 'Golden Window Reversal', tag: 'Reversal', desc: 'Flags the 10:30–11:00am morning sell-off reversal window on uptrending stocks above their daily 200 SMA.' },
+  { file: 'Dip_Snapper.pine', title: 'Dip Snapper', tag: 'Dip Buy', desc: 'Marks the first green 5-min candle after a red sell-off into an established support zone on an uptrending stock.' },
+  { file: 'Level_Keeper.pine', title: 'Level Keeper', tag: 'Support/Resistance', desc: 'Auto-plots horizontal support/resistance zones from swing highs and lows with 3+ contact points.' },
+  { file: 'Scalp_Sentinel.pine', title: 'Scalp Sentinel', tag: 'Scalping', desc: 'Flags failed breakouts/breakdowns at key daily levels for the technical-bounce scalp, gated by above-average volume.' },
+  { file: 'Trendline_Weaver.pine', title: 'Trendline Weaver', tag: 'Trendlines', desc: 'Auto-draws uptrend/downtrend trendlines from extreme swing pivots with at least 3 contact points.' },
+  { file: 'Gap_Navigator.pine', title: 'Gap Navigator', tag: 'Gap Trading', desc: 'Marks premarket high/low, key daily resistance, and VWAP breakdown levels for catalyst-driven gap-up and gap-down setups.' },
+  { file: 'Bagholder_Bear.pine', title: 'Bagholder Bear', tag: 'Short Setup', desc: 'Flags the small-cap "bag holder" short trigger — the first green-to-red day after a multi-day downtrending run.' },
+  { file: 'Volume_Prophet.pine', title: 'Volume Prophet', tag: 'Volume', desc: 'Volume moving average + relative volume (RVOL) panel to confirm breakouts and breakdowns are backed by real volume.' },
+  { file: 'Index_Tide_Rider.pine', title: 'Index Tide Rider', tag: 'Index/Large Cap', desc: 'Daily-support dip-buy and trend-join setups tuned for SPY/QQQ and the large caps that follow them.' },
+  { file: 'Risk_Architect.pine', title: 'Risk Architect', tag: 'Risk Mgmt', desc: 'On-chart position size and reward-to-risk calculator so every trade risks a fixed, consistent slice of the account.' },
+  { file: 'Swing_Catalyst.pine', title: 'Swing Catalyst', tag: 'Swing Trading', desc: 'Event-driven swing setup for catalyst gap-ups on stocks holding their daily 200 SMA and 8 EMA.' },
+  { file: 'Morning_Phoenix.pine', title: 'Morning Phoenix', tag: 'Gap Reversal', desc: 'The gapper-reversal long: buys premarket-VWAP-holding pullbacks on huge overnight gap-ups with a bullish catalyst.' },
+];
+
+const scripts = SCRIPTS.map(s => ({
+  ...s,
+  code: fs.readFileSync(path.join(process.cwd(), 'public', 'pine-scripts', s.file), 'utf-8'),
+}));
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pine Scripts — TrendTrooper</title>
+<meta name="description" content="Free TradingView Pine Script indicators built from Humbled Trader's price action, VWAP, gap, and risk management strategies.">
+<meta property="og:title" content="TrendTrooper — Free Pine Scripts">
+<meta property="og:description" content="Free TradingView Pine Script indicators built from Humbled Trader's price action, VWAP, gap, and risk management strategies.">
+<meta property="og:image" content="https://trendtrooper.com/bot-preview.png">
+<meta property="og:url" content="https://trendtrooper.com/pine-scripts">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://trendtrooper.com/pine-scripts">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#020510;--cyan:#00cfff;--purple:#7040ff;--green:#00ff88;--red:#ff4060;--yellow:#ffd060;
+  --text:#e8eeff;--muted:rgba(220,235,255,0.85);--muted2:rgba(180,210,255,0.55);
+  --border:rgba(0,200,255,0.1);--border2:rgba(0,200,255,0.2);
+  --card:rgba(4,8,30,0.88);--card2:rgba(6,12,40,0.6);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;line-height:1.6;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px);background-size:50px 50px;z-index:0;pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(112,64,255,0.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(0,200,255,0.04) 0%,transparent 50%);z-index:0;pointer-events:none;}
+
+/* BULL WATERMARK — fixed background image behind all content */
+.bull-watermark{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(2,5,16,0.88),rgba(2,5,16,0.94)),url('/bull-bg.jpg');background-size:cover;background-position:center 30%;background-repeat:no-repeat;background-attachment:fixed;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,.1);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
+.tt-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#e8eeff;}
+.tt-logo{flex-shrink:0;}
+.tt-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#fff,#00cfff,#7040ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tt-tag{font-size:9px;color:#00cfff;font-weight:600;letter-spacing:3px;text-transform:uppercase;display:block;opacity:.8;}
+.tt-nav{display:flex;align-items:center;gap:1px;white-space:nowrap;}
+.tt-nav a{color:#c8d8f0;padding:6px 9px;border-radius:8px;text-decoration:none;font-weight:800;font-size:11.5px;letter-spacing:.8px;text-transform:uppercase;transition:color .15s,background .15s;}
+.tt-nav a:hover{color:#e8eeff;background:rgba(0,200,255,.06);}
+.tt-nav a.cur{color:#00cfff;}
+.tt-cta{background:linear-gradient(135deg,#00cfff,#7040ff)!important;color:#fff!important;font-weight:800!important;padding:8px 14px!important;border-radius:8px!important;box-shadow:0 0 20px rgba(0,200,255,.2)!important;}
+.tt-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
+.tt-burger span{width:22px;height:2px;background:#e8eeff;border-radius:2px;display:block;transition:transform .2s,opacity .2s;}
+.tt-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.tt-burger.open span:nth-child(2){opacity:0;}
+.tt-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.tt-mob{display:none;flex-direction:column;position:sticky;top:70px;z-index:99;background:rgba(2,5,20,.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,.1);padding:8px 24px 16px;}
+.tt-mob.open{display:flex;}
+.tt-mob a{color:#c8d8f0;padding:10px 0;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.04);}
+.tt-mob a:hover{color:#e8eeff;}
+@media(max-width:900px){.tt-nav{display:none;}.tt-burger{display:flex;}}
+
+/* CONTENT */
+.page{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:40px 24px 80px;}
+.page-hero{text-align:center;margin-bottom:48px;}
+.page-label{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px;}
+.page-hero h1{font-family:'Orbitron',monospace;font-size:clamp(28px,4vw,42px);font-weight:900;margin-bottom:12px;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-hero p{color:var(--muted2);font-size:15px;max-width:640px;margin:0 auto;}
+
+.pine-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:24px;}
+
+.pine-card{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:24px;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.pine-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));}
+.pine-tag{display:inline-block;font-family:'Orbitron',monospace;font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);background:rgba(112,64,255,.1);border:1px solid rgba(112,64,255,.25);border-radius:6px;padding:3px 8px;margin-bottom:10px;width:fit-content;}
+.pine-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:1px;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;}
+.pine-desc{color:var(--muted2);font-size:13px;line-height:1.55;margin-bottom:16px;flex-grow:1;}
+
+.pine-code-wrap{position:relative;margin-bottom:14px;}
+.pine-code{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:10px;padding:12px 14px;max-height:160px;overflow:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.6;color:var(--muted);white-space:pre;}
+.pine-code::-webkit-scrollbar{width:8px;height:8px;}
+.pine-code::-webkit-scrollbar-thumb{background:rgba(0,200,255,.2);border-radius:4px;}
+
+.pine-actions{display:flex;gap:10px;}
+.pine-btn{flex:1;text-align:center;padding:10px;border-radius:10px;font-family:'Orbitron',monospace;font-size:10.5px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:opacity .15s,transform .1s;border:none;}
+.pine-btn:active{transform:scale(.97);}
+.pine-btn-copy{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;}
+.pine-btn-copy:hover{opacity:.85;}
+.pine-btn-dl{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--border2);}
+.pine-btn-dl:hover{background:rgba(255,255,255,.09);}
+.pine-btn-copy.copied{background:linear-gradient(135deg,var(--green),var(--cyan));}
+
+.pine-howto{max-width:820px;margin:56px auto 0;background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:26px 28px;}
+.pine-howto h3{font-family:'Orbitron',monospace;font-size:13px;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px;}
+.pine-howto ol{color:var(--muted);font-size:14px;padding-left:20px;line-height:1.9;}
+.pine-howto strong{color:var(--text);}
+</style>
+</head>
+<body>
+
+<div class="bull-watermark"></div>
+
+<header>
+  <a class="tt-brand" href="/">
+    <svg class="tt-logo" width="44" height="50" viewBox="0 0 52 58"><defs><linearGradient id="shG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6644ff"/><stop offset="100%" stop-color="#00aaff"/></linearGradient></defs><path d="M26 2 L50 12 L50 32 Q50 48 26 56 Q2 48 2 32 L2 12 Z" fill="url(#shG)" stroke="rgba(100,160,255,0.6)" stroke-width="1.5"/><text x="26" y="36" text-anchor="middle" font-family="Orbitron,monospace" font-weight="900" font-size="16" fill="#ffffff" letter-spacing="1">TT</text><text x="26" y="17" text-anchor="middle" font-size="10" fill="rgba(255,220,100,0.9)">*</text></svg>
+    <div><div class="tt-name">TRENDTROOPER</div><span class="tt-tag">Signal Service</span></div>
+  </a>
+  <nav class="tt-nav">
+    <a href="/#features">Features</a>
+    <a href="/chart">Live Chart</a>
+    <a href="/#markets">Markets</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/chart">Full Chart</a>
+    <a href="/analysis">Analysis</a>
+    <a href="/screener">Screener</a>
+    <a href="/academy">Academy</a>
+    <a href="/tools">Tools</a>
+    <a href="/pine-scripts" class="cur">Pine Scripts</a>
+    <a href="https://bot.trendtrooper.com/" target="_blank">Live Bot Trading</a>
+    <a href="/#pricing" class="tt-cta">Get Started</a>
+  </nav>
+  <button class="tt-burger" id="ttBurger" onclick="this.classList.toggle('open');document.getElementById('ttMob').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+<div class="tt-mob" id="ttMob">
+  <a href="/#features">Features</a>
+  <a href="/chart">Live Chart</a>
+  <a href="/#markets">Markets</a>
+  <a href="/#pricing">Pricing</a>
+  <a href="/chart">Full Chart</a>
+  <a href="/analysis">Analysis</a>
+  <a href="/screener">Screener</a>
+  <a href="/academy">Academy</a>
+  <a href="/tools">Tools</a>
+  <a href="/pine-scripts">Pine Scripts</a>
+  <a href="https://bot.trendtrooper.com/" target="_blank">Live Bot Trading</a>
+  <a href="/#pricing">Get Started</a>
+</div>
+
+<div class="page">
+  <div class="page-hero">
+    <div class="page-label">Free Indicators</div>
+    <h1>Pine Scripts Library</h1>
+    <p>Thirteen free TradingView indicators, each built around one specific Humbled Trader setup — VWAP reclaims, gap plays, dip buys, support/resistance, and risk sizing. Copy the code or download the file and drop it straight into the Pine Editor.</p>
+  </div>
+
+  <div class="pine-grid">
+    {scripts.map(s => (
+      <div class="pine-card">
+        <span class="pine-tag">{s.tag}</span>
+        <div class="pine-title">{s.title}</div>
+        <p class="pine-desc">{s.desc}</p>
+        <div class="pine-code-wrap">
+          <pre class="pine-code" id={`code-${s.file}`}>{s.code}</pre>
+        </div>
+        <div class="pine-actions">
+          <button class="pine-btn pine-btn-copy" data-target={`code-${s.file}`}>Copy Code</button>
+          <a class="pine-btn pine-btn-dl" href={`/pine-scripts/${s.file}`} download>Download</a>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="pine-howto">
+    <h3>How to use these</h3>
+    <ol>
+      <li>Click <strong>Copy Code</strong> on any script above (or download the <code>.pine</code> file).</li>
+      <li>Open any chart on TradingView and go to <strong>Pine Editor</strong> at the bottom of the screen.</li>
+      <li>Click <strong>Open</strong> → <strong>New blank indicator</strong>, select all the placeholder code, and paste.</li>
+      <li>Click <strong>Save</strong>, then <strong>Add to chart</strong>. All scripts are indicators (not strategies) — they plot signals, they don't place trades on their own.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.pine-btn-copy').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const targetId = btn.getAttribute('data-target');
+    const codeEl = document.getElementById(targetId);
+    if (!codeEl) return;
+    try {
+      await navigator.clipboard.writeText(codeEl.textContent || '');
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1600);
+    } catch (e) {
+      const range = document.createRange();
+      range.selectNode(codeEl);
+      window.getSelection()?.removeAllRanges();
+      window.getSelection()?.addRange(range);
+    }
+  });
+});
+</script>
+</body>
+</html>

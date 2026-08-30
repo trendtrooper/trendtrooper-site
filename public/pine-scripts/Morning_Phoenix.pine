@@ -1,0 +1,72 @@
+//@version=6
+indicator("Morning Phoenix", overlay = true)
+
+// ============================================================================
+// MORNING PHOENIX
+// Based on Humbled Trader — "The Most Consistently Profitable Trading
+// Strategy" (her A+ setup: the GAPPER REVERSAL LONG, e.g. DDOG & SNOW)
+// Her three golden criteria implemented here:
+//  1. HUGE overnight gap up (5%+) on a large/mid cap.
+//  2. Strong positive catalyst — ideally an earnings beat on all metrics
+//     (manual check).
+//  3. Very bullish daily chart — gapping OVER the daily resistance levels.
+//  • The stock should already be trending up premarket and holding its
+//    premarket VWAP after any early pullback.
+//  • You are NOT buying the high-of-day breakout. You buy the PULLBACKS:
+//    dips to premarket VWAP / the key premarket support that hold, then you
+//    SELL INTO the breakouts at the next daily resistance.
+//  • Risk ≥ $1 on high-beta names; upside is the reclaimed trend (1:3+).
+// Requires an intraday chart with Extended Hours ON.
+// ============================================================================
+
+gapMin = input.float(5.0, "Min overnight gap (%)", step = 0.5)
+
+prevClose = request.security(syminfo.tickerid, "D", close[1])
+vwapLine  = ta.vwap(hlc3)
+volMa     = ta.sma(volume, 13)
+
+newDay = ta.change(time("D")) != 0
+var float pmHigh = na
+var float pmLow  = na
+var bool  bigGap = false
+if newDay
+    pmHigh := na
+    pmLow  := na
+    bigGap := false
+if session.ispremarket
+    pmHigh := na(pmHigh) ? high : math.max(pmHigh, high)
+    pmLow  := na(pmLow)  ? low  : math.min(pmLow, low)
+
+firstRTH = session.ismarket and (session.ispremarket[1] or newDay)
+if firstRTH
+    bigGap := open >= prevClose * (1 + gapMin / 100)
+
+// --- Pullback buy: gap day, dip tags VWAP, holds, closes green above it
+pullbackBuy = session.ismarket and bigGap and low <= vwapLine * 1.002 and close > vwapLine and close > open and volume > volMa
+
+// --- Wick-bought confirmation: lower wick bought back up near VWAP (her bullish tell)
+body   = math.abs(close - open)
+dnWick = math.min(close, open) - low
+wickBuy = session.ismarket and bigGap and dnWick > body and close > vwapLine and low <= vwapLine * 1.005
+
+// --- Sell-into-strength: breaking the premarket high (scale out, don't chase)
+pmhTest = session.ismarket and bigGap and not na(pmHigh) and close > pmHigh and close[1] <= pmHigh
+
+// --- Invalidation: losing VWAP after the open
+vwapLost = session.ismarket and bigGap and close < vwapLine and close[1] >= vwapLine
+
+plot(vwapLine, "VWAP", color.new(color.blue, 0), 2)
+plot(pmHigh, "Premarket high (sell zone)", color.new(color.green, 30), 1, plot.style_linebr)
+plot(pmLow,  "Premarket low",              color.new(color.red,   40), 1, plot.style_linebr)
+plot(prevClose, "Prior day close", color.new(color.gray, 50), 1, plot.style_linebr)
+
+plotshape(pullbackBuy, "Pullback buy",   shape.labelup,     location.belowbar, color.new(color.green, 0), text = "BUY\nDIP", textcolor = color.white,  size = size.small)
+plotshape(wickBuy,     "Wick bought up", shape.triangleup,  location.belowbar, color.new(color.teal, 20), size = size.tiny)
+plotshape(pmhTest,     "Scale out",      shape.labeldown,   location.abovebar, color.new(color.orange, 0), text = "SELL\nSTR", textcolor = color.white, size = size.tiny)
+plotshape(vwapLost,    "VWAP lost",      shape.xcross,      location.abovebar, color.new(color.red,    0), size = size.tiny)
+
+bgcolor(bigGap ? color.new(color.green, 97) : na)
+
+alertcondition(pullbackBuy, "Gapper pullback buy", "Morning Phoenix: big-gap stock holding VWAP on a pullback with volume — her A+ gapper reversal entry (verify catalyst)")
+alertcondition(pmhTest,     "Scale into strength", "Morning Phoenix: premarket high breaking — scale out into strength at resistance")
+alertcondition(vwapLost,    "VWAP lost",           "Morning Phoenix: VWAP lost on the gap day — setup invalidated")

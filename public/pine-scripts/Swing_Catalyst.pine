@@ -1,0 +1,72 @@
+//@version=6
+indicator("Swing Catalyst", overlay = true)
+
+// ============================================================================
+// SWING CATALYST
+// Based on Humbled Trader — "Simple Part-Time SWING TRADING STRATEGY"
+// (her event-driven swing setup, demonstrated on the NVDA earnings gap)
+// Her rules implemented here:
+//  • Scan: gap up ≥ 3% with heavy premarket dollar volume, market cap
+//    > $800M (no small-cap swings), and a FORWARD-LOOKING bullish catalyst:
+//    earnings beat + raised guidance, sector hype, or IPO hype (manual).
+//  • Daily chart must be in an uptrend: above the 200 SMA AND riding the
+//    8 EMA (with a history of reclaiming it). Gapping to new all-time highs
+//    = no overhead resistance = extra bullish. Never short all-time highs.
+//  • Entry: day-one break of the PREMARKET HIGH (buy the VWAP pullback
+//    after the break). Stop: premarket LOW (she prefers it over low-of-day).
+//  • Manage: sell 1/10th partials into strength, judge the hold on the
+//    15-min / hourly / daily — aim for 3–5R over multiple days.
+// Requires an intraday chart with Extended Hours ON (daily signals shown too).
+// ============================================================================
+
+gapMin = input.float(3.0, "Min gap up (%)", step = 0.5)
+
+prevClose = request.security(syminfo.tickerid, "D", close[1])
+daily200  = request.security(syminfo.tickerid, "D", ta.sma(close, 200))
+daily8    = request.security(syminfo.tickerid, "D", ta.ema(close, 8))
+vwapLine  = ta.vwap(hlc3)
+
+dailyBull = close > daily200 and close > daily8
+
+newDay = ta.change(time("D")) != 0
+var float pmHigh = na
+var float pmLow  = na
+var bool  bigGap = false
+if newDay
+    pmHigh := na
+    pmLow  := na
+    bigGap := false
+if session.ispremarket
+    pmHigh := na(pmHigh) ? high : math.max(pmHigh, high)
+    pmLow  := na(pmLow)  ? low  : math.min(pmLow, low)
+
+firstRTH = session.ismarket and (session.ispremarket[1] or newDay)
+if firstRTH
+    bigGap := open >= prevClose * (1 + gapMin / 100)
+
+// --- Entry: PMH break on a gap day with a bullish daily chart
+pmhBreak = session.ismarket and bigGap and dailyBull and not na(pmHigh) and close > pmHigh and close[1] <= pmHigh
+
+// --- Add: VWAP pullback holding after the break
+vwapPull = session.ismarket and bigGap and dailyBull and not na(pmHigh) and close > pmHigh and low <= vwapLine * 1.001 and close > vwapLine and close > open
+
+// --- Stop: premarket low lost
+stopHit = session.ismarket and bigGap and not na(pmLow) and close < pmLow and close[1] >= pmLow
+
+// --- Daily trail: 8 EMA lost (swing exit warning)
+trailWarn = ta.crossunder(close, daily8)
+
+plot(vwapLine, "VWAP",        color.new(color.blue,   0), 2)
+plot(daily8,   "Daily 8 EMA", color.new(color.purple, 0), 2)
+plot(daily200, "Daily 200 SMA", color.new(color.orange, 30), 1)
+plot(pmHigh,   "Premarket high (entry)", color.new(color.green, 30), 1, plot.style_linebr)
+plot(pmLow,    "Premarket low (stop)",   color.new(color.red,   30), 1, plot.style_linebr)
+
+plotshape(pmhBreak,  "Swing entry (PMH break)", shape.labelup,    location.belowbar, color.new(color.green, 0), text = "SWING", textcolor = color.white,  size = size.small)
+plotshape(vwapPull,  "Add on VWAP pullback",    shape.circle,     location.belowbar, color.new(color.teal,  0), text = "ADD",   textcolor = color.teal,   size = size.tiny)
+plotshape(stopHit,   "Stop (PM low lost)",      shape.xcross,     location.abovebar, color.new(color.red,   0), text = "STOP",  textcolor = color.red,    size = size.small)
+plotshape(trailWarn, "8 EMA lost",              shape.triangledown,location.abovebar, color.new(color.orange,0), text = "8EMA",  textcolor = color.orange, size = size.tiny)
+
+alertcondition(pmhBreak,  "Swing entry",  "Swing Catalyst: gap-day premarket-high break on a bullish daily chart — event-driven swing entry (verify the catalyst!)")
+alertcondition(stopHit,   "Swing stop",   "Swing Catalyst: premarket low lost — her stop for the event-driven swing")
+alertcondition(trailWarn, "Daily 8 EMA lost", "Swing Catalyst: closed under the daily 8 EMA — swing trail warning")

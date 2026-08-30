@@ -1,0 +1,65 @@
+//@version=6
+indicator("Bagholder Bear", overlay = true)
+
+// ============================================================================
+// BAGHOLDER BEAR
+// Based on Humbled Trader — "How I Made $2200 in 30 Minutes using this
+// Entry Technique" (her "bag holder short" for small caps)
+// Her rules implemented here:
+//  • Universe (set your scanner, manual): small cap < $800M, low float,
+//    gap > 10%, high volume, long-term downtrending "bag holder" daily chart
+//    with clear supply/resistance overhead (reverse splits, dilution common).
+//  • Don't short day 1 of a strong-catalyst run. The edge is DAY 2 / DAY 3:
+//    wait for the FIRST RED DAY.
+//  • Trigger: GREEN-TO-RED move — price loses the prior day's close.
+//    Confirmation: break of premarket low / key whole-dollar level.
+//  • Risk: the daily resistance overhead / premarket high. Add on weak
+//    bounces that fail at VWAP with declining bounce volume.
+//  • Targets: the prior daily supports the run came from (they usually give
+//    most of it back).
+// Requires an intraday chart with Extended Hours ON.
+// ============================================================================
+
+tzNY = "America/New_York"
+
+prevClose = request.security(syminfo.tickerid, "D", close[1])
+prevHigh  = request.security(syminfo.tickerid, "D", high[1])
+vwapLine  = ta.vwap(hlc3)
+volMa     = ta.sma(volume, 13)
+
+newDay = ta.change(time("D")) != 0
+
+var float pmHigh = na
+var float pmLow  = na
+if newDay
+    pmHigh := na
+    pmLow  := na
+if session.ispremarket
+    pmHigh := na(pmHigh) ? high : math.max(pmHigh, high)
+    pmLow  := na(pmLow)  ? low  : math.min(pmLow, low)
+
+// --- Green-to-red: losing the prior day close during regular hours
+greenToRed = session.ismarket and close < prevClose and close[1] >= prevClose
+
+// --- Premarket-low break confirmation
+pmlBreak = session.ismarket and not na(pmLow) and close < pmLow and close[1] >= pmLow
+
+// --- Weak bounce add: below VWAP, tags it, fails, bounce volume below average
+weakBounce = session.ismarket and close < vwapLine and high >= vwapLine * 0.998 and close < open and volume < volMa
+
+// --- Squeeze-risk warning: reclaiming VWAP from below (cover signal)
+vwapReclaim = session.ismarket and close > vwapLine and close[1] <= vwapLine
+
+plot(vwapLine,  "VWAP",            color.new(color.blue,  0), 2)
+plot(prevClose, "Prior day close", color.new(color.gray, 30), 1, plot.style_linebr)
+plot(pmHigh,    "Premarket high (risk)", color.new(color.red,   30), 1, plot.style_linebr)
+plot(pmLow,     "Premarket low (trigger)", color.new(color.orange, 30), 1, plot.style_linebr)
+
+plotshape(greenToRed,  "Green-to-Red", shape.triangledown, location.abovebar, color.new(color.red,    0), text = "G→R",   textcolor = color.red,    size = size.small)
+plotshape(pmlBreak,    "PM-low break", shape.triangledown, location.abovebar, color.new(color.maroon, 0), text = "PML",   textcolor = color.maroon, size = size.tiny)
+plotshape(weakBounce,  "Weak bounce add", shape.circle,    location.abovebar, color.new(color.orange, 0), text = "ADD",   textcolor = color.orange, size = size.tiny)
+plotshape(vwapReclaim, "Cover warning",   shape.xcross,    location.belowbar, color.new(color.green,  0), text = "COVER", textcolor = color.green,  size = size.tiny)
+
+alertcondition(greenToRed,  "Green-to-red trigger", "Bagholder Bear: stock went red vs prior close — first-red-day short trigger (day 2/3 runners only)")
+alertcondition(pmlBreak,    "Premarket low break",  "Bagholder Bear: premarket low broken — breakdown confirmation")
+alertcondition(vwapReclaim, "VWAP reclaim — cover", "Bagholder Bear: VWAP reclaimed from below — squeeze risk, consider covering")

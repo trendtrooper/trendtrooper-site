@@ -1,0 +1,60 @@
+//@version=6
+indicator("Dip Snapper", overlay = true)
+
+// ============================================================================
+// DIP SNAPPER
+// Based on Humbled Trader — "BUY THE DIP — Learn This Profitable Trading
+// Strategy in 20Mins"
+// Her four criteria implemented here:
+//  1. Stock is UPTRENDING on the daily chart with multiple tested support
+//     levels (works on anything > $500M market cap).
+//  2. Price dips into an established support zone and forms a reversal:
+//     the FIRST GREEN 5-MIN CANDLE after multiple red sell-off candles.
+//  3. Market is stabilizing/uptrending, not selling off all day (use your
+//     own read — this script flags the stock-side setup).
+//  4. No heavily negative news (manual check).
+//  • Risk: about $1–1.50 below the support / prior day low on a high-beta
+//    name. Target: VWAP, then premarket highs — aim for 1:3 or better.
+//  • Don't catch the falling knife: the green-candle confirmation IS the entry.
+// ============================================================================
+
+minRedBars = input.int(3,  "Min consecutive red candles before the dip buy", minval = 2)
+supLookback= input.int(20, "Support lookback (bars)", minval = 5)
+supTolPct  = input.float(0.3, "Support touch tolerance (%)", step = 0.1)
+riskDollars= input.float(1.0, "Risk below entry ($) for stop line", step = 0.25)
+
+vwapLine  = ta.vwap(hlc3)
+daily200  = request.security(syminfo.tickerid, "D", ta.sma(close, 200))
+prevLow   = request.security(syminfo.tickerid, "D", low[1])
+pmHighSrc = high
+
+// Prior-day low and rolling support: lowest low of the lookback, excluding current bar
+support   = ta.lowest(low[1], supLookback)
+nearSup   = low <= support * (1 + supTolPct / 100)
+
+dailyBull = close > daily200
+
+var int redRun = 0
+redRun := close < open ? redRun + 1 : 0
+
+greenCandle = close > open
+firstGreen  = greenCandle and redRun[1] >= minRedBars
+
+dipBuy = firstGreen and nearSup[1] and dailyBull
+
+// --- Stop & target guides drawn at signal
+var line stopLn = na
+var line tgtLn  = na
+if dipBuy
+    line.delete(stopLn)
+    line.delete(tgtLn)
+    stopLn := line.new(bar_index, close - riskDollars, bar_index + 20, close - riskDollars, color = color.red,   style = line.style_dashed)
+    tgtLn  := line.new(bar_index, vwapLine,            bar_index + 20, vwapLine,            color = color.green, style = line.style_dashed)
+
+plot(vwapLine, "VWAP", color.new(color.blue, 0), 2)
+plot(daily200, "Daily 200 SMA", color.new(color.orange, 30), 1)
+plot(support,  "Rolling support", color.new(color.teal, 40), 1, plot.style_linebr)
+
+plotshape(dipBuy, "Dip Buy", shape.labelup, location.belowbar, color.new(color.green, 0), text = "DIP\nBUY", textcolor = color.white, size = size.small)
+
+alertcondition(dipBuy, "Dip Snapper Buy", "Dip Snapper: first green candle after a multi-red sell-off into tested support on a daily uptrend — buy-the-dip setup (check market + news)")

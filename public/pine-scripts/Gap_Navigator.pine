@@ -1,0 +1,72 @@
+//@version=6
+indicator("Gap Navigator", overlay = true)
+
+// ============================================================================
+// GAP NAVIGATOR
+// Based on Humbled Trader — "GAP UP TRADING STRATEGY — Golden Setup To
+// Become Profitable" (+ "How To Trade Gap Up and Gap Down Strategy")
+// Her rules implemented here (large caps, catalyst-driven gaps):
+//  GAP-UP LONG:
+//   • Overnight gap up OVER a key daily resistance (best: 52-week-high area)
+//     with a positive catalyst (earnings beat — manual check).
+//   • Entry 1: pullback to the key level (± ~50c risk).
+//   • Entry 2: break of the PREMARKET HIGH — then buy dips above it.
+//   • Stop: 5-min VWAP breakdown. Sell into each daily resistance above.
+//  GAP-DOWN SHORT:
+//   • Gap down BELOW key daily support (worst: 52-week-low break) on a
+//     bearish catalyst → short the small bounces toward VWAP / broken level.
+// Requires an intraday chart with Extended Hours ON for premarket levels.
+// ============================================================================
+
+gapMinPct = input.float(2.0, "Min overnight gap (%)", step = 0.5)
+tzNY      = "America/New_York"
+
+prevClose = request.security(syminfo.tickerid, "D", close[1])
+vwapLine  = ta.vwap(hlc3)
+
+newDay = ta.change(time("D")) != 0
+
+// --- Track premarket high/low and today's open gap
+var float pmHigh  = na
+var float pmLow   = na
+var float dayOpen = na
+var bool  gapUp   = false
+var bool  gapDown = false
+
+if newDay
+    pmHigh := na
+    pmLow  := na
+    gapUp  := false
+    gapDown:= false
+
+if session.ispremarket
+    pmHigh := na(pmHigh) ? high : math.max(pmHigh, high)
+    pmLow  := na(pmLow)  ? low  : math.min(pmLow, low)
+
+firstRTH = session.ismarket and (session.ispremarket[1] or newDay)
+if firstRTH
+    dayOpen := open
+    gapUp   := open >= prevClose * (1 + gapMinPct / 100)
+    gapDown := open <= prevClose * (1 - gapMinPct / 100)
+
+// --- Signals
+pmhBreak   = session.ismarket and gapUp and not na(pmHigh) and close > pmHigh and close[1] <= pmHigh and close > vwapLine
+gapUpDip   = session.ismarket and gapUp and not na(pmHigh) and close > pmHigh and low <= pmHigh and close > open
+gapDnBounce= session.ismarket and gapDown and close < vwapLine and high >= vwapLine * 0.999 and close < open
+vwapStop   = session.ismarket and (gapUp and close < vwapLine and close[1] >= vwapLine)
+
+plot(vwapLine,  "VWAP",           color.new(color.blue,   0), 2)
+plot(prevClose, "Prior day close",color.new(color.gray,  40), 1, plot.style_linebr)
+plot(pmHigh,    "Premarket high", color.new(color.green, 30), 1, plot.style_linebr)
+plot(pmLow,     "Premarket low",  color.new(color.red,   30), 1, plot.style_linebr)
+
+plotshape(pmhBreak,    "Gap-Up: PMH break",     shape.triangleup,   location.belowbar, color.new(color.green, 0), text = "PMH\nBRK",  textcolor = color.green,  size = size.small)
+plotshape(gapUpDip,    "Gap-Up: dip entry",     shape.circle,       location.belowbar, color.new(color.teal,  0), text = "DIP",       textcolor = color.teal,   size = size.tiny)
+plotshape(gapDnBounce, "Gap-Down: bounce short",shape.triangledown, location.abovebar, color.new(color.red,   0), text = "SHORT",     textcolor = color.red,    size = size.small)
+plotshape(vwapStop,    "VWAP stop",             shape.xcross,       location.abovebar, color.new(color.orange,0), text = "STOP",      textcolor = color.orange, size = size.tiny)
+
+bgcolor(gapUp ? color.new(color.green, 97) : gapDown ? color.new(color.red, 97) : na)
+
+alertcondition(pmhBreak,    "Gap-up PMH breakout", "Gap Navigator: gap-up stock breaking premarket highs above VWAP — long trigger (verify catalyst)")
+alertcondition(gapDnBounce, "Gap-down bounce short","Gap Navigator: gap-down stock stalling at VWAP — short-the-bounce trigger")
+alertcondition(vwapStop,    "VWAP breakdown stop", "Gap Navigator: VWAP lost — her stop for the gap-up long")

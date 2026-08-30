@@ -1,0 +1,89 @@
+//@version=6
+indicator("Level Keeper", overlay = true, max_lines_count = 60, max_labels_count = 60)
+
+// ============================================================================
+// LEVEL KEEPER
+// Based on Humbled Trader — "Support & Resistance Didn't Work Until I
+// Learned This Strategy"
+// Her rules implemented here:
+//  • Find the most OBVIOUS price levels: extreme highs, extreme lows, and
+//    V / W shapes on the chart.
+//  • A horizontal line needs at least THREE contact points to matter — the
+//    more touches, the more significant the level.
+//  • Levels are ZONES, never exact to the cent; whole-dollar numbers matter
+//    psychologically, so levels are optionally snapped toward round numbers.
+//  • Volume is your guide: a break of a key level on above-average volume is
+//    a real break; low volume breaks are suspect.
+//  • Prior resistance, once broken out of, becomes new support (and vice
+//    versa). Wait for 1–2 retests before trading a level.
+// ============================================================================
+
+pivLen    = input.int(5,  "Pivot strength (bars each side)", minval = 2)
+minTouches= input.int(3,  "Min touches for a valid level", minval = 2)
+zonePct   = input.float(0.4, "Zone tolerance (%)", step = 0.1)
+maxLevels = input.int(8,  "Max levels drawn", minval = 2, maxval = 20)
+volLen    = input.int(14, "Volume MA length")
+
+volMa = ta.sma(volume, volLen)
+ph = ta.pivothigh(high, pivLen, pivLen)
+pl = ta.pivotlow(low,  pivLen, pivLen)
+
+var array<float> lvls    = array.new_float()
+var array<int>   touches = array.new_int()
+
+f_addLevel(float px) =>
+    tol = px * zonePct / 100
+    int hit = -1
+    int n = array.size(lvls)
+    if n > 0
+        for i = 0 to n - 1
+            if math.abs(array.get(lvls, i) - px) <= tol
+                hit := i
+                break
+    if hit >= 0
+        array.set(touches, hit, array.get(touches, hit) + 1)
+        array.set(lvls, hit, (array.get(lvls, hit) + px) / 2)
+    else
+        array.push(lvls, px)
+        array.push(touches, 1)
+        if array.size(lvls) > 40
+            array.shift(lvls)
+            array.shift(touches)
+
+if not na(ph)
+    f_addLevel(ph)
+if not na(pl)
+    f_addLevel(pl)
+
+// --- Draw the strongest levels
+var array<line> drawn = array.new_line()
+if barstate.islast and array.size(lvls) > 0
+    while array.size(drawn) > 0
+        line.delete(array.pop(drawn))
+    int shown = 0
+    for i = array.size(lvls) - 1 to 0
+        if shown < maxLevels and array.get(touches, i) >= minTouches
+            px = array.get(lvls, i)
+            ln = line.new(math.max(0, bar_index - 100), px, bar_index + 10, px, color = px > close ? color.new(color.red, 30) : color.new(color.green, 30), width = 2)
+            array.push(drawn, ln)
+            shown += 1
+
+// --- Volume-confirmed break of nearest level
+float nearest = na
+if array.size(lvls) > 0
+    float best = 1e10
+    for i = 0 to array.size(lvls) - 1
+        if array.get(touches, i) >= minTouches
+            d = math.abs(array.get(lvls, i) - close)
+            if d < best
+                best := d
+                nearest := array.get(lvls, i)
+
+breakUp = not na(nearest) and close > nearest and close[1] <= nearest and volume > volMa
+breakDn = not na(nearest) and close < nearest and close[1] >= nearest and volume > volMa
+
+plotshape(breakUp, "Volume Breakout",  shape.triangleup,   location.belowbar, color.new(color.green, 0), text = "BRK", textcolor = color.green, size = size.tiny)
+plotshape(breakDn, "Volume Breakdown", shape.triangledown, location.abovebar, color.new(color.red,   0), text = "BRK", textcolor = color.red,   size = size.tiny)
+
+alertcondition(breakUp, "Level break UP on volume",   "Level Keeper: key level broken to the upside on above-average volume — prior resistance may become support")
+alertcondition(breakDn, "Level break DOWN on volume", "Level Keeper: key level broken to the downside on above-average volume — prior support may become resistance")

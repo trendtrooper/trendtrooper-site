@@ -1,0 +1,54 @@
+//@version=6
+indicator("Volume Prophet", overlay = false, format = format.volume)
+
+// ============================================================================
+// VOLUME PROPHET
+// Based on Humbled Trader — "Trading won't work if you don't know THIS
+// Volume Analysis Indicator"
+// Her rules implemented here:
+//  • Two tools: a VOLUME MOVING AVERAGE (she uses ~14 periods) over the
+//    volume bars, and RELATIVE VOLUME (RVOL) — current vs average.
+//  • Momentum traders want RVOL ≥ 2–3; small-cap runners print hundreds of
+//    percent. High RVOL = range, momentum, and liquidity.
+//  • VOLUME BREAKOUT: volume holding ABOVE its average sustains a move —
+//    breakouts on shrinking volume tend to fail.
+//  • VOLUME BREAKDOWN: expanding volume on a support break = real selling.
+//  • REVERSAL CLUE (swing entries): after a multi-day rout, wait for selling
+//    volume to SUBSIDE back under the average (~1/4–1/5 of panic volume),
+//    then look for the first green-day breakout.
+// ============================================================================
+
+volLen  = input.int(14,  "Volume MA length", minval = 2)
+rvolHot = input.float(2.0, "Hot RVOL threshold", step = 0.5)
+calmPct = input.float(30.0, "Volume-subsided threshold (% of recent peak)", step = 5)
+
+volMa = ta.sma(volume, volLen)
+rvol  = volume / volMa
+
+isUp = close >= open
+volColor = volume > volMa ? (isUp ? color.new(color.green, 0) : color.new(color.red, 0)) : (isUp ? color.new(color.green, 60) : color.new(color.red, 60))
+
+plot(volume, "Volume", volColor, style = plot.style_columns)
+plot(volMa,  "Volume MA", color.new(color.orange, 0), 2)
+
+// --- Signals
+volBreakout  = volume > volMa * rvolHot and isUp
+volBreakdown = volume > volMa * rvolHot and not isUp
+
+peakVol   = ta.highest(volume, volLen * 2)
+subsided  = volume < peakVol * calmPct / 100 and volume < volMa
+reversalWatch = subsided and isUp and not isUp[1]
+
+plotshape(volBreakout,   "Volume breakout",  shape.triangleup,   location.top, color.new(color.green,  0), size = size.tiny)
+plotshape(volBreakdown,  "Volume breakdown", shape.triangledown, location.top, color.new(color.red,    0), size = size.tiny)
+plotshape(reversalWatch, "Reversal watch",   shape.diamond,      location.top, color.new(color.yellow, 0), size = size.tiny)
+
+// --- RVOL readout
+var table t = table.new(position.top_right, 1, 2)
+if barstate.islast
+    table.cell(t, 0, 0, "RVOL: " + str.tostring(rvol, "#.##") + "x", text_color = color.white, bgcolor = rvol >= rvolHot ? color.new(color.green, 20) : color.new(color.gray, 20))
+    table.cell(t, 0, 1, rvol >= rvolHot ? "In play" : "Quiet", text_color = color.white, bgcolor = color.new(color.black, 40))
+
+alertcondition(volBreakout,   "Volume breakout",  "Volume Prophet: buying volume breaking out above average — move has fuel")
+alertcondition(volBreakdown,  "Volume breakdown", "Volume Prophet: selling volume breaking out — real distribution")
+alertcondition(reversalWatch, "Volume subsided",  "Volume Prophet: panic volume has subsided under the average with a green candle — reversal watch for swing entry")
