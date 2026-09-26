@@ -628,29 +628,12 @@ import LogoutBar from "../components/LogoutBar.astro";
   </div>
 </div>
 
-<!-- AI RESEARCH ANALYSIS -->
-<div class="ai-wrap">
-  <div class="card">
-    <div class="ai-card-head">
-      <div class="card-title" style="margin-bottom:0;">AI Research Analysis</div>
-      <div class="ai-search">
-        <input id="aiTickerInput" type="text" placeholder="Enter ticker: NVDA, TQQQ…" autocomplete="off" spellcheck="false" onfocus="this.select()" />
-        <button class="btn primary" id="aiAnalyzeBtn">Analyze</button>
-      </div>
-    </div>
-    <div id="aiResults" class="ai-results">
-      <div class="ai-placeholder">Enter a ticker above and click Analyze for a full AI-generated research report — fundamentals, technicals, sentiment, seasonality, sector peer comparison, insider activity, short interest, and a directional bias table.</div>
-    </div>
-  </div>
-</div>
-
 <footer>
   <div>TrendTrooper Analysis &nbsp;•&nbsp; © <span id="yr"></span> &nbsp;•&nbsp; Data via Yahoo Finance</div>
   <div class="foot-links"><a href="/">Home</a><a href="/dashboard">Dashboard</a><a href="/screener">Screener</a><a href="/chart">Chart</a></div>
 </footer>
 
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script is:inline>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
@@ -1123,10 +1106,6 @@ async function runAnalysis(ticker) {
   if (!ticker) return;
   currentTicker = ticker;
 
-  // Keep the AI Research Analysis box's ticker input in sync
-  var aiInput = document.getElementById('aiTickerInput');
-  if (aiInput) aiInput.value = ticker;
-
   // CHANGE 14: update full-chart link dynamically
   var fcLink = document.getElementById('fullChartLink');
   if (fcLink) fcLink.href = '/chart?symbol=' + encodeURIComponent(ticker);
@@ -1409,53 +1388,6 @@ function renderExpanded(data) {
 const initTicker = new URLSearchParams(window.location.search).get('t') || 'SPY';
 document.getElementById('tickerInput').value = initTicker;
 runAnalysis(initTicker);
-</script>
-<script is:inline>
-// ── AI RESEARCH ANALYSIS ─────────────────────────────────────────
-async function runAiAnalysis(ticker) {
-  ticker = (ticker || '').trim().toUpperCase();
-  var resultsEl = document.getElementById('aiResults');
-  if (!ticker) return;
-
-  resultsEl.innerHTML = '<div class="ai-loading"><div class="spinner"></div> Researching ' + ticker + '… this can take up to 30 seconds.</div>';
-
-  var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
-  var timeoutId = setTimeout(function() {
-    if (controller) controller.abort();
-  }, 45000);
-
-  try {
-    var fetchOpts = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ticker: ticker }),
-    };
-    if (controller) fetchOpts.signal = controller.signal;
-
-    const res = await fetch('/api/ticker-analysis', fetchOpts);
-    clearTimeout(timeoutId);
-
-    const data = await res.json().catch(function() { return {}; });
-
-    if (!res.ok || data.error) {
-      resultsEl.innerHTML = '<div class="ai-error">⚠ ' + (data.error || ('Server returned ' + res.status)) + '</div>';
-      return;
-    }
-
-    resultsEl.innerHTML = (typeof marked !== 'undefined') ? marked.parse(data.analysis || '') : (data.analysis || '');
-  } catch (err) {
-    clearTimeout(timeoutId);
-    var msg = (err && err.name === 'AbortError') ? 'Request timed out after 45 seconds. Try again.' : ((err && err.message) || 'Request failed. Try again.');
-    resultsEl.innerHTML = '<div class="ai-error">⚠ ' + msg + '</div>';
-  }
-}
-
-document.getElementById('aiAnalyzeBtn').addEventListener('click', function() {
-  runAiAnalysis(document.getElementById('aiTickerInput').value);
-});
-document.getElementById('aiTickerInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') runAiAnalysis(e.target.value);
-});
 </script>
 <script>
   (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
