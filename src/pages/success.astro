@@ -217,16 +217,25 @@ header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92)
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get('session_id');
 
-  if (params.get('dev') === 'tt-ironclad-2026') {
-    localStorage.setItem('tt_dev_access', 'tt-ironclad-2026');
-  }
-
   if (sessionId) {
-    fetch('https://bot.trendtrooper.com/get-token?session_id=' + sessionId)
+    // 1) Server verifies the Checkout Session with Stripe and sets the HttpOnly session cookie.
+    const signIn = fetch('/api/auth/checkout-complete', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({session_id: sessionId})
+    }).catch(() => {});
+    // Don't navigate to a member page before the cookie has been set.
+    document.querySelectorAll('.links a').forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      signIn.then(() => { window.location.href = a.getAttribute('href'); });
+    }));
+
+    // 2) Show the bot-issued access token (for signing in on other devices via /subscribe).
+    fetch('https://bot.trendtrooper.com/get-token?session_id=' + encodeURIComponent(sessionId))
       .then(r => r.json())
       .then(data => {
         if (data.token) {
-          localStorage.setItem('tt_sub_token', data.token);
           document.getElementById('tokenDisplay').textContent = data.token;
           document.getElementById('tokenBox').style.display = 'block';
         }

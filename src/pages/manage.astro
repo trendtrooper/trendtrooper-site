@@ -7,7 +7,6 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Manage Subscription — TrendTrooper</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>if(localStorage.getItem("tt_dev_access")!=="tt-ironclad-2026"&&!localStorage.getItem("tt_sub_token")){sessionStorage.setItem("tt_redirect",location.pathname);location.replace("/subscribe");}</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#020510;--cyan:#00cfff;--cyan-dim:rgba(0,200,255,0.08);--green:#00ff88;--red:#ff4060;--text:#e8eeff;--muted:rgba(220,235,255,0.95);--muted2:rgba(180,210,255,0.6);--border:rgba(0,200,255,0.1);--border2:rgba(0,200,255,0.2);}
@@ -133,44 +132,36 @@ header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92)
 </div>
 
 <script>
-  const BOT = 'https://bot.trendtrooper.com';
-  const token = localStorage.getItem('tt_sub_token') || localStorage.getItem('tt_dev_access');
-
-  document.getElementById('tokenDisplay').textContent = token || '—';
-
-  if (token === 'tt-ironclad-2026') {
-    document.getElementById('planVal').textContent = 'Developer';
-    document.getElementById('statusVal').textContent = 'Active (Dev)';
-    document.getElementById('accessVal').textContent = 'All pages';
-    document.getElementById('cancelBtn').style.display = 'none';
-  } else if (token) {
-    fetch(`${BOT}/verify-token?token=${token}`)
-      .then(r => r.json())
-      .then(d => {
-        if (d.valid) {
-          document.getElementById('planVal').textContent = d.plan.charAt(0).toUpperCase() + d.plan.slice(1);
-          document.getElementById('accessVal').textContent = 'All member pages';
-        } else {
-          document.getElementById('statusVal').textContent = 'Inactive';
-          document.getElementById('statusVal').className = 'row-val status-inactive';
-          document.getElementById('cancelBtn').style.display = 'none';
-        }
-      });
-  }
+  // This page is only served to signed-in members (functions/_middleware.js); details come from the server.
+  fetch('/api/auth/me', { credentials: 'same-origin', cache: 'no-store' })
+    .then(r => r.json())
+    .then(d => {
+      if (!d.authenticated) { window.location.replace('/subscribe?next=/manage'); return; }
+      document.getElementById('tokenDisplay').textContent = d.token || '—';
+      if (d.kind === 'dev') {
+        document.getElementById('planVal').textContent = 'Developer';
+        document.getElementById('statusVal').textContent = 'Active (Dev)';
+        document.getElementById('accessVal').textContent = 'All pages';
+        document.getElementById('cancelBtn').style.display = 'none';
+      } else {
+        const plan = d.plan || 'pro';
+        document.getElementById('planVal').textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+        document.getElementById('accessVal').textContent = 'All member pages';
+      }
+    })
+    .catch(() => { document.getElementById('tokenDisplay').textContent = '—'; });
 
   function showConfirm() { document.getElementById('confirmBox').style.display = 'block'; }
   function hideConfirm() { document.getElementById('confirmBox').style.display = 'none'; }
 
   function doCancel() {
-    fetch(`${BOT}/cancel-subscription`, {
+    fetch('/api/auth/cancel', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({token})
+      credentials: 'same-origin'
     })
     .then(r => r.json())
     .then(d => {
       if (d.status === 'cancelled') {
-        localStorage.removeItem('tt_sub_token');
         document.getElementById('confirmBox').style.display = 'none';
         document.getElementById('msgOk').style.display = 'block';
         document.getElementById('cancelBtn').style.display = 'none';
@@ -184,9 +175,10 @@ header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92)
   }
 
   function logout() {
-    localStorage.removeItem('tt_dev_access');
-    localStorage.removeItem('tt_sub_token');
-    window.location.href = '/';
+    try { localStorage.removeItem('tt_dev_access'); localStorage.removeItem('tt_sub_token'); } catch(e) {}
+    fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
+      .catch(() => {})
+      .then(() => { window.location.href = '/'; });
   }
   document.querySelectorAll('#ttMob a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('ttMob').classList.remove('open');document.getElementById('ttBurger').classList.remove('open');}));
 </script>

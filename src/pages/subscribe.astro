@@ -304,26 +304,29 @@ header{position:sticky;top:0;z-index:100;height:70px;background:rgba(2,5,20,.92)
     }
   }
 
-  function redeemToken() {
+  // Tokens are verified server-side (functions/api/auth/token.js), which sets an HttpOnly session cookie.
+  async function redeemToken() {
     const token = document.getElementById('tokenField').value.trim();
     const err = document.getElementById('tokenError');
     if (!token) return;
-
-    // Dev token shortcut
-    if (token === 'tt-ironclad-2026') {
-      localStorage.setItem('tt_dev_access', token);
-      redirect();
-      return;
-    }
-
-    // TODO: validate against server when Stripe is integrated
-    // For now, reject unknown tokens
+    err.style.display = 'none';
+    try {
+      const res = await fetch('/api/auth/token', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({token})
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) { redirect(); return; }
+    } catch(e) {}
     err.style.display = 'block';
   }
 
   function redirect() {
-    const dest = sessionStorage.getItem('tt_redirect') || '/dashboard';
-    sessionStorage.removeItem('tt_redirect');
+    // ?next= is set by the server-side paywall redirect; only same-site paths are accepted.
+    const next = new URLSearchParams(window.location.search).get('next') || '';
+    const dest = (next.startsWith('/') && !next.startsWith('//') && !next.includes('\\')) ? next : '/dashboard';
     window.location.href = dest;
   }
 

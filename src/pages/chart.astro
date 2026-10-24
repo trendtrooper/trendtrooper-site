@@ -10,7 +10,6 @@ const initialSymbol = (symbolParam && symbolParam.trim())
 
 <html lang="en">
 <head>
-<script>if(localStorage.getItem("tt_dev_access")!=="tt-ironclad-2026"&&!localStorage.getItem("tt_sub_token")){sessionStorage.setItem("tt_redirect",location.pathname);location.replace("/subscribe");}</script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TrendTrooper — Full Chart</title>
@@ -696,9 +695,6 @@ const initialSymbol = (symbolParam && symbolParam.trim())
     b.classList.toggle("active", b.dataset.sym === initSym);
   });
 })();
-</script>
-<script>
-  (function(){var t=localStorage.getItem('tt_dev_access'),s=localStorage.getItem('tt_sub_token');if(t!=='tt-ironclad-2026'&&!s){sessionStorage.setItem('tt_redirect',window.location.pathname);window.location.replace('/subscribe');}})();
 </script>
 
 <LogoutBar />

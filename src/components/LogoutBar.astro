@@ -7,13 +7,17 @@
   <button onclick="ttLogout()" style="background:rgba(255,64,96,0.15);border:1px solid rgba(255,64,96,0.3);color:#ff4060;font-size:0.75rem;font-family:'Rajdhani',sans-serif;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;letter-spacing:0.05em;">Log Out</button>
 </div>
 <script>
+  // Session lives in an HttpOnly cookie checked by functions/_middleware.js; ask the server who we are.
   (function(){
-    var t = localStorage.getItem('tt_dev_access') || localStorage.getItem('tt_sub_token');
-    if (t) document.getElementById('ttAccountBar').style.display = 'flex';
+    fetch('/api/auth/me', { credentials: 'same-origin', cache: 'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (d && d.authenticated) document.getElementById('ttAccountBar').style.display = 'flex'; })
+      .catch(function(){});
   })();
   function ttLogout() {
-    localStorage.removeItem('tt_dev_access');
-    localStorage.removeItem('tt_sub_token');
-    window.location.href = '/';
+    try { localStorage.removeItem('tt_dev_access'); localStorage.removeItem('tt_sub_token'); } catch(e) {}
+    fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
+      .catch(function(){})
+      .then(function(){ window.location.href = '/'; });
   }
 </script>

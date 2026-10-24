@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/_astro/*",
+    "/pine-scripts/*",
+    "/favicon.ico",
+    "/favicon.svg",
+    "/robots.txt",
+    "/sitemap.xml",
+    "/bot-preview.png",
+    "/bull-bg.jpg",
+    "/city-bg.png",
+    "/hero-bg.png",
+    "/trading-bg.png"
+  ]
+}
